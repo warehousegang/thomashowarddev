@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,10 +24,10 @@
       </p>
 
       <nav>
-        <a href="blog/">Writing</a>
-        <a href="about/">About</a>
+        <a href="../">Writing</a>
+        <a href="../../about/">About</a>
         <a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <a href="YOUR_X_URL" target="_blank" rel="noopener noreferrer">X</a>
+        <a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X</a>
         <a href="YOUR_LINKEDIN_URL" target="_blank" rel="noopener noreferrer">LinkedIn</a>
       </nav>
     </header>
@@ -43,31 +44,23 @@
 
       <p class="meta">September 2026 · Thomas Howard</p>
 
-      <p>
-        BusyNow already runs on Kubernetes.
-      </p>
+      <p>BusyNow already runs on Kubernetes.</p>
 
       <p>
         Its infrastructure is managed as code. Deployments are automated.
         GitOps gives me a declarative path from a repository to the cluster.
       </p>
 
-      <p>
-        So naturally, I've decided to add another layer.
-      </p>
+      <p>So naturally, I've decided to add another layer.</p>
 
-      <p>
-        Crossplane.
-      </p>
+      <p>Crossplane.</p>
 
       <p>
         That sentence should make any platform engineer at least slightly
         suspicious.
       </p>
 
-      <p>
-        It makes me suspicious too.
-      </p>
+      <p>It makes me suspicious too.</p>
 
       <p>
         One of the easiest ways to ruin a platform is to keep adding tools
@@ -93,9 +86,7 @@
         </strong>
       </div>
 
-      <p>
-        And more specifically:
-      </p>
+      <p>And more specifically:</p>
 
       <div class="callout">
         <strong>
@@ -104,24 +95,16 @@
         </strong>
       </div>
 
-      <p>
-        That's a much more interesting experiment.
-      </p>
+      <p>That's a much more interesting experiment.</p>
 
 
       <h2>Terraform already works</h2>
 
-      <p>
-        The first question is obvious.
-      </p>
+      <p>The first question is obvious.</p>
 
-      <p>
-        Why not just use Terraform?
-      </p>
+      <p>Why not just use Terraform?</p>
 
-      <p>
-        I do.
-      </p>
+      <p>I do.</p>
 
       <p>
         Terraform is very good at what it does. I describe infrastructure,
@@ -142,30 +125,22 @@
         Terraform generally runs when something invokes it.
       </p>
 
-      <p>
-        Kubernetes continuously reconciles.
-      </p>
+      <p>Kubernetes continuously reconciles.</p>
 
-      <p>
-        That distinction matters to me.
-      </p>
+      <p>That distinction matters to me.</p>
 
       <p>
         A Kubernetes controller doesn't look at desired state once and
         disappear. It keeps watching.
       </p>
 
-      <p>
-        You say:
-      </p>
+      <p>You say:</p>
 
       <div class="callout">
         <strong>I want three replicas.</strong>
       </div>
 
-      <p>
-        Kubernetes keeps asking:
-      </p>
+      <p>Kubernetes keeps asking:</p>
 
       <div class="callout">
         <strong>Do three replicas exist?</strong>
@@ -210,13 +185,11 @@
         Engineer → Terraform → Cloud Provider → Database
       </div>
 
-      <p>
-        That works.
-      </p>
+      <p>That works.</p>
 
       <p>
         But the engineer needs to understand the infrastructure
-        implementation; or at least interact with a workflow that does.
+        implementation, or at least interact with a workflow that does.
       </p>
 
       <p>
@@ -231,9 +204,7 @@
         The consumer shouldn't necessarily care how the database gets created.
       </p>
 
-      <p>
-        They should describe what they need.
-      </p>
+      <p>They should describe what they need.</p>
 
       <p>
         Maybe someday that looks something like:
@@ -247,41 +218,25 @@ spec:
   size: small
   availability: production</code></pre>
 
-      <p>
-        That's intentionally boring.
-      </p>
+      <p>That's intentionally boring.</p>
 
-      <p>
-        There are no subnet IDs.
-      </p>
+      <p>There are no subnet IDs.</p>
 
-      <p>
-        No security-group configuration.
-      </p>
+      <p>No security-group configuration.</p>
 
-      <p>
-        No parameter groups.
-      </p>
+      <p>No parameter groups.</p>
 
-      <p>
-        No AWS-specific instance classes.
-      </p>
+      <p>No AWS-specific instance classes.</p>
 
-      <p>
-        No Terraform module arguments.
-      </p>
+      <p>No Terraform module arguments.</p>
 
-      <p>
-        The consumer is describing intent:
-      </p>
+      <p>The consumer is describing intent:</p>
 
       <div class="callout">
         <strong>Give this workload a small production database.</strong>
       </div>
 
-      <p>
-        The platform decides what that means.
-      </p>
+      <p>The platform decides what that means.</p>
 
       <p>
         That distinction is the reason I'm interested in Crossplane.
@@ -295,9 +250,7 @@ spec:
         entire platform layer.
       </p>
 
-      <p>
-        If all I accomplish is replacing:
-      </p>
+      <p>If all I accomplish is replacing:</p>
 
       <pre><code>resource "aws_db_instance" "places" {
     ...
@@ -337,9 +290,7 @@ spec:
         The application doesn't need to know how those pieces fit together.
       </p>
 
-      <p>
-        The platform does.
-      </p>
+      <p>The platform does.</p>
 
       <div class="callout">
         <strong>
@@ -357,8 +308,11 @@ spec:
       <h2>Why this matters for BusyNow</h2>
 
       <p>
-        BusyNow is intentionally more complicated underneath than a small
-        application strictly needs to be.
+        <a href="https://busynow.app/" target="_blank" rel="noopener noreferrer">
+          BusyNow
+        </a>
+        is intentionally more complicated underneath than a small application
+        strictly needs to be.
       </p>
 
       <p>
@@ -371,13 +325,9 @@ spec:
         for fictional companies.
       </p>
 
-      <p>
-        I want the infrastructure to have an actual job.
-      </p>
+      <p>I want the infrastructure to have an actual job.</p>
 
-      <p>
-        BusyNow gives it one.
-      </p>
+      <p>BusyNow gives it one.</p>
 
       <p>
         If I create a platform abstraction incorrectly, I have to live with
@@ -416,42 +366,30 @@ spec:
         infrastructure.
       </p>
 
-      <p>
-        That creates an important problem.
-      </p>
+      <p>That creates an important problem.</p>
 
-      <p>
-        AI agents can generate infrastructure code.
-      </p>
+      <p>AI agents can generate infrastructure code.</p>
 
-      <p>
-        That's useful.
-      </p>
+      <p>That's useful.</p>
 
       <p>
         But I'm not convinced I want autonomous agents freely generating
         arbitrary Terraform and applying it to production.
       </p>
 
-      <p>
-        That's an enormous authority surface.
-      </p>
+      <p>That's an enormous authority surface.</p>
 
       <p>
         I'd rather give automation a constrained vocabulary.
       </p>
 
-      <p>
-        Instead of:
-      </p>
+      <p>Instead of:</p>
 
       <div class="callout">
         Create whatever AWS resources you think this feature needs.
       </div>
 
-      <p>
-        I want something closer to:
-      </p>
+      <p>I want something closer to:</p>
 
       <div class="callout">
         <strong>
@@ -495,9 +433,7 @@ spec:
         They reduce the number of things a consumer is allowed to ask for.
       </p>
 
-      <p>
-        That's a feature.
-      </p>
+      <p>That's a feature.</p>
 
       <p>
         If my platform supports three database classes:
@@ -508,7 +444,7 @@ standard
 production</code></pre>
 
       <p>
-        then an application developer (or autonomous agent) doesn't need to
+        then an application developer, or autonomous agent, doesn't need to
         choose among hundreds of cloud configuration options.
       </p>
 
@@ -526,9 +462,7 @@ production</code></pre>
         backups, reliability, observability, cost, and security.
       </p>
 
-      <p>
-        Consumers operate inside those boundaries.
-      </p>
+      <p>Consumers operate inside those boundaries.</p>
 
       <p>
         This is increasingly how I think about safe AI automation.
@@ -553,13 +487,9 @@ production</code></pre>
         quietly provisioning infrastructure behind my back.
       </p>
 
-      <p>
-        The path should remain inspectable.
-      </p>
+      <p>The path should remain inspectable.</p>
 
-      <p>
-        Something closer to:
-      </p>
+      <p>Something closer to:</p>
 
       <div class="lifecycle">
         Intent → Pull Request → Review → Git → Argo CD → Kubernetes →
@@ -576,21 +506,15 @@ production</code></pre>
         it enters the cluster. Crossplane reconciles it after it arrives.
       </p>
 
-      <p>
-        Each layer has a different responsibility.
-      </p>
+      <p>Each layer has a different responsibility.</p>
 
-      <p>
-        That separation matters.
-      </p>
+      <p>That separation matters.</p>
 
       <p>
         Crossplane isn't replacing GitOps in this model.
       </p>
 
-      <p>
-        It's sitting underneath it.
-      </p>
+      <p>It's sitting underneath it.</p>
 
 
       <h2>And it doesn't necessarily replace Terraform</h2>
@@ -599,9 +523,7 @@ production</code></pre>
         I'm also not planning a dramatic "Terraform is dead" migration.
       </p>
 
-      <p>
-        That would be solving a problem I don't have.
-      </p>
+      <p>That would be solving a problem I don't have.</p>
 
       <p>
         Some infrastructure may continue to make perfect sense in Terraform.
@@ -612,9 +534,7 @@ production</code></pre>
         Kubernetes control plane.
       </p>
 
-      <p>
-        The cluster itself is an obvious example.
-      </p>
+      <p>The cluster itself is an obvious example.</p>
 
       <p>
         Having the Kubernetes cluster responsible for creating the
@@ -622,9 +542,7 @@ production</code></pre>
         entertaining bootstrap problems.
       </p>
 
-      <p>
-        There will probably be a boundary.
-      </p>
+      <p>There will probably be a boundary.</p>
 
       <p>
         Terraform can establish foundational infrastructure.
@@ -643,26 +561,18 @@ production</code></pre>
 
       <h2>The danger is abstraction for abstraction's sake</h2>
 
-      <p>
-        I'm enthusiastic about Crossplane.
-      </p>
+      <p>I'm enthusiastic about Crossplane.</p>
 
-      <p>
-        I'm also prepared to remove it.
-      </p>
+      <p>I'm also prepared to remove it.</p>
 
-      <p>
-        That's important.
-      </p>
+      <p>That's important.</p>
 
       <p>
         Platform engineering has a tendency to produce beautiful abstractions
         that solve problems developers never had.
       </p>
 
-      <p>
-        Crossplane introduces real costs.
-      </p>
+      <p>Crossplane introduces real costs.</p>
 
       <ul class="question-list">
         <li>Another control plane has to be operated.</li>
@@ -691,16 +601,12 @@ production</code></pre>
         <strong>That's architecture cosplay.</strong>
       </div>
 
-      <p>
-        The abstraction has to earn its existence.
-      </p>
+      <p>The abstraction has to earn its existence.</p>
 
 
       <h2>What I'm going to build first</h2>
 
-      <p>
-        I'm deliberately starting small.
-      </p>
+      <p>I'm deliberately starting small.</p>
 
       <p>
         I don't want Crossplane managing half of BusyNow on day one.
@@ -714,28 +620,31 @@ production</code></pre>
         <li>
           Can Crossplane safely manage a real cloud resource used by BusyNow?
         </li>
+
         <li>
           Can I wrap that resource behind a simpler BusyNow-specific API?
         </li>
+
         <li>
           Can Argo CD remain the path through which desired state enters the
           cluster?
         </li>
+
         <li>
           Can I clearly observe reconciliation and failure?
         </li>
+
         <li>
           Can I delete or change the Kubernetes resource without accidentally
           destroying something important?
         </li>
+
         <li>
           Can I recover when reconciliation fails?
         </li>
       </ul>
 
-      <p>
-        And most importantly:
-      </p>
+      <p>And most importantly:</p>
 
       <div class="callout">
         <strong>
@@ -745,4 +654,13 @@ production</code></pre>
       </div>
 
       <p>
-        If the answer to that last question
+        If the answer to that last question is no, the experiment failed.
+      </p>
+
+      <p>That's okay.</p>
+
+
+      <h2>Where I think this could go</h2>
+
+      <p>
+        If the model works, Crossplane
