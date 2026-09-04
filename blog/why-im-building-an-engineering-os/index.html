@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="I'm trying to find out how much of a production engineering organization can be turned into a system—and how far one engineer can take it.">
+  <title>Why I'm Building an Engineering OS — Thomas Howard</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <main class="site">
+    <header>
+      <p class="site-title"><a href="../../">Thomas Howard</a></p>
+      <nav>
+        <a href="../">Writing</a>
+        <a href="../../about/">About</a>
+        <a href="https://github.com/warehousegang">GitHub</a>
+      </nav>
+    </header>
+
+    <article>
+      <h1>Why I'm Building an Engineering OS</h1>
+      <p class="deck">I'm trying to find out how much of a production engineering organization can be turned into a system—and how far one engineer can take it.</p>
+      <p class="meta">September 2026 · Thomas Howard</p>
+
+      <p>I'm building a software company largely by myself.</p>
+
+      <p>That creates an obvious problem.</p>
+
+      <p>Building the application is only a small part of operating a real software product.</p>
+
+      <p>Someone has to design the architecture. Someone has to implement features, review changes, test them, deploy them, monitor production, respond to incidents, patch infrastructure, manage security, investigate failures, control costs, maintain documentation, and decide what gets built next.</p>
+
+      <p>Historically, those responsibilities get distributed across an engineering organization.</p>
+
+      <p>I don't have an engineering organization.</p>
+
+      <p>So I've started building one.</p>
+
+      <p>Not by hiring a collection of people and not by pretending that an AI coding agent is an engineering department.</p>
+
+      <p>I'm trying to build the organization itself as software.</p>
+
+      <p>I call it the <strong>Engineering OS</strong>.</p>
+
+      <h2>The problem isn't writing enough code</h2>
+
+      <p>AI has made producing software dramatically easier.</p>
+
+      <p>I can describe a feature, investigate an architecture, generate an implementation, create tests, modify Kubernetes resources, analyze failures, and work through unfamiliar code much faster than I could a few years ago.</p>
+
+      <p>That's incredibly powerful.</p>
+
+      <p>But it also exposes a misconception about software engineering.</p>
+
+      <p>Writing code was never the entire job.</p>
+
+      <p>Suppose an AI agent produces 5,000 lines of perfectly valid code while I'm asleep.</p>
+
+      <p>Great.</p>
+
+      <p>Should those changes ship?</p>
+
+      <ul class="question-list">
+        <li>Did they follow the architecture?</li>
+        <li>Were the right tests executed?</li>
+        <li>Did the implementation introduce a security problem?</li>
+        <li>Did it change infrastructure?</li>
+        <li>Does it violate an existing architectural decision?</li>
+        <li>What evidence proves that the change actually works?</li>
+        <li>What happens if production behaves differently than the test environment?</li>
+        <li>Who—or what—is allowed to deploy it?</li>
+        <li>What happens if the system gets the answer wrong?</li>
+      </ul>
+
+      <p>Making implementation faster doesn't eliminate those questions.</p>
+
+      <p>It makes answering them more important.</p>
+
+      <h2>What I mean by an Engineering OS</h2>
+
+      <p>I'm not trying to build another developer portal.</p>
+
+      <p>I'm also not trying to create a giant prompt that says, "Run my engineering department."</p>
+
+      <p>The Engineering OS is the operating system around software delivery.</p>
+
+      <p>At a high level, I'm working toward something that looks like this:</p>
+
+      <div class="lifecycle">Intent → Planning → Implementation → Review → Evidence → Deployment → Observation → Learning</div>
+
+      <p>Different agents and platform components can participate at different points in that lifecycle.</p>
+
+      <p>An implementation agent might write code. Another system can independently review the result. Automated tests can produce evidence. Policy can determine whether the evidence is sufficient. GitOps can control how an approved artifact reaches a Kubernetes cluster. Observability can determine what happened afterward. An incident workflow can react when reality doesn't match expectations.</p>
+
+      <p>The important part isn't that AI appears somewhere in that chain.</p>
+
+      <div class="callout"><strong>No single agent is the engineering organization. The system is.</strong></div>
+
+      <h2>Autonomy without trust isn't enough</h2>
+
+      <p>It's tempting to measure AI engineering by how autonomous the agent is.</p>
+
+      <p>Can it implement a ticket without help? Can it open a pull request? Can it deploy? Can it fix production?</p>
+
+      <p>Those are interesting capabilities, but they're not the metric I care about most.</p>
+
+      <p>I care about whether I can <strong>trust the system to operate when I'm not watching it</strong>.</p>
+
+      <p>Those are very different things.</p>
+
+      <p>An agent capable of modifying production infrastructure at 3:00 AM isn't necessarily an advanced engineering system. It might just be an extremely efficient way to create an incident.</p>
+
+      <p>The more autonomy I add, the more interested I've become in constraints: what an agent is authorized to change, what evidence must exist before a change progresses, which actions are reversible, which decisions require human approval, and where final authority lives.</p>
+
+      <p>These aren't theoretical questions anymore.</p>
+
+      <p>They're architecture.</p>
+
+      <h2>The goal isn't removing myself</h2>
+
+      <p>There's an obvious interpretation of this project that I want to avoid.</p>
+
+      <p>I'm not trying to remove humans from engineering.</p>
+
+      <p>I'm trying to remove myself from work that doesn't require me.</p>
+
+      <p>Those aren't the same goal.</p>
+
+      <p>I don't need to personally watch a deployment complete successfully. I shouldn't need to manually notice that a pod is crash-looping. I don't need to repeatedly check whether a dependency is healthy. I shouldn't have to remind an engineering system that a required test suite hasn't run.</p>
+
+      <p>Machines are extraordinarily good at that kind of work.</p>
+
+      <p>What I do want to own are consequential decisions: what we build, which risks are acceptable, what architecture we're committing to, when the system should stop, when automation should require escalation, and when the evidence is insufficient.</p>
+
+      <p>The Engineering OS should make those decisions easier for me—not quietly make all of them on my behalf.</p>
+
+      <h2>Why Kubernetes is part of this</h2>
+
+      <p>A lot of what I'm building runs on Kubernetes, and that's not accidental.</p>
+
+      <p>Kubernetes itself is built around an idea that fits this project remarkably well:</p>
+
+      <div class="callout"><strong>Declare what you want, continuously observe reality, and reconcile the difference.</strong></div>
+
+      <p>That model extends far beyond containers.</p>
+
+      <p>A deployment has a desired state. So can a release. So can a reliability requirement. So can an engineering policy. So can a synthetic check. So can evidence required before production.</p>
+
+      <p>I'm increasingly interested in controllers and platform APIs because they provide a way to encode operational knowledge into systems that continuously enforce it.</p>
+
+      <p>Documentation asks people to remember.</p>
+
+      <p>Platforms make the desired behavior the default.</p>
+
+      <h2>Production is the test</h2>
+
+      <p>The application I'm using to explore much of this is BusyNow, a real production application running on Kubernetes.</p>
+
+      <p>That's important because I don't want Engineering OS to become an elaborate demo.</p>
+
+      <p>Demos are easy to automate.</p>
+
+      <p>Production is where the assumptions get exposed.</p>
+
+      <p>Dependencies become unavailable. Networks get slow. Deployments fail. Credentials expire. Infrastructure drifts. APIs throttle requests. Agents misunderstand instructions. Tests pass while users still encounter problems.</p>
+
+      <p>An autonomous engineering system has to deal with that reality.</p>
+
+      <p>Otherwise I've just built an impressive CI pipeline.</p>
+
+      <h2>Can one engineer really do this?</h2>
+
+      <p>I don't know.</p>
+
+      <p>That's one of the reasons I'm writing about it.</p>
+
+      <p>My long-term question is much more interesting than whether an AI agent can implement a feature:</p>
+
+      <div class="callout"><strong>Can one engineer build and operate a serious software product serving thousands—or eventually tens of thousands—of users by surrounding themselves with sufficiently capable agents, automation, and platform infrastructure?</strong></div>
+
+      <p>There are obvious reasons the answer might be no. Customer support could become the bottleneck. Product decisions could become the bottleneck. Security could require specialization. Operational complexity could eventually overwhelm the system.</p>
+
+      <p>I don't want to assume the thesis is correct.</p>
+
+      <p>I want to test it.</p>
+
+      <p>And if the system eventually reaches a point where another engineer is required, I want to understand <strong>why</strong>.</p>
+
+      <h2>Complexity belongs somewhere</h2>
+
+      <p>I don't believe the goal of platform engineering should always be to eliminate complexity.</p>
+
+      <p>Some systems are inherently complicated. Distributed systems are complicated. Production infrastructure is complicated. Security is complicated. Reliability is complicated.</p>
+
+      <p>Trying to pretend otherwise often just pushes that complexity onto application developers or operators.</p>
+
+      <p>I'd rather concentrate complexity in the platform so that the experience of using the platform becomes simple.</p>
+
+      <p>The internals can be sophisticated.</p>
+
+      <p>The interface shouldn't have to be.</p>
+
+      <p>That's increasingly how I think about Engineering OS.</p>
+
+      <p>I may build complicated controllers, policies, evidence systems, agents, deployment workflows, and observability infrastructure underneath it.</p>
+
+      <p>But from my perspective as the person operating the company, the experience should eventually become much simpler:</p>
+
+      <div class="callout">
+        <strong>Here's what I want.</strong><br>
+        <strong>Here's what the system did.</strong><br>
+        <strong>Here's the evidence.</strong><br>
+        <strong>Here's what requires my decision.</strong>
+      </div>
+
+      <p>Everything else should increasingly disappear behind the platform.</p>
+
+      <h2>This blog is part of the experiment</h2>
+
+      <p>I'm going to document the project as I build it.</p>
+
+      <p>Not every commit and not every new tool.</p>
+
+      <p>I'm more interested in the engineering questions that emerge along the way.</p>
+
+      <p>How do you establish trust between autonomous agents? What should an AI agent actually be allowed to do in production? How do you prove that an automated engineering task was completed correctly? How should architecture constrain autonomous implementation? Where should humans remain in the control loop? Can Kubernetes controllers encode parts of an engineering organization's operating model? How do you design automation that fails safely?</p>
+
+      <p>And eventually:</p>
+
+      <div class="callout"><strong>How much engineering organization does one engineer actually need?</strong></div>
+
+      <p>I expect some of my assumptions to be wrong. I expect parts of the architecture to change. I expect to build things that turn out to be unnecessary.</p>
+
+      <p>That's fine.</p>
+
+      <p>The goal isn't to prove that one person can replace an engineering organization.</p>
+
+      <p>The goal is to find out how much of an engineering organization can be made into a system.</p>
+
+      <p>And then see what becomes possible when it is.</p>
+    </article>
+
+    <footer><a href="../">← All writing</a> · © 2026 Thomas Howard</footer>
+  </main>
+</body>
+</html>
