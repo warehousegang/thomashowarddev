@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta
+    name="description"
+    content="Becoming CTO didn't move me away from engineering. It changed the size of the system I'm responsible for."
+  >
+
+  <title>The System Got Bigger — Thomas Howard</title>
+
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body>
+  <main class="site">
+
+    <header>
+      <p class="site-title">
+        <a href="../../">Thomas Howard</a>
+      </p>
+
+      <nav>
+        <a href="../">Writing</a>
+        <a href="../../about/">About</a>
+        <a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X</a>
+        <a href="YOUR_LINKEDIN_URL" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </nav>
+    </header>
+
+    <article>
+
+      <h1>The System Got Bigger</h1>
+
+      <p class="deck">
+        Becoming CTO didn't move me away from engineering. It changed the size
+        of the system I'm responsible for.
+      </p>
+
+      <p class="meta">September 2026 · Thomas Howard</p>
+
+      <p>I became a CTO recently.</p>
+
+      <p>
+        I expected the job to make me think less about engineering.
+      </p>
+
+      <p>
+        So far, the opposite has happened.
+      </p>
+
+      <p>
+        The system just got bigger.
+      </p>
+
+      <p>
+        As a platform engineer, I've spent a lot of time thinking about desired
+        state.
+      </p>
+
+      <p>
+        You describe what a system should look like, observe what actually
+        exists, and build mechanisms that continuously reconcile the difference.
+      </p>
+
+      <p>
+        I'm starting to think engineering organizations aren't entirely
+        different.
+      </p>
+
+      <p>
+        There is a desired state: what the company needs to be able to build,
+        operate, secure, and support.
+      </p>
+
+      <p>
+        There is an observed state: the software, architecture, people,
+        processes, technical debt, incidents, costs, commitments, and
+        constraints that actually exist.
+      </p>
+
+      <p>
+        And somewhere between those two is the job.
+      </p>
+
+
+      <h2>I don't mean people are Kubernetes</h2>
+
+      <p>
+        There's an obvious danger in this analogy.
+      </p>
+
+      <p>
+        People aren't pods.
+      </p>
+
+      <p>
+        Organizations aren't deterministic systems.
+      </p>
+
+      <p>
+        You can't write a controller that reconciles an engineer into behaving
+        the way you want.
+      </p>
+
+      <p>
+        Nor should you try.
+      </p>
+
+      <p>
+        But the systems around people can absolutely be engineered.
+      </p>
+
+      <p>
+        That's the distinction I'm becoming increasingly interested in.
+      </p>
+
+      <div class="callout">
+        <strong>
+          Good engineering systems should reduce the amount of organizational
+          memory required to operate them.
+        </strong>
+      </div>
+
+      <p>
+        Testing shouldn't depend on someone remembering to run the right suite.
+      </p>
+
+      <p>
+        Production standards shouldn't depend on someone remembering what the
+        platform team decided six months ago.
+      </p>
+
+      <p>
+        Compliance evidence shouldn't require an archaeological expedition
+        every time someone asks for it.
+      </p>
+
+      <p>
+        Deployment safety shouldn't depend entirely on tribal knowledge.
+      </p>
+
+      <p>
+        And AI agents shouldn't receive enormous amounts of authority simply
+        because nobody designed better boundaries for them.
+      </p>
+
+      <p>
+        Those are engineering problems.
+      </p>
+
+
+      <h2>The code is only part of the system</h2>
+
+      <p>
+        Earlier in my career, the boundary around an engineering problem felt
+        much smaller.
+      </p>
+
+      <p>
+        There was an application.
+      </p>
+
+      <p>
+        There was infrastructure.
+      </p>
+
+      <p>
+        There was a deployment system.
+      </p>
+
+      <p>
+        There were bugs to fix and features to ship.
+      </p>
+
+      <p>
+        Those things haven't disappeared.
+      </p>
+
+      <p>
+        But as CTO, the boundary now includes things I previously experienced
+        mostly as constraints imposed on the engineering system.
+      </p>
+
+      <ul class="question-list">
+        <li>What should we build?</li>
+        <li>What should we buy?</li>
+        <li>What shouldn't exist anymore?</li>
+        <li>What technical debt actually matters?</li>
+        <li>Where should engineers spend their time?</li>
+        <li>What should be automated?</li>
+        <li>What requires human judgment?</li>
+        <li>What authority should an AI agent have?</li>
+        <li>How do we prove that our systems are secure and compliant?</li>
+        <li>How much complexity can the organization afford to operate?</li>
+      </ul>
+
+      <p>
+        Those decisions eventually become architecture.
+      </p>
+
+      <p>
+        They also become cost, reliability, developer experience, product
+        velocity, and organizational behavior.
+      </p>
+
+      <p>
+        The architecture diagram just doesn't show all of them.
+      </p>
+
+
+      <h2>Organizations accumulate manual reconciliation</h2>
+
+      <p>
+        Kubernetes has spoiled me in one particular way.
+      </p>
+
+      <p>
+        It made continuous reconciliation feel normal.
+      </p>
+
+      <p>
+        If I declare that three replicas should exist and one disappears, I
+        don't want a human being checking the cluster every fifteen minutes and
+        creating another one.
+      </p>
+
+      <p>
+        The system knows the desired state.
+      </p>
+
+      <p>
+        It observes reality.
+      </p>
+
+      <p>
+        It acts when the two diverge.
+      </p>
+
+      <p>
+        Engineering organizations contain an astonishing number of processes
+        that work nothing like this.
+      </p>
+
+      <p>
+        Instead, we build human reconciliation loops.
+      </p>
+
+      <div class="lifecycle">
+        Something changes → Someone notices → Someone remembers the process →
+        Someone asks someone else → Someone updates something
+      </div>
+
+      <p>
+        Sometimes that's appropriate.
+      </p>
+
+      <p>
+        Human judgment is useful.
+      </p>
+
+      <p>
+        But sometimes we've put a person in the loop because nobody ever
+        engineered the loop.
+      </p>
+
+      <p>
+        That's a very different thing.
+      </p>
+
+
+      <h2>This changes how I think about automation</h2>
+
+      <p>
+        I'm increasingly skeptical of automation whose only purpose is to make
+        an individual task faster.
+      </p>
+
+      <p>
+        That's useful, but it's the least interesting version of automation.
+      </p>
+
+      <p>
+        I'm more interested in removing entire coordination problems.
+      </p>
+
+      <p>
+        A test suite that runs faster is good.
+      </p>
+
+      <p>
+        A system that understands when tests should run, runs them, evaluates
+        the evidence, prevents an unsafe change from progressing, and records
+        what happened is something different.
+      </p>
+
+      <p>
+        The first automates a task.
+      </p>
+
+      <p>
+        The second starts encoding an engineering responsibility.
+      </p>
+
+      <div class="callout">
+        <strong>
+          The most interesting automation doesn't just save work. It removes
+          coordination.
+        </strong>
+      </div>
+
+
+      <h2>AI makes this question much more important</h2>
+
+      <p>
+        AI agents make it possible to automate engineering work that previously
+        required judgment, not just scripting.
+      </p>
+
+      <p>
+        That's powerful.
+      </p>
+
+      <p>
+        It also creates a temptation to solve every problem by giving the agent
+        more context, more tools, and more authority.
+      </p>
+
+      <p>
+        I don't think that's enough.
+      </p>
+
+      <p>
+        If an agent can write code, what determines whether that code is safe
+        to merge?
+      </p>
+
+      <p>
+        If it can create infrastructure, what infrastructure is it allowed to
+        create?
+      </p>
+
+      <p>
+        If it detects a production problem, can it change production?
+      </p>
+
+      <p>
+        If it makes a decision, what evidence should exist afterward?
+      </p>
+
+      <p>
+        Those aren't primarily prompting problems.
+      </p>
+
+      <p>
+        They're systems-design problems.
+      </p>
+
+      <p>
+        The interesting work is increasingly happening around the agent:
+        authority boundaries, policy, evidence, observability, rollback,
+        escalation, and interfaces.
+      </p>
+
+      <p>
+        In other words, the engineering system matters as much as the
+        intelligence operating inside it.
+      </p>
+
+
+      <h2>This is where the Engineering OS gets more interesting</h2>
+
+      <p>
+        I've been building something around BusyNow that I call an Engineering
+        OS.
+      </p>
+
+      <p>
+        The original experiment was straightforward:
+      </p>
+
+      <div class="callout">
+        <strong>
+          How much of an engineering organization can one engineer encode into
+          software?
+        </strong>
+      </div>
+
+      <p>
+        BusyNow gives me a useful environment for testing that question because
+        it's a real production system.
+      </p>
+
+      <p>
+        If the automation is bad, I have to deal with it.
+      </p>
+
+      <p>
+        If the platform is too complicated, I have to operate it.
+      </p>
+
+      <p>
+        If an abstraction doesn't work, production eventually exposes it.
+      </p>
+
+      <p>
+        Becoming CTO has given me another version of the same question.
+      </p>
+
+      <div class="callout">
+        <strong>
+          How much organizational friction exists because responsibilities that
+          should have been encoded into systems still depend on humans
+          remembering to perform them?
+        </strong>
+      </div>
+
+      <p>
+        I don't know the answer yet.
+      </p>
+
+      <p>
+        But I suspect it's a lot.
+      </p>
+
+
+      <h2>Not everything should become software</h2>
+
+      <p>
+        There's an important boundary here.
+      </p>
+
+      <p>
+        The goal isn't to remove humans from engineering.
+      </p>
+
+      <p>
+        Some decisions are ambiguous.
+      </p>
+
+      <p>
+        Some require context that isn't captured in a system.
+      </p>
+
+      <p>
+        Some require empathy, negotiation, creativity, or judgment.
+      </p>
+
+      <p>
+        And some decisions are important enough that a human should remain
+        responsible even if software could technically make them.
+      </p>
+
+      <p>
+        The challenge is figuring out which is which.
+      </p>
+
+      <p>
+        I want humans spending more time on the problems that genuinely require
+        humans.
+      </p>
+
+      <p>
+        I don't want them acting as unreliable cron jobs.
+      </p>
+
+
+      <h2>The system got bigger</h2>
+
+      <p>
+        My job didn't stop being engineering when I became CTO.
+      </p>
+
+      <p>
+        The boundary of what I'm engineering changed.
+      </p>
+
+      <p>
+        I'm still interested in reliable systems, good abstractions, constrained
+        interfaces, feedback loops, observability, and making complicated things
+        easier to operate.
+      </p>
+
+      <p>
+        It's just that now some of those systems contain software,
+        infrastructure, AI, processes, budgets, customers, and people.
+      </p>
+
+      <p>
+        That's a much larger system.
+      </p>
+
+      <p>
+        And I think I'm going to learn a lot from trying to understand it.
+      </p>
+
+    </article>
+
+    <footer>
+      © 2026 Thomas Howard
+    </footer>
+
+  </main>
+</body>
+</html>
