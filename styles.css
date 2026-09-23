@@ -5,6 +5,8 @@
   --rule: #e7e7e7;
   --code-bg: #f6f6f6;
   --max: 720px;
+  --sans: "Avenir Next", Avenir, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 /* Base */
@@ -22,8 +24,10 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: Georgia, "Times New Roman", serif;
-  line-height: 1.62;
+  font-family: var(--sans);
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: -0.006em;
 }
 
 .site {
@@ -40,21 +44,27 @@ header {
 .site-title {
   margin: 0 0 8px;
   font-size: 2rem;
-  line-height: 1.15;
+  line-height: 1.12;
   font-weight: 700;
+  letter-spacing: -0.035em;
 }
 
 .tagline {
   margin: 0;
   color: var(--muted);
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 /* Navigation */
 
 nav {
   margin-top: 18px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--sans);
   font-size: 0.94rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 nav a {
@@ -91,24 +101,29 @@ a:hover {
 h1,
 h2,
 h3 {
-  line-height: 1.18;
+  line-height: 1.15;
   margin: 0;
+  font-family: var(--sans);
+  font-weight: 700;
 }
 
 h1 {
   font-size: 2.35rem;
   margin-bottom: 14px;
+  letter-spacing: -0.04em;
 }
 
 h2 {
   font-size: 1.55rem;
   margin-top: 2.6em;
   margin-bottom: 0.75em;
+  letter-spacing: -0.03em;
 }
 
 h3 {
   font-size: 1.2rem;
   margin-top: 2em;
+  letter-spacing: -0.02em;
 }
 
 p {
@@ -128,15 +143,19 @@ article h2 {
 
 .deck {
   font-size: 1.12rem;
-  color: #333;
+  line-height: 1.55;
+  color: #444;
   margin-bottom: 0.8rem;
+  font-weight: 400;
+  letter-spacing: -0.012em;
 }
 
 .meta {
   color: var(--muted);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--sans);
   font-size: 0.82rem;
   margin-bottom: 3rem;
+  letter-spacing: 0;
 }
 
 /* Homepage / Writing index */
@@ -144,6 +163,7 @@ article h2 {
 .section-title {
   font-size: 1.35rem;
   margin-bottom: 1rem;
+  letter-spacing: -0.025em;
 }
 
 .post-list {
@@ -157,16 +177,20 @@ article h2 {
 }
 
 .post-list a {
+  font-family: var(--sans);
   font-size: 1.08rem;
+  line-height: 1.4;
   font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 .post-date {
   display: block;
   color: var(--muted);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--sans);
   font-size: 0.8rem;
   margin-top: 0.15rem;
+  letter-spacing: 0;
 }
 
 /* Project links */
@@ -187,7 +211,7 @@ article h2 {
 /* Architecture / lifecycle */
 
 .lifecycle {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--mono);
   font-size: 0.92rem;
   line-height: 1.7;
   background: var(--code-bg);
@@ -195,6 +219,7 @@ article h2 {
   overflow-x: auto;
   border-radius: 3px;
   margin: 1.5rem 0;
+  letter-spacing: 0;
 }
 
 /* Lists */
@@ -212,7 +237,8 @@ article h2 {
 
 code,
 pre {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--mono);
+  letter-spacing: 0;
 }
 
 pre {
@@ -237,8 +263,9 @@ footer {
   margin-top: 4rem;
   padding-top: 1rem;
   color: var(--muted);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--sans);
   font-size: 0.78rem;
+  letter-spacing: 0;
 }
 
 /* Mobile */
