@@ -1,9 +1,9 @@
 :root {
-  --bg: #fff;
-  --text: #171717;
-  --muted: #666;
-  --rule: #e7e7e7;
-  --code-bg: #f6f6f6;
+  --bg: #faf9f7;
+  --text: #1c1c1c;
+  --muted: #6b6b68;
+  --rule: #e5e3df;
+  --code-bg: #f2f1ee;
   --max: 720px;
   --sans: "Avenir Next", Avenir, "Helvetica Neue", Helvetica, Arial, sans-serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
