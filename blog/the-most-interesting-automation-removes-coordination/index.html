@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta
+    name="description"
+    content="We have gotten very good at automating engineering tasks. The bigger opportunity may be eliminating the coordination required between them."
+  >
+
+  <title>The Most Interesting Automation Removes Coordination | Thomas Howard</title>
+
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body>
+  <main class="site">
+
+    <header>
+      <p class="site-title">
+        <a href="../../">Thomas Howard</a>
+      </p>
+
+      <nav>
+        <a href="../">Writing</a>
+        <a href="../../about/">About</a>
+        <a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X</a>
+        <a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </nav>
+    </header>
+
+    <article>
+
+      <h1>The Most Interesting Automation Removes Coordination</h1>
+
+      <p class="deck">
+        We have gotten very good at automating engineering tasks. We have been
+        less successful at automating everything required to move work between them.
+      </p>
+
+      <p class="meta">September 2026 · Thomas Howard</p>
+
+      <p>
+        Most engineering organizations already automate a remarkable amount of work.
+        Builds happen automatically. Tests run in CI. Infrastructure is provisioned
+        from code. Deployments can happen without anyone touching a server. Now AI
+        agents can plan work, implement changes, review code, investigate failures,
+        and write tests.
+      </p>
+
+      <p>
+        Yet the path through all of those systems still frequently depends on people.
+        A developer finishes a change and tells someone it is ready. Someone decides
+        what needs to be tested. QA interprets the results. A ticket gets updated.
+        Someone asks whether the change is safe to release. Another person checks
+        whether the required evidence exists. None of those activities is particularly
+        expensive by itself, but together they create an enormous amount of coordination.
+      </p>
+
+      <p>
+        I've started to think this is where some of the most interesting engineering
+        automation exists. The opportunity isn't just automating the task. It's
+        eliminating the coordination required between tasks.
+      </p>
+
+      <div class="callout">
+        <strong>
+          The most interesting automation doesn't just save work. It removes coordination.
+        </strong>
+      </div>
+
+
+      <h2>We automated the work, not the workflow</h2>
+
+      <p>
+        Traditional engineering automation tends to optimize individual steps. Make
+        the build faster. Parallelize the tests. Automate the deployment. Generate the
+        infrastructure. Those are valuable improvements, but the organization often
+        remains responsible for orchestrating them. Someone still needs to know that
+        something happened, understand what it means, determine what should happen next,
+        and communicate that state somewhere else.
+      </p>
+
+      <div class="lifecycle">
+        Plan → Engineer → CI → QA → Review → Release
+      </div>
+
+      <p>
+        That creates a strange situation: we automate execution while humans remain
+        the control plane. A five-minute task isn't really a five-minute task if three
+        people have to coordinate around it. Handoffs introduce latency, context loss,
+        interruptions, ambiguity, and opportunities for work to disappear. Improving
+        the task by 50 percent might save a few minutes. Eliminating two unnecessary
+        handoffs could save hours.
+      </p>
+
+      <p>
+        AI agents make it possible to reconsider that architecture. If an issue contains
+        sufficiently clear intent and acceptance criteria, an engineering agent can plan
+        and implement the change. Deterministic verification can establish whether known
+        requirements were satisfied. An independent review can challenge the implementation.
+        The resulting pull request can contain the implementation, verification results,
+        and evidence required for a human to make the consequential decision.
+      </p>
+
+      <div class="lifecycle">
+        Intent → Plan → Implementation → Verification → Independent Review →
+        Pull Request + Evidence → Human Decision
+      </div>
+
+      <p>
+        The important part isn't that AI appears in the workflow. The important part
+        is what disappeared: much of the manual orchestration between stages.
+      </p>
+
+
+      <h2>Human in the loop should not mean human as the loop</h2>
+
+      <p>
+        Removing coordination is not the same thing as removing humans. There are
+        decisions I want humans to retain. Merging consequential changes, production
+        authority, security and risk acceptance, ambiguous product decisions, and
+        exceptions to established policy involve judgment or accountability. Making
+        an agent technically capable of performing those actions doesn't mean it should
+        have the authority to perform them.
+      </p>
+
+      <p>
+        But there is a difference between human judgment and human orchestration. A
+        human shouldn't need to tell one system that another system finished its work.
+        Someone shouldn't need to copy test results into a ticket because the release
+        process cannot find them. An engineer shouldn't need to remember which review
+        is required for a particular class of change if that requirement can be encoded.
+        A manager shouldn't need to inspect five systems just to determine the current
+        state of a piece of work.
+      </p>
+
+      <div class="callout">
+        <strong>
+          Human in the loop should not mean human as the loop.
+        </strong>
+      </div>
+
+      <p>
+        This is becoming one of the principles behind how I'm thinking about AI-first
+        engineering. Give software responsibility for deterministic orchestration. Give
+        agents bounded authority to perform work. Encode policy where it can actually
+        be enforced. Produce evidence automatically. Then make human intervention
+        explicit at the places where judgment, accountability, or risk actually justify it.
+      </p>
+
+      <p>
+        The goal isn't maximum autonomy. It's deliberate autonomy. If coordination
+        exists because judgment needs to happen, preserve it. If coordination exists
+        because information simply needs to move from one system to another, that's a
+        good candidate to engineer out.
+      </p>
+
+
+      <h2>The engineering process can become software</h2>
+
+      <p>
+        This changes how I think about developer productivity. The obvious question is
+        how much faster AI can make an engineer. I'm increasingly more interested in how
+        much organizational machinery we can make unnecessary. Repository instructions
+        can define how work should happen. Linear can carry intent and acceptance criteria.
+        Agents can perform bounded engineering work. Tests can provide deterministic
+        evidence. Independent review can challenge the result. CI can enforce gates.
+        Humans can retain specifically defined authority.
+      </p>
+
+      <p>
+        At that point, the engineering process isn't merely documented. Parts of it are
+        executable. That's an important distinction. A process written in a document
+        still depends on someone remembering it, interpreting it, and carrying it out.
+        A process encoded into the engineering system can observe state, enforce
+        boundaries, collect evidence, and move work forward without requiring someone
+        to manually coordinate every transition.
+      </p>
+
+      <p>
+        This is also where my Engineering OS experiment is heading. I'm less interested
+        in building an autonomous coding machine than I am in understanding how much of
+        the engineering organization itself can become an executable system. AI makes
+        that much more possible, but it also makes authority boundaries, evidence,
+        observability, rollback, escalation, and human accountability more important.
+      </p>
+
+      <p>
+        Not everything should become software. Some coordination exists because people
+        genuinely need to collaborate, disagree, negotiate, or make decisions under
+        uncertainty. Automating that away would make the organization worse. The useful
+        distinction is whether a handoff exists because judgment is required or simply
+        because our systems stop halfway through the job.
+      </p>
+
+
+      <h2>Finish the loop</h2>
+
+      <p>
+        I wrote recently that becoming CTO made me realize the system I'm responsible
+        for got bigger. I'm beginning to see coordination as another part of that system.
+        Some of it is leadership and collaboration. Some of it is valuable friction.
+        But a surprising amount exists because our engineering systems don't finish the
+        loop.
+      </p>
+
+      <p>
+        They run the test but don't interpret the result. They detect the failure but
+        don't route it. They generate evidence but don't attach it to the decision. They
+        finish the work but wait for a person to tell the next system that the work is
+        ready. Every one of those gaps turns a person into part of the infrastructure.
+      </p>
+
+      <p>
+        That's the automation I'm most interested in now. Not engineering without humans,
+        and not autonomous systems with unlimited authority. I want engineering systems
+        that handle the mechanics of coordination while making the places that require
+        human judgment explicit.
+      </p>
+
+      <div class="callout">
+        <strong>
+          Humans should spend less time coordinating machines and more time making
+          decisions that deserve humans.
+        </strong>
+      </div>
+
+    </article>
+
+    <footer>
+      © 2026 Thomas Howard
+    </footer>
+
+  </main>
+</body>
+</html>
