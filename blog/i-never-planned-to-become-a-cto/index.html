@@ -1,0 +1,318 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta
+name="description"
+content="I never planned to become a CTO. My path through quality engineering, product, automation, and platform engineering taught me that technical leadership starts with understanding the problem people actually need solved."
+
+>
+
+  <title>I Never Planned to Become a CTO: What Quality Engineering Taught Me About Building Products | Thomas Howard</title>
+
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body>
+  <main class="site">
+
+```
+<header>
+  <p class="site-title">
+    <a href="../../">Thomas Howard</a>
+  </p>
+
+  <nav>
+    <a href="../">Writing</a>
+    <a href="../../about/">About</a>
+    <a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub</a>
+    <a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X</a>
+    <a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+  </nav>
+</header>
+
+<article>
+
+  <h1>I Never Planned to Become a CTO: What Quality Engineering Taught Me About Building Products</h1>
+
+  <p class="deck">
+    I didn't follow the traditional engineering leadership ladder. I started in
+    quality engineering, learned to build products around real human pain, moved
+    deeper into engineering systems, and eventually found myself responsible for
+    the whole thing.
+  </p>
+
+  <p class="meta">September 2026 · Thomas Howard</p>
+
+  <p>
+    A few days ago I wrote about becoming CTO at Snap eHealth. The response was
+    much larger than I expected. More interesting than the number of people who
+    saw it, though, were the messages and emails that followed. People wanted to
+    know how I got there.
+  </p>
+
+  <p>
+    It's a reasonable question because my career doesn't look much like the
+    conventional path to CTO. I wasn't a software developer who became an
+    engineering manager. I wasn't a Director of Engineering and then a VP of
+    Engineering. I spent much of my career in Quality Engineering.
+  </p>
+
+  <p>
+    There was no ten-year plan behind that progression. I wasn't collecting
+    titles or deliberately assembling a CTO résumé. Most of the important moves
+    in my career happened because I found a problem that bothered me and kept
+    following it until I understood the system underneath it.
+  </p>
+
+  <div class="callout">
+    <strong>
+      I didn't climb a management ladder. I kept expanding the problem I was
+      willing to own.
+    </strong>
+  </div>
+
+
+  <h2>Quality taught me to distrust the happy path</h2>
+
+  <p>
+    Good quality engineering isn't really about finding bugs. Bugs are the
+    evidence. The more interesting question is why the system allowed the
+    failure to happen.
+  </p>
+
+  <p>
+    Quality taught me to look at software differently. I learned to question
+    assumptions, look for failure modes, explore the edges of a system, and pay
+    attention to the difference between what somebody intended to build and what
+    a person actually experienced.
+  </p>
+
+  <p>
+    Over time, finding the same classes of problems became less satisfying. If a
+    regression suite took weeks to execute, I didn't want to become better at
+    managing a weeks-long regression process. I wanted to know why we had one.
+    If engineers repeatedly introduced the same type of defect, I wanted to know
+    what was missing from the engineering system that allowed it. If releases
+    were painful, adding more release process wasn't necessarily the answer.
+  </p>
+
+  <p>
+    That curiosity pulled me into automation. Automation pulled me into CI/CD.
+    CI/CD exposed infrastructure problems. Infrastructure pulled me into AWS,
+    containers, Kubernetes, observability, reliability, and eventually platform
+    engineering.
+  </p>
+
+  <p>
+    At each step, the original problem turned out to be part of a larger system.
+    Testing couldn't be separated from delivery. Delivery couldn't be separated
+    from infrastructure. Infrastructure couldn't be separated from the developer
+    experience built on top of it.
+  </p>
+
+
+  <h2>The most important thing I learned wasn't technical</h2>
+
+  <p>
+    That progression explains how I became a much broader engineer. It doesn't
+    explain how I ended up leading technology.
+  </p>
+
+  <p>
+    The other part of the story is product.
+  </p>
+
+  <p>
+    Somewhere along the way I got really damn good at understanding consumer
+    pain. I learned to look past what somebody asked us to build and understand
+    what they were actually trying to accomplish.
+  </p>
+
+  <p>
+    That's a different skill from gathering requirements. A requirement might
+    tell you that a user wants a button in a particular place. Understanding the
+    pain means asking why they need the button at all. What are they trying to
+    accomplish? What is frustrating them today? What decision are they trying to
+    make? What unnecessary work have we forced them to perform?
+  </p>
+
+  <p>
+    Once I started thinking that way, product and engineering stopped looking
+    like separate activities.
+  </p>
+
+  <div class="callout">
+    <strong>
+      The job isn't to build what someone asked for. The job is to understand
+      the pain well enough to engineer a way to remove it.
+    </strong>
+  </div>
+
+  <p>
+    That sounds obvious, but engineering organizations get this wrong constantly.
+    We can build technically excellent solutions to problems nobody particularly
+    cares about. We can optimize architecture while the experience remains
+    frustrating. We can deliver every requirement and still miss the reason the
+    product needed to exist.
+  </p>
+
+  <p>
+    Learning to recognize that changed the kind of engineer I was becoming. I
+    cared about architecture and reliability, but I also cared deeply about
+    whether the thing we built made somebody's life better. Engineering became
+    the mechanism for solving the problem, not the objective itself.
+  </p>
+
+
+  <h2>Platform engineering made the customer bigger</h2>
+
+  <p>
+    Platform engineering reinforced that way of thinking because suddenly the
+    customer was often another engineer.
+  </p>
+
+  <p>
+    A developer waiting on an environment has pain. An engineer copying the same
+    configuration between repositories has pain. A team trying to understand why
+    a deployment failed has pain. Someone spending half a day figuring out how
+    to launch a new service has pain.
+  </p>
+
+  <p>
+    You can respond to those problems with documentation and process, or you can
+    treat them like product problems.
+  </p>
+
+  <p>
+    What is the developer trying to accomplish? Why is it difficult? Which
+    decisions should the platform make for them? Which complexity can disappear
+    behind a good interface? How do we make the safe path easier than the unsafe
+    one?
+  </p>
+
+  <p>
+    That's product thinking applied to engineering infrastructure.
+  </p>
+
+  <p>
+    It also changed how I thought about leadership. Instead of optimizing a team
+    or a technology in isolation, I became interested in the interfaces between
+    them. Product, engineering, quality, infrastructure, security, and operations
+    weren't independent functions. They were parts of the same delivery system.
+  </p>
+
+
+  <h2>I had to be willing to be bad at things again</h2>
+
+  <p>
+    None of this happened because I somehow accumulated expertise in every
+    engineering discipline. Moving outside Quality Engineering meant repeatedly
+    becoming a beginner again, usually while already being experienced enough to
+    know how uncomfortable that was.
+  </p>
+
+  <p>
+    I had to ask basic questions about infrastructure. I had to build things that
+    more experienced platform engineers could have built better. I had to learn
+    cloud architecture, Kubernetes, networking, reliability, system design, and
+    eventually a much broader set of product and organizational concerns.
+  </p>
+
+  <p>
+    There is a temptation once you're good at something to stay close to the
+    things that prove you're good at it. Starting over removes that protection.
+    You go from being the person with answers to the person asking questions
+    everyone else seems to already understand.
+  </p>
+
+  <p>
+    But almost every major expansion in my career required exactly that.
+  </p>
+
+  <p>
+    I still do it. Becoming CTO didn't suddenly make the unknowns disappear. It
+    dramatically increased their surface area.
+  </p>
+
+
+  <h2>The system kept getting bigger</h2>
+
+  <p>
+    Looking backward, there is a much cleaner story than there was while I was
+    living it.
+  </p>
+
+  <p>
+    Quality Engineering taught me to understand failure. Automation taught me to
+    remove repetitive work. Platform engineering taught me to think about the
+    systems that enable engineers to work. Product taught me to understand the
+    pain underneath what people say they want.
+  </p>
+
+  <p>
+    Eventually those ideas started converging.
+  </p>
+
+  <p>
+    Today the questions I'm interested in are larger. How should an engineering
+    organization work? How do architecture and product strategy reinforce each
+    other? How much coordination can we remove? Where should humans retain
+    explicit authority? How should AI change software delivery? How do we build
+    systems that allow engineers to move quickly without treating security,
+    reliability, or quality as somebody else's problem?
+  </p>
+
+  <p>
+    Those may sound like CTO questions, but to me they don't feel fundamentally
+    different from the questions that interested me in Quality Engineering. The
+    boundary of the system changed.
+  </p>
+
+  <div class="callout">
+    <strong>
+      Quality taught me to find where things break. Product taught me to
+      understand why the pain matters. Engineering taught me how to change the
+      system producing it.
+    </strong>
+  </div>
+
+  <p>
+    I don't know that my career is a path anyone should try to reproduce. It
+    certainly wasn't designed to be one. There are much more conventional ways
+    to become a CTO.
+  </p>
+
+  <p>
+    But I also don't think my path was as strange as it first appears.
+  </p>
+
+  <p>
+    I started by trying to understand why software failed and how that failure
+    affected the person using it. Then I kept moving outward: the test system,
+    the delivery system, the infrastructure, the product, the engineering
+    platform, and eventually the organization responsible for all of them.
+  </p>
+
+  <p>
+    I never planned to become a CTO.
+  </p>
+
+  <p>
+    <strong>I just kept following the problem.</strong>
+  </p>
+
+</article>
+
+<footer>
+  © 2026 Thomas Howard
+</footer>
+```
+
+  </main>
+</body>
+</html>
