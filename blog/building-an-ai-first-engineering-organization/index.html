@@ -1,0 +1,444 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta
+name="description"
+content="AI-first engineering in healthcare does not have to mean choosing between speed and control. Skills, agents, governed memory, sandboxing, deterministic gates, and automated evidence can let regulated engineering organizations move faster while reducing risk."
+
+>
+
+  <title>Building an AI-First Engineering Organization Without Losing Control | Thomas Howard</title>
+
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body>
+  <main class="site">
+
+
+<header>
+  <p class="site-title">
+    <a href="../../">Thomas Howard</a>
+  </p>
+
+  <nav>
+    <a href="../">Writing</a>
+    <a href="../../about/">About</a>
+    <a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub</a>
+    <a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X</a>
+    <a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+  </nav>
+</header>
+
+<article>
+
+  <h1>Building an AI-First Engineering Organization Without Losing Control</h1>
+
+  <p class="deck">
+    How skills, agents, governed memory, deterministic gates, sandboxing, and
+    automated evidence can let regulated engineering organizations move faster
+    without turning security and compliance into an afterthought.
+  </p>
+
+  <p class="meta">September 2026 · Thomas Howard</p>
+
+  <p>
+    There is a tension emerging inside engineering organizations adopting AI. We
+    want agents that can understand a problem, modify a repository, write tests,
+    review architecture, update documentation, and help move software toward
+    production. At the same time, the environments where some of this technology
+    matters most are the environments where we can least afford to lose control.
+  </p>
+
+  <p>
+    Healthcare makes that tension particularly obvious. We have HIPAA, PHI, vendor
+    agreements, access controls, audit requirements, security reviews, production
+    boundaries, change management, and an obligation to understand who or what
+    performed consequential actions. Now introduce an AI agent capable of changing
+    hundreds of files, creating infrastructure, or producing an entire implementation
+    in minutes.
+  </p>
+
+  <p>
+    The obvious response is to constrain it. Add more approvals, more reviews, more
+    policies, and more humans into the loop. Do enough of that and you've recreated
+    the same slow engineering organization with a very fast code generator sitting
+    inside it. I think there is another way to approach the problem.
+  </p>
+
+  <div class="callout">
+    <strong>
+      The goal isn't to make AI safe enough to participate in the old engineering
+      process. The goal is to build an engineering system where AI can move
+      extremely fast because the boundaries around it are explicit, deterministic,
+      and difficult to violate.
+    </strong>
+  </div>
+
+
+  <h2>The false choice between speed and control</h2>
+
+  <p>
+    Engineering organizations have spent years treating velocity and risk as opposing
+    forces. Move faster and you accept more risk. Add more controls and engineering
+    slows down. AI appears to make that tradeoff worse because the amount of work a
+    single agent can produce is enormous compared with the amount a human can
+    reasonably inspect in the same period of time.
+  </p>
+
+  <p>
+    But I think that framing assumes the engineering system around AI remains mostly
+    unchanged. If an agent can build a feature in an hour but then waits for a human
+    to determine what should be tested, another human to review the architecture,
+    another person to verify security requirements, and somebody else to decide
+    whether it is safe to deploy, we haven't really built an AI-first engineering
+    organization. We made one part of the existing organization much faster.
+  </p>
+
+  <p>
+    The bigger opportunity is to rethink the path around the code. Requirements,
+    implementation, testing, architecture review, security analysis, governance,
+    deployment evidence, observability, and work tracking do not have to remain
+    disconnected human-speed activities just because they historically were. A large
+    amount of the coordination between those systems can become part of the
+    engineering platform itself.
+  </p>
+
+
+  <h2>Governance should be part of the engineering system</h2>
+
+  <p>
+    A policy sitting in a document isn't much of a control. Neither is a security
+    rule somebody has to remember, a Slack message telling engineers not to touch
+    production, or a checklist somebody is expected to complete before a release.
+    Those things can communicate expectations, but they still depend on people
+    remembering and correctly interpreting them at exactly the right moment.
+  </p>
+
+  <p>
+    Governance becomes much more interesting when the engineering environment can
+    actually enforce it. An agent working in a repository should know what it owns,
+    what it cannot touch, which architectural boundaries exist, which tests must
+    pass, what evidence it must produce, what requires independent review, which
+    credentials it can access, and whether it has any authority to merge or deploy.
+    Those constraints should travel with the engineering system instead of living
+    somewhere outside it.
+  </p>
+
+  <p>
+    More importantly, the agent shouldn't get to decide whether it followed those
+    rules. AI can help interpret policy, review architecture, identify risk, and
+    reason about complicated changes, but the system surrounding the agent should
+    determine whether the required evidence actually exists. That distinction is
+    important because the same model performing the work cannot also be the ultimate
+    authority on whether its own work is compliant.
+  </p>
+
+  <div class="callout">
+    <strong>
+      AI can reason inside the system. It shouldn't be able to reason its way
+      around the system.
+    </strong>
+  </div>
+
+
+  <h2>Skills turn institutional knowledge into engineering infrastructure</h2>
+
+  <p>
+    One of the more interesting problems I've encountered while building AI-first
+    engineering systems is how much of an organization exists outside its source
+    code. Every mature engineering organization has an enormous amount of knowledge
+    that isn't obvious from opening a repository. This service owns this boundary.
+    Don't use this database for that. Never send this class of data to that vendor.
+    Production authentication works this way. This repository follows this deployment
+    pattern. This legacy system has a failure mode that isn't obvious until you've
+    broken it once.
+  </p>
+
+  <p>
+    Historically, that knowledge lived in people's heads, scattered documentation,
+    old Slack conversations, pull request comments, and tribal knowledge. A new
+    engineer slowly learned it by working with the system and talking to the people
+    who had been there longer. That model already had problems with humans. It
+    becomes a much bigger problem when autonomous agents are expected to work across
+    an engineering organization.
+  </p>
+
+  <p>
+    Agents need context that is explicit, versioned, discoverable, and specific to
+    the system they're modifying. This is where skills become important. A repository
+    skill can describe how an agent is expected to operate within a particular
+    technical domain: architectural conventions, testing expectations, deployment
+    patterns, terminology, known hazards, and the boundaries surrounding the system.
+  </p>
+
+  <p>
+    That changes skills from prompt engineering into something closer to engineering
+    infrastructure. The agent doesn't have to rediscover the organization every time
+    it starts working, and the organization's knowledge becomes something that can be
+    reviewed, versioned, tested, and changed alongside the software it governs. When
+    a rule changes, we can change the source of that knowledge instead of hoping
+    every engineer and every agent learns about it independently.
+  </p>
+
+
+  <h2>Agents should have jobs, not unlimited authority</h2>
+
+  <p>
+    I don't think the future of AI engineering is one enormous agent with access to
+    everything. I think it looks much more like separation of duties. An
+    implementation agent can build. A quality agent can test. An architecture agent
+    can evaluate boundaries. A security agent can inspect risk. A deployment agent
+    can understand release state. A governance system can determine whether the
+    evidence produced by those systems satisfies the organization's rules.
+  </p>
+
+  <p>
+    These agents can share context without sharing authority. The architecture
+    reviewer shouldn't quietly rewrite the implementation it is supposed to
+    independently review. The implementation agent shouldn't be able to declare its
+    own architecture compliant. A quality agent doesn't necessarily need deployment
+    authority, and an architecture reviewer doesn't necessarily need production
+    credentials.
+  </p>
+
+  <p>
+    We've used separation of duties in security, infrastructure, finance, and
+    regulated systems forever because concentrated authority creates risk. AI doesn't
+    make that principle obsolete. If anything, the speed and scale at which agents
+    can operate makes the principle more important. The interesting architectural
+    problem becomes designing agents with enough capability to do meaningful work
+    while giving each of them only the authority required for its job.
+  </p>
+
+
+  <h2>Memory has to be governed too</h2>
+
+  <p>
+    Agents without memory repeatedly rediscover the same organization. They forget
+    why an architectural decision was made, what happened the last time a service
+    changed, which constraint was discovered during an incident, which implementation
+    pattern has already been rejected, and whether an exception was permanent or
+    temporary. That wastes time, but it can also recreate risks the organization has
+    already learned how to avoid.
+  </p>
+
+  <p>
+    An AI-first organization needs a memory architecture just as much as it needs a
+    source-code architecture. But memory can't simply mean giving a model every
+    conversation the company has ever had. Some knowledge belongs in repository
+    history. Some belongs in skills. Some belongs in architecture decisions. Some
+    belongs in the work-management system. Some belongs in operational evidence.
+    Some information should expire.
+  </p>
+
+  <p>
+    In healthcare, the boundaries become even more important. Sensitive information
+    should not casually flow into a general-purpose memory system simply because
+    retaining more context makes an agent more useful. What an agent is allowed to
+    remember, where that information is stored, who can retrieve it, how long it
+    survives, and which agents can see it are governance questions, not convenience
+    settings.
+  </p>
+
+  <div class="callout">
+    <strong>
+      The interesting problem isn't giving AI infinite memory. It's giving AI
+      governed memory.
+    </strong>
+  </div>
+
+
+  <h2>Work management can become part of the control plane</h2>
+
+  <p>
+    This is where tools like Linear become more interesting to me than ticket
+    trackers. A well-structured work system can describe intent. What was authorized?
+    Why are we changing it? Which repository owns the work? What are the acceptance
+    criteria? Does the change require architecture or security review? What evidence
+    is required before the work can be considered complete?
+  </p>
+
+  <p>
+    That gives agents something humans historically carried around implicitly: the
+    authorized scope of a change. The ticket becomes more than a request somebody
+    eventually marks complete. It becomes part of the contract between business
+    intent and implementation, and agents can use that contract to understand what
+    they are actually authorized to do.
+  </p>
+
+  <p>
+    It also creates the possibility of closing loops that currently require people
+    to move information between systems. An implementation can produce evidence that
+    updates the work state. A review can identify a missing requirement and route the
+    work back. A successful deployment can become part of the evidence attached to
+    the original change. The objective isn't to automate Linear. It's to stop treating
+    work management and engineering execution as completely separate systems.
+  </p>
+
+
+  <h2>Sandbox aggressively. Trust selectively.</h2>
+
+  <p>
+    AI agents should be able to experiment, but that doesn't mean they need
+    unrestricted environments. Give them branches, ephemeral environments, narrowly
+    scoped credentials, synthetic or appropriately controlled test data, and isolated
+    execution. Let them attempt things, make mistakes, discard bad approaches, and
+    iterate quickly where failure has a limited blast radius.
+  </p>
+
+  <p>
+    An agent being able to attempt something is very different from an agent having
+    the authority to make that thing real. If an agent can safely attempt a change
+    ten times inside a sandbox, test each approach, discard nine, and present one
+    validated candidate, there is little value in slowing down its ability to
+    experiment. The important boundary is where experimentation becomes an action
+    with consequences.
+  </p>
+
+  <div class="callout">
+    <strong>
+      Make experimentation cheap and authority expensive.
+    </strong>
+  </div>
+
+  <p>
+    I think that separation is one of the most powerful architectural ideas available
+    to AI-first engineering. We can be extremely permissive about what an agent is
+    allowed to think about, generate, test, and attempt while being extremely
+    restrictive about what identities can modify protected systems, merge protected
+    branches, access sensitive data, or deploy into production. Speed and control
+    stop being opposites when they operate on different sides of that boundary.
+  </p>
+
+
+  <h2>The final boundary has to be deterministic</h2>
+
+  <p>
+    There is a fundamental problem with using AI as the final governance mechanism:
+    AI is probabilistic, while security controls cannot be. An LLM can review
+    architecture, identify suspicious behavior, and reason about a complicated change
+    in ways static rules cannot. But "the model said it looks good" cannot become the
+    final security boundary.
+  </p>
+
+  <p>
+    Some things need binary answers. Did the required test suite pass? Was the artifact
+    built from the reviewed commit? Was the change independently reviewed? Did the
+    dependency scan pass? Was an unauthorized directory modified? Does this identity
+    actually have permission to perform this operation? Is the thing being deployed the
+    thing that was approved?
+  </p>
+
+  <p>
+    Those controls should remain deterministic. AI can produce evidence, reason about
+    evidence, and identify risks humans or static systems might miss. But the system
+    still needs hard boundaries the model cannot negotiate away.
+  </p>
+
+
+  <h2>Compliance can become evidence instead of ceremony</h2>
+
+  <p>
+    This may ultimately be one of the biggest opportunities for regulated engineering.
+    Traditional compliance creates enormous amounts of human ceremony because
+    organizations need evidence that controls occurred. Someone approved the work.
+    Someone reviewed the change. The correct tests ran. The right artifact was
+    deployed. Access was appropriately restricted. The organization can prove what
+    happened afterward.
+  </p>
+
+  <p>
+    In many companies, evidence for those controls is assembled manually long after
+    the engineering work happened. That is expensive, slow, and surprisingly fragile
+    because the compliance process is trying to reconstruct what the engineering
+    system already knew at the moment the work occurred. An AI-native engineering
+    system creates an opportunity to make evidence a consequence of doing the work
+    instead.
+  </p>
+
+  <p>
+    The work item establishes intent. The repository establishes exactly what
+    changed. Agent activity establishes what automated systems attempted. CI
+    establishes verification. Governance evaluates the required evidence. Identity
+    establishes who or what performed an action. The deployment system establishes
+    what reached an environment. Observability establishes what happened afterward.
+    Those aren't separate compliance artifacts somebody has to invent later. They are
+    the history of the change.
+  </p>
+
+  <p>
+    That doesn't eliminate HIPAA, SOC 2, security review, risk management, or human
+    accountability. It changes where those concerns live. Instead of compliance being
+    an administrative process wrapped around engineering, more of the evidence needed
+    to demonstrate control can become an architectural property of the engineering
+    system itself.
+  </p>
+
+
+  <h2>Humans shouldn't disappear</h2>
+
+  <p>
+    There is a temptation in AI engineering to measure sophistication by how
+    completely humans have been removed from the process. I think that's another
+    mistake. The objective isn't zero humans. It's putting human judgment where human
+    judgment has the highest value and removing the repetitive coordination that
+    prevents people from spending time on those decisions.
+  </p>
+
+  <p>
+    Should we build this? Does this risk make sense for the business? Should this
+    architecture become an organizational standard? Should this vendor ever receive
+    this class of data? Is this incident severe enough to stop releases? Those are
+    consequential questions involving judgment, accountability, context, and business
+    risk.
+  </p>
+
+  <p>
+    Those are very different from determining whether 147 tests passed, whether
+    required architecture evidence exists, whether an artifact came from the reviewed
+    commit, whether the correct security scan ran, or whether somebody remembered to
+    update a ticket. We shouldn't confuse keeping humans accountable for important
+    decisions with requiring humans to manually coordinate every mechanical step
+    surrounding those decisions.
+  </p>
+
+  <div class="callout">
+    <strong>
+      Humans should own judgment. Machines should eliminate ceremony.
+    </strong>
+  </div>
+
+
+  <h2>The paradox of AI governance</h2>
+
+  <p>
+    The surprising thing I've learned while building toward this model is that more
+    governance can actually produce more speed. Not governance as meetings,
+    committees, or a forty-page document engineers and agents are expected to
+    remember. Governance as code, identity, isolation, evidence, automated
+    verification, explicit authority, and machine-readable organizational knowledge.
+  </p>
+
+  <p>
+    When those boundaries become strong enough, you can allow AI to operate much more
+    aggressively inside them. Agents can write more code, attempt more solutions,
+    perform more analysis, run more tests, review more changes, and coordinate more
+    of the engineering system because the consequential boundaries no longer depend
+    entirely on trusting the agent to behave correctly.
+  </p>
+
+  <p>
+    That changes the relationship between speed and control. The organizations that
+    move fastest may not be the ones that give AI the most unrestricted access. They
+    may be the ones that build the strongest boundaries and therefore can safely give
+    AI enormous freedom within those boundaries.
+  </p>
+
+  <p>
+    I think
