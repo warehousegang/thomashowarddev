@@ -45,7 +45,7 @@ content="AI-first engineering in healthcare does not have to mean choosing betwe
     without turning security and compliance into an afterthought.
   </p>
 
-  <p class="meta">September 2026 · Thomas Howard</p>
+  <p class="meta">October 2026 · Thomas Howard</p>
 
   <p>
     There is a tension emerging inside engineering organizations adopting AI. We
@@ -414,15 +414,76 @@ content="AI-first engineering in healthcare does not have to mean choosing betwe
     </strong>
   </div>
 
+    <h2>Governance has to earn its complexity</h2>
+
+  <p>
+    There is another failure mode in AI-first engineering that deserves just as much
+    attention as moving too fast without controls: building so much machinery around
+    AI that the machinery becomes the bottleneck.
+  </p>
+
+  <p>
+    Once you see how quickly agents can generate and modify software, it is tempting
+    to surround them with increasingly sophisticated architecture reviewers, policy
+    engines, approval workflows, agent hierarchies, evidence pipelines, and automated
+    gates. Each addition can sound reasonable in isolation. Eventually, though, the
+    organization can recreate the same problem it was trying to escape. The code is
+    produced in minutes, but getting that code through the engineering system takes
+    hours or days.
+  </p>
+
+  <p>
+    Every control has a cost, and that cost should buy down a real risk. If a
+    deterministic test can answer the question, we probably don't need an agent to
+    answer it. If CI can enforce a boundary, we probably don't need another approval
+    workflow. If repository-level instructions provide enough context, we don't need
+    to build a centralized system to solve the same problem. And when a control
+    repeatedly blocks safe, routine work without finding meaningful problems, the
+    control itself deserves scrutiny.
+  </p>
+
+  <p>
+    This is especially important when building an MVP. The governance appropriate
+    for a mature system handling consequential production changes is not necessarily
+    the governance required while proving a product or establishing its initial
+    architecture. Controls should be proportional to the risk, authority, and blast
+    radius of the action being performed.
+  </p>
+
+  <div class="callout">
+    <strong>
+      The goal isn't maximum governance. It's the minimum governance necessary to
+      make high-speed engineering safe.
+    </strong>
+  </div>
+
+  <p>
+    Simplicity should be a design constraint for the engineering platform itself.
+    Start with explicit boundaries, least-privilege access, isolation, deterministic
+    verification, and clear points of human accountability. Add additional machinery
+    when an actual failure mode demonstrates that it is necessary. A control should
+    exist because it prevents or detects something important, not because a more
+    sophisticated system is possible to build.
+  </p>
+
+  <p>
+    This creates a useful test for every piece of an AI engineering platform: does
+    this control allow us to move faster with acceptable risk, or has maintaining the
+    control become work of its own? AI-first engineering should reduce coordination
+    overhead, not automate the creation of more of it.
+  </p>
 
   <h2>The paradox of AI governance</h2>
 
   <p>
-    The surprising thing I've learned while building toward this model is that more
-    governance can actually produce more speed. Not governance as meetings,
+    The surprising thing I've learned while building toward this model is that the
+    right governance can actually produce more speed. Not governance as meetings,
     committees, or a forty-page document engineers and agents are expected to
     remember. Governance as code, identity, isolation, evidence, automated
     verification, explicit authority, and machine-readable organizational knowledge.
+    The distinction matters. More governance is not inherently better. The right
+    controls remove uncertainty and allow greater autonomy; the wrong controls simply
+    create another queue.
   </p>
 
   <p>
@@ -440,5 +501,20 @@ content="AI-first engineering in healthcare does not have to mean choosing betwe
     AI enormous freedom within those boundaries.
   </p>
 
-  <p>
-    I think
+  <div class="callout">
+    <strong>
+      The question isn't whether we can trust AI enough to let it build healthcare
+      software. It's whether we can build engineering systems strong enough that
+      trust is no longer the primary control.
+    </strong>
+  </div>
+
+</article>
+
+<footer>
+  © 2026 Thomas Howard
+</footer>
+
+  </main>
+</body>
+</html>
