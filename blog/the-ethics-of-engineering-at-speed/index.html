@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An essay on AI-assisted software engineering, executable governance, human accountability, and safety in healthcare technology.">
+  <title>The Ethics of Engineering at AI Speed: Who Is Responsible When the Machine Writes the Code? | Thomas Howard</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <main class="site">
+    <header>
+      <p class="site-title"><a href="../../">Thomas Howard</a></p>
+      <nav>
+        <a href="../">Writing</a>
+        <a href="../../about/">About</a>
+        <a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X</a>
+        <a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </nav>
+    </header>
+    <article>
+      <h1>The Ethics of Engineering at AI Speed: Who Is Responsible When the Machine Writes the Code?</h1>
+      <p class="deck">AI can now produce software faster than teams can reasonably inspect it. The question is no longer just how quickly we can build, but how we prove that what we build deserves to be trusted.</p>
+      <p class="meta">October 2026 · Thomas Howard</p>
+  <p>
+    Something about AI-assisted software engineering has been bothering me. Not because I think we should slow it down. Quite the opposite. I use these tools constantly, and the amount of work a small engineering team can accomplish now is remarkable.
+  </p>
+  <p>
+    What bothers me is the widening gap between how quickly we can produce software and how confidently we can say it is correct. An agent can change dozens of files, write tests, refactor a service, and propose a pull request before I&#x27;ve finished understanding the original problem. That&#x27;s impressive. It is also a fundamentally different engineering environment from the one most of our processes were designed for.
+  </p>
+  <p>
+    I spent years in quality engineering learning that a passing test suite is not the same thing as a trustworthy system. AI has made that lesson more important, not less. When a machine writes the code, who is responsible for what happens when that code reaches a customer, a production system, or a patient?
+  </p>
+  <h2>The bottleneck has moved</h2>
+  <p>
+    For a long time, writing software was the expensive part. Engineers spent hours translating requirements into code, connecting services, debugging edge cases, and working through unfamiliar frameworks. Reviews, testing, and deployment happened around that work.
+  </p>
+  <p>
+    Now the generation step can be astonishingly fast. The limiting factor is increasingly our ability to understand what changed, determine whether it was the right change, and establish enough evidence to release it safely.
+  </p>
+  <p>
+    That is not an argument against AI. It is an argument for updating the engineering system around it. If our output increases tenfold while our ability to validate it stays the same, we haven&#x27;t necessarily become ten times more productive. We may simply have created a larger queue of unverified decisions.
+  </p>
+  <p>
+    And sometimes the dangerous changes are not obvious. An agent might fix a database query and subtly change which records are returned. It might simplify authorization logic in a way that passes happy-path tests. It might make an interface cleaner while removing information someone depends on to do their job.
+  </p>
+  <div class="callout">
+    <strong>The bottleneck is no longer only writing software. It is proving that rapidly generated software deserves to be trusted.</strong>
+  </div>
+  <h2>A green checkmark is not a moral argument</h2>
+  <p>
+    I&#x27;ve watched engineering organizations treat green pipelines as evidence that a change is ready. I understand why. Automated checks are visible, repeatable, and reassuring. I helped build those systems because they are essential.
+  </p>
+  <p>
+    But tests only demonstrate what they were designed to test. They cannot automatically tell us whether we asked the right question in the first place. An AI agent can generate an implementation and generate tests that confirm its own interpretation of the requirement. Both can be internally consistent and still wrong.
+  </p>
+  <p>
+    Imagine a healthcare workflow that identifies patients eligible for outreach. A change improves query performance and all the tests pass. But a subset of patients with incomplete records no longer appears on the roster. Nothing crashes. No alert fires. The system is faster, and the clinical team sees fewer patients than it should.
+  </p>
+  <p>
+    That is an engineering defect with a human consequence. It is also a reminder that correctness is larger than compilation, coverage, or a successful deployment.
+  </p>
+  <h2>The problem with “human in the loop”</h2>
+  <p>
+    We often respond to concerns about autonomous systems by saying a human will review the output. I think that is necessary in some situations, but it is not a complete strategy.
+  </p>
+  <p>
+    What does meaningful review look like when an agent produces a thousand-line change in minutes? When several agents are working in parallel? When a reviewer is expected to understand unfamiliar code, a complicated dependency graph, and the implications of a change across multiple services?
+  </p>
+  <p>
+    A human clicking Approve is not automatically human oversight. If the reviewer lacks the time, context, or evidence to challenge the change, the approval can become ceremonial.
+  </p>
+  <p>
+    The answer is not to eliminate people from consequential decisions. It is to give them better evidence and reserve their attention for the decisions that actually require judgment. I want reviewers to see what behavior changed, what risks were identified, what tests were run, which assumptions remain unverified, and whether the change affects sensitive data or clinical workflows.
+  </p>
+  <h2>Governance should be executable</h2>
+  <p>
+    I have little patience for governance that lives in a document nobody consults while the actual engineering system continues unchanged. Policies matter. They establish responsibility and boundaries. But if a rule is important enough to protect patients or production systems, we should ask whether we can enforce it in the delivery process.
+  </p>
+  <p>
+    An AI agent should not be able to modify critical eligibility logic and have that change treated like a documentation update. A dependency with uncertain provenance should not silently become part of a production service. A deployment that changes authorization behavior should carry different evidence requirements from a cosmetic adjustment.
+  </p>
+  <p>
+    This is where architecture, quality engineering, and governance begin to converge. We can classify changes by consequence. We can require additional validation for high-risk paths. We can compare before-and-after behavior using representative datasets. We can maintain audit trails of the instructions, tools, approvals, and code revisions involved.
+  </p>
+  <p>
+    We can also make the safe path the easy path. If the engineering platform automatically supplies the right checks and review requirements, safety becomes part of how work moves rather than an extra ceremony someone has to remember.
+  </p>
+  <div class="callout">
+    <strong>If governance matters, it should change what the engineering system permits—not just what the policy document says.</strong>
+  </div>
+  <h2>Trust extends beyond the code we wrote</h2>
+  <p>
+    There is another layer here that the broader open-model ecosystem makes impossible to ignore. We increasingly build on models, datasets, libraries, and tools created outside our organizations. Hugging Face and similar ecosystems make extraordinary capabilities accessible to teams that could never train these systems themselves.
+  </p>
+  <p>
+    That openness is valuable. But downloading a model or integrating an agent tool also means accepting questions about provenance, licensing, data handling, dependencies, and what the component can do once it is running. A model artifact is not trustworthy simply because it is popular. An agent tool is not safe simply because it makes a workflow convenient.
+  </p>
+  <p>
+    The supply chain for AI-assisted engineering is wider than our source repository. We need to know what we are running, where it came from, what access it has, how it is evaluated, and how we can revoke or replace it when something changes.
+  </p>
+  <p>
+    The same principle applies to coding agents. Their permissions should match the task. Reading source code is different from changing infrastructure. Opening a pull request is different from deploying to production. Access to synthetic test data is different from access to real patient information.
+  </p>
+  <h2>Autonomy should follow consequence</h2>
+  <p>
+    I don&#x27;t think every AI action needs a committee. That would destroy much of the benefit and encourage teams to work around the controls. The more useful question is how much authority a system should have for a particular kind of decision.
+  </p>
+  <p>
+    Let an agent update documentation, run isolated tests, or propose a low-risk refactor with relatively little friction. Require stronger evidence when it touches authentication, data access, billing, clinical eligibility, or patient communication. Keep explicit human authorization for actions where a mistake could have serious consequences.
+  </p>
+  <p>
+    And those boundaries should be based on what the change can affect, not merely which file it touches. A one-line change to a query can matter more than a five-hundred-line change to a user interface.
+  </p>
+  <p>
+    This is not about distrusting AI. It is about understanding the scope of authority we&#x27;re granting it. We already apply similar thinking to production access, financial approvals, and security controls. AI makes that discipline more urgent because it can act at a speed and scale that magnifies both good decisions and bad ones.
+  </p>
+  <h2>We need to observe the things that do not happen</h2>
+  <p>
+    Traditional observability tells us when services fail, requests slow down, or error rates increase. Those signals remain essential. But some of the most serious problems in healthcare software look like successful operations.
+  </p>
+  <p>
+    An outreach workflow finishes without errors, but misses a category of patients. An eligibility engine responds quickly, but applies the wrong rule. An AI assistant completes its task, but omits an exception that would have changed a human decision.
+  </p>
+  <p>
+    If we only measure uptime and successful execution, these failures can remain invisible. We need behavioral monitoring: population comparisons, exclusion analysis, unexpected distribution shifts, and checks that important business and clinical invariants still hold after changes.
+  </p>
+  <p>
+    I keep coming back to a simple question: what would tell us that the system is confidently doing the wrong thing? If we cannot answer it, we do not yet have enough evidence to trust the automation.
+  </p>
+  <h2>The responsibility does not transfer to the model</h2>
+  <p>
+    There is a temptation to describe an AI failure as something the model did, as though the organization were merely a bystander. I don&#x27;t accept that framing.
+  </p>
+  <p>
+    The model did not decide its own permissions. It did not define the release process, approve the production boundary, or choose which outcomes the business would measure. People made those decisions, even if they made them indirectly through tools and configuration.
+  </p>
+  <p>
+    Engineering leaders are responsible for creating the conditions under which software is produced and released. Product leaders are responsible for defining intended outcomes. Clinical leaders must be involved when workflows can affect care. Security and compliance teams have critical roles, but they cannot substitute for ownership inside engineering.
+  </p>
+  <p>
+    Accountability is not the same thing as manually inspecting every line of code. It means designing a system in which important decisions are visible, controls are enforceable, and failures can be detected, explained, and corrected.
+  </p>
+  <div class="callout">
+    <strong>When the machine writes the code, the responsibility still belongs to the people who authorized the system.</strong>
+  </div>
+  <h2>The kind of engineering organization I want to build</h2>
+  <p>
+    I am genuinely excited about what AI makes possible. Small teams can tackle problems that once required much larger organizations. Engineers can spend less time on repetitive implementation and more time understanding customers, architecture, and difficult tradeoffs. We should embrace that.
+  </p>
+  <p>
+    But I don&#x27;t want an organization that celebrates the number of lines an agent generated or the number of pull requests it merged. Those are activity metrics. I want to know whether we solved the right problem, whether we preserved the behaviors that matter, and whether we can explain the consequences of what we shipped.
+  </p>
+  <p>
+    My years in quality engineering taught me to look beyond the happy path. Platform engineering taught me to build guardrails into the systems people use every day. Working in healthcare has made the stakes of those choices impossible to ignore.
+  </p>
+  <p>
+    The future I want is not slower engineering. It is engineering where speed and safety reinforce each other because the architecture makes trust measurable. AI should help us build the evidence, not just the code.
+  </p>
+  <p>
+    When the machine writes the code, responsibility doesn&#x27;t disappear. It becomes our job to design the system that decides what the machine is allowed to do—and what must be proven before anyone else has to live with the result.
+  </p>
+    </article>
+    <footer>© 2026 Thomas Howard</footer>
+  </main>
+</body>
+</html>
