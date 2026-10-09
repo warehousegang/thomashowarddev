@@ -1,0 +1,125 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="description" content="The most consequential decisions artificial intelligence makes in healthcare may be the ones nobody realizes it is making.">
+
+  <title>When AI Decides Who Gets Care: The Invisible Ethics of Healthcare Automation | Thomas Howard</title>
+
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body>
+  <main class="site">
+
+```
+<header>
+  <p class="site-title">
+    <a href="../../">Thomas Howard</a>
+  </p>
+
+  <nav>
+    <a href="../">Writing</a>
+    <a href="../../about/">About</a>
+    <a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub</a>
+    <a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X</a>
+    <a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+  </nav>
+</header>
+
+<article>
+  <h1>When AI Decides Who Gets Care: The Invisible Ethics of Healthcare Automation</h1>
+  <p class="deck">The most consequential decisions artificial intelligence makes in healthcare may be the ones nobody realizes it is making.</p>
+  <p class="meta">October 2026 · Thomas Howard</p>
+  <p>There is a question I have been thinking about lately as artificial intelligence becomes more deeply embedded in healthcare technology: At what point does a system designed to improve operational efficiency begin making decisions about who receives care?</p>
+  <p>Not explicitly. Not through a diagnosis or a treatment recommendation. But through the thousands of smaller decisions that happen before a patient ever sees a physician.</p>
+  <p>Which patients get contacted first? Which care gaps are considered urgent? Which patients receive follow-up reminders? Which records are flagged for human review? And which patients quietly fall to the bottom of the list?</p>
+  <p>These look like operational decisions. In reality, they can have clinical consequences.</p>
+  <p>After years leading quality engineering teams and building healthcare technology, I find the intersection of engineering, artificial intelligence, and medical ethics increasingly difficult to ignore. AI can now interpret records, prioritize work, execute workflows, and communicate with patients at a scale that would have seemed extraordinary a few years ago.</p>
+  <p>The engineering possibilities are enormous. But I wonder whether we are asking the right questions about what these systems are actually doing.</p>
+
+  <h2>The ethical decision nobody intended to make</h2>
+  <p>Imagine a healthcare organization responsible for coordinating preventive care across 50,000 patients. It introduces an AI-powered system to identify overdue annual wellness visits, preventive screenings, and chronic disease follow-ups.</p>
+  <p>The objective is reasonable: improve outreach, reduce administrative work, and help more people receive care. The system evaluates records, identifies gaps, and prioritizes outreach using several signals.</p>
+  <p>Patients with complete histories receive higher confidence scores. People who previously responded to outreach are easier to schedule. Incomplete records require extra processing. Some clinical conditions are easier to classify than others.</p>
+  <p>Over time, the system becomes very good at scheduling the people who are easiest to reach. Appointments increase. Outreach productivity improves. Administrative costs decline. Leadership sees a successful implementation.</p>
+  <p>But what happens to patients with incomplete records, limited technology access, language barriers, or complicated medical histories? What if they consistently receive lower priority because contacting them requires more effort?</p>
+  <p>Nobody explicitly instructed the system to deprioritize vulnerable patients. Nobody designed a feature called ‘reduce access to care.’ Yet that may be the outcome.</p>
+  <p>An AI system does not need to make a clinical decision to influence a clinical outcome. Sometimes the ethical decision is hidden inside an ordinary engineering optimization.</p>
+  <div class="callout"><strong>An AI system does not need to make a clinical decision to influence a clinical outcome.</strong></div>
+
+  <h2>Efficiency is not the same as equity</h2>
+  <p>In software engineering, optimization is generally a good thing. We reduce latency, eliminate unnecessary computation, improve throughput, and automate repetitive processes. Those improvements are measurable. They make systems faster, cheaper, and more reliable.</p>
+  <p>Healthcare introduces a complication: the most efficient workflow is not necessarily the most equitable workflow.</p>
+  <p>Suppose an AI system finds that mobile notifications produce better appointment conversion rates than telephone outreach. Prioritizing mobile seems obvious. Higher conversion. Lower cost. Better throughput.</p>
+  <p>But consider an older patient who does not use a smartphone, or someone living with limited internet access. If the system optimizes exclusively for conversion, those people may become less visible.</p>
+  <p>The algorithm has not developed malicious intentions. It is doing precisely what its objective rewards. That is the problem.</p>
+  <p>What are we actually optimizing for? Completed appointments? Administrative savings? Better clinical outcomes? Getting attention to the people with the greatest need? Those goals overlap, but they are not interchangeable.</p>
+  <p>A system can succeed against its technical requirements while failing the people it was meant to serve.</p>
+
+  <h2>When engineering decisions become healthcare policy</h2>
+  <p>One uncomfortable realization is that engineers can unintentionally create healthcare policy through software architecture.</p>
+  <p>Consider a database query that retrieves patients eligible for a clinical workflow. It filters by visit history, patient status, organization configuration, and clinical eligibility. Every condition determines who appears in the resulting population.</p>
+  <p>Now imagine an AI agent generating or modifying that query. It might improve performance by excluding incomplete records, simplify eligibility logic, or introduce a confidence threshold to reduce false positives.</p>
+  <p>The changes may look reasonable. Tests pass. Performance improves. Deployment succeeds. But the population receiving attention has changed.</p>
+  <p>A patient who previously appeared on a care coordination roster disappears. The clinical team may never know. The system has effectively changed who participates in a healthcare process.</p>
+  <p>This is why healthcare engineering needs a broader definition of correctness. Traditional correctness asks whether a system behaves according to its specifications. Healthcare correctness must also ask whether those specifications preserve clinical intent, patient safety, and appropriate access.</p>
+  <p>Code is not necessarily safe because it compiles, passes tests, and produces the expected output. We have to understand the consequences of the behavior we authorized.</p>
+
+  <h2>Governance cannot be a document nobody reads</h2>
+  <p>When organizations discuss AI governance, the conversation often turns to policies, committees, risk assessments, and compliance frameworks. Those things matter. But governance that lives only in documentation cannot keep pace with AI-assisted engineering.</p>
+  <p>A policy cannot prevent an unsafe deployment if nothing in the delivery process enforces it.</p>
+  <p>I believe governance must become part of the architecture itself. Systems should identify when an AI-generated change affects clinical eligibility, patient prioritization, outreach behavior, or access to care. They should preserve evidence of what changed, why, and how it was validated.</p>
+  <p>Not every change deserves the same level of autonomy. An agent correcting a visual alignment issue presents a different risk from one modifying patient eligibility rules. The first may be appropriate for automated validation and deployment. The second may require clinical review, explicit authorization, and evidence that the affected population has not changed unexpectedly.</p>
+  <p>These distinctions should not depend on someone remembering to ask the right question. They should be built into the delivery process.</p>
+  <div class="callout"><strong>Governance should operate as an engineering control, not merely an organizational aspiration.</strong></div>
+
+  <h2>An architecture of accountability</h2>
+  <p>I increasingly think about responsible healthcare AI as a collection of technical guarantees rather than a collection of promises.</p>
+  <p>Traceability matters. Consequential AI actions should be attributable to a model, version, instruction, authorization, and execution context. If an agent changes workflow behavior, we should be able to reconstruct what happened.</p>
+  <p>Clinical invariants matter. Certain conditions must remain true as software evolves. AI-generated changes should not silently alter eligibility rules, remove safeguards, or exclude patient populations without explicit review.</p>
+  <p>Population-level testing matters. Traditional regression tests verify individual scenarios. Healthcare systems also need to detect changes across entire patient populations. If thousands of people disappear from an outreach workflow after a code change, we should know before deployment.</p>
+  <p>Human authority matters. AI can recommend, classify, and automate within approved boundaries. Decisions with significant clinical consequences require appropriately qualified human oversight.</p>
+  <p>Continuous monitoring matters. Validation cannot stop at deployment. We need to watch for unexpected shifts in patient access, outreach distribution, workflow behavior, and error rates.</p>
+  <p>None of this requires abandoning AI-driven development. AI can help build the safeguards: comparing population snapshots, examining code for clinical impact, generating targeted tests, and finding unexpected differences. The technology accelerating delivery can also strengthen its controls.</p>
+
+  <h2>The danger of measuring only what is easy</h2>
+  <p>Healthcare organizations measure completed appointments, outreach attempts, response rates, workflow completion times, and operating costs. These are useful metrics. But they mostly describe what happened inside the system.</p>
+  <p>They do not necessarily reveal what failed to happen.</p>
+  <p>How many patients were never contacted? How many eligible people were excluded because their records were incomplete? How many were repeatedly classified as low priority? How many clinical opportunities were missed because the model lacked confidence to act?</p>
+  <p>These questions are harder because they require examining the absence of activity. And absence rarely produces an error message.</p>
+  <p>An application can have excellent uptime, low latency, successful deployments, and thousands of passing tests while still producing inequitable outcomes. That should change how we think about observability.</p>
+  <p>In healthcare, observability should extend beyond infrastructure health and application performance. We should observe the effects of systems on patient populations: not simply whether a workflow executed, but whether the right patients were included and whether automation introduced unintended disparities.</p>
+  <div class="callout"><strong>A system that cannot detect who it is overlooking cannot credibly claim to be operating safely.</strong></div>
+
+  <h2>Speed and responsibility are not opposing goals</h2>
+  <p>I do not believe the answer is to slow healthcare engineering to a crawl. There is an ethical cost to moving too slowly, too. Delayed improvements can preserve known defects, prolong administrative inefficiency, and keep patients from benefiting from better coordination.</p>
+  <p>Healthcare organizations should pursue the productivity improvements AI makes possible. But speed without boundaries is not engineering maturity. It is uncontrolled risk.</p>
+  <p>The goal is to automate aggressively where consequences are understood and controlled, and apply stronger validation and human oversight where patient safety or access may be affected.</p>
+  <p>That requires leaders to understand more than technology. They must understand how software behavior, organizational incentives, clinical operations, and patient outcomes interact.</p>
+  <p>A CTO cannot delegate all these questions to compliance. A VP of Engineering cannot treat patient impact as something that begins after deployment. And engineers cannot assume product requirements capture every ethical consequence.</p>
+  <p>Responsible adoption requires shared accountability across engineering, product, clinical leadership, security, and executive management.</p>
+
+  <h2>The question healthcare leaders should be asking</h2>
+  <p>As AI becomes more capable, we will spend considerable time debating whether machines should make medical decisions. That debate matters. But I worry we may overlook the quieter decisions AI already influences.</p>
+  <p>Which patients appear on a roster. Which care gaps receive attention. Which outreach attempts are prioritized. Which exceptions are escalated. Which patients remain invisible.</p>
+  <p>These may never resemble formal medical judgments, yet together they influence access to care.</p>
+  <p>Can we explain why a patient was prioritized? Can we identify who was excluded? Can we demonstrate that an optimization did not undermine clinical intent? Can we detect when an apparently harmless engineering change alters patient access? And when something goes wrong, can we trace it, understand its impact, and correct it?</p>
+  <p>If we cannot answer those questions, our governance is incomplete.</p>
+  <p>AI can make healthcare more accessible, efficient, and responsive. I believe that potential is worth pursuing aggressively. But engineering leadership is not simply about building systems that work faster. It is about ensuring those systems remain accountable to the people whose lives they affect.</p>
+  <p>Because the most consequential failure may not be an AI system making the wrong decision. It may be a system making a decision nobody realized it was authorized to make.</p>
+  <p>And a patient who never knows why the care they needed never came.</p>
+</article>
+
+<footer>
+  © 2026 Thomas Howard
+</footer>
+  </main>
+</body>
+</html>
+
+````

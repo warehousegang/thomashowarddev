@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta
+    name="description"
+    content="Why I'm adding Crossplane to BusyNow, and what I'm trying to learn about infrastructure APIs, Kubernetes reconciliation, GitOps, and autonomous engineering."
+  >
+
+  <title>Why I'm Adding Crossplane to BusyNow | Thomas Howard</title>
+
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body>
+  <main class="site">
+
+    <header>
+      <p class="site-title">
+        <a href="../../">Thomas Howard</a>
+      </p>
+
+      <nav>
+        <a href="../">Writing</a>
+        <a href="../../about/">About</a>
+        <a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X</a>
+        <a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </nav>
+    </header>
+
+    <article>
+
+      <h1>Why I'm Adding Crossplane to BusyNow</h1>
+
+      <p class="deck">
+        I already have Terraform, Kubernetes, and GitOps. So why add another
+        control plane? Because I'm trying to find out whether infrastructure
+        can behave more like the software running on top of it.
+      </p>
+
+      <p class="meta">September 2026 · Thomas Howard</p>
+
+      <p>
+        BusyNow already runs on Kubernetes. Its infrastructure is managed as
+        code, deployments are automated, and GitOps gives me a declarative path
+        from a repository to the cluster. So naturally, I've decided to add
+        another layer: Crossplane. That should make any platform engineer at
+        least slightly suspicious. It makes me suspicious too.
+      </p>
+
+      <p>
+        One of the easiest ways to ruin a platform is to keep adding tools
+        because each one solves an interesting problem in isolation. Eventually
+        the platform becomes a collection of abstractions that requires more
+        effort to understand than the infrastructure it was supposed to
+        simplify. I'm not adding Crossplane because BusyNow desperately needs
+        another piece of infrastructure. I'm adding it because I want to answer
+        a larger question.
+      </p>
+
+      <div class="callout">
+        <strong>
+          Can I turn the infrastructure patterns behind BusyNow into APIs that
+          the rest of my Engineering OS can safely consume?
+        </strong>
+      </div>
+
+
+      <h2>Terraform works. That's not the problem.</h2>
+
+      <p>
+        I already use Terraform, and I'm not looking to replace it simply
+        because another tool exists. Terraform is very good at provisioning
+        infrastructure: describe the desired configuration, calculate the
+        difference between configuration and reality, and use providers to make
+        the necessary changes. The distinction I'm interested in is how that
+        model differs from Kubernetes. Terraform generally reconciles when
+        something invokes it. Kubernetes continuously reconciles.
+      </p>
+
+      <p>
+        A Kubernetes controller doesn't look at desired state once and
+        disappear. If I say I want three replicas, the system keeps asking
+        whether three replicas exist. If one disappears, Kubernetes doesn't
+        wait for someone to run another deployment pipeline. The control loop
+        notices that observed state no longer matches desired state and attempts
+        to reconcile the difference.
+      </p>
+
+      <p>
+        Crossplane takes that model and applies it to infrastructure outside the
+        cluster. Kubernetes can begin reconciling cloud resources alongside
+        Deployments, Services, Jobs, and the other objects it already
+        understands. That doesn't automatically make the architecture better,
+        but it creates an interesting possibility: infrastructure can become
+        part of the same continuously reconciled platform model as the software
+        consuming it.
+      </p>
+
+
+      <h2>Infrastructure becomes an API</h2>
+
+      <p>
+        Suppose a BusyNow service needs a database. A traditional workflow might
+        look like this:
+      </p>
+
+      <div class="lifecycle">
+        Engineer → Terraform → Cloud Provider → Database
+      </div>
+
+      <p>
+        That works, but the engineer either needs to understand the
+        infrastructure implementation or interact with a workflow that does.
+        What I'm interested in building is a different boundary:
+      </p>
+
+      <div class="lifecycle">
+        Engineer or Agent → Platform API → Crossplane → Cloud Provider
+      </div>
+
+      <p>
+        The consumer shouldn't necessarily care how the database gets created.
+        It should describe what it needs. Eventually that could look something
+        like this:
+      </p>
+
+      <pre><code>apiVersion: platform.busynow.app/v1alpha1
+kind: Database
+metadata:
+  name: places
+spec:
+  size: small
+  availability: production</code></pre>
+
+      <p>
+        That's intentionally boring. There are no subnet IDs, security groups,
+        parameter groups, AWS-specific instance classes, or Terraform module
+        arguments. The consumer is expressing intent: give this workload a
+        small production database. The platform decides what that means.
+      </p>
+
+      <p>
+        This is where composition matters. Creating an AWS resource from
+        Kubernetes isn't enough to justify an entire platform layer. If all I
+        accomplish is replacing an <code>aws_db_instance</code> Terraform
+        resource with a 70-line Kubernetes manifest describing the same AWS
+        object, I've probably made the system worse. A useful platform API has
+        to operate at a higher level.
+      </p>
+
+      <p>
+        A <code>Database</code> capability could eventually represent the
+        database itself along with networking, security policy, credentials,
+        observability, backups, connection information, and ownership metadata.
+        The application doesn't need to know how those pieces fit together.
+        The platform does.
+      </p>
+
+      <div class="callout">
+        <strong>
+          Developers should consume capabilities, not infrastructure
+          implementation details.
+        </strong>
+      </div>
+
+
+      <h2>APIs are also authority boundaries</h2>
+
+      <p>
+        This becomes more interesting when AI agents enter the system. My
+        longer-term experiment with BusyNow is what I call the Engineering OS:
+        trying to determine how much of an engineering organization can be
+        encoded into software, agents, policy, automation, and platform
+        infrastructure. Agents can already generate infrastructure code, but
+        I'm not convinced I want autonomous agents freely generating arbitrary
+        Terraform and applying it to production. That's an enormous authority
+        surface.
+      </p>
+
+      <p>
+        I'd rather give automation a constrained vocabulary. An agent might be
+        allowed to request a <code>Database</code> without being allowed to
+        manipulate RDS, IAM, VPCs, security groups, or arbitrary AWS APIs
+        directly. Crossplane potentially gives me a boundary between
+        <strong>intent</strong> and <strong>implementation authority</strong>.
+        The agent describes a capability it needs. The platform owns how that
+        capability is implemented.
+      </p>
+
+      <p>
+        Platform APIs therefore aren't just abstractions. They're constraints.
+        If the platform exposes development, standard, and production database
+        classes, a developer or agent doesn't need to choose among hundreds of
+        cloud configuration options. More importantly, it can't. The platform
+        can encode what I've already learned about networking, backups,
+        reliability, observability, cost, and security, while consumers operate
+        inside those boundaries.
+      </p>
+
+      <div class="callout">
+        <strong>
+          The answer isn't necessarily giving agents more intelligence.
+          Sometimes the answer is giving them better APIs.
+        </strong>
+      </div>
+
+
+      <h2>Git still owns the path in</h2>
+
+      <p>
+        One architectural boundary I want to preserve is Git. I don't want an
+        agent talking directly to the Kubernetes API and quietly provisioning
+        infrastructure behind my back. The path should remain inspectable,
+        reviewable, and recoverable.
+      </p>
+
+      <div class="lifecycle">
+        Intent → Pull Request → Review → Git → Argo CD → Kubernetes →
+        Crossplane → AWS
+      </div>
+
+      <p>
+        In that model, the infrastructure request becomes an artifact. It has
+        history. Policy can inspect it. The Engineering OS can attach evidence
+        to it. GitOps determines when desired state enters the cluster, and
+        Crossplane reconciles it after it arrives. Each layer has a different
+        responsibility. Crossplane isn't replacing GitOps. It sits underneath
+        it.
+      </p>
+
+      <p>
+        It doesn't necessarily replace Terraform either. I'm not planning a
+        dramatic "Terraform is dead" migration because that would solve a
+        problem I don't have. Foundational infrastructure may continue to make
+        perfect sense in Terraform. The Kubernetes cluster itself is an obvious
+        example, since having a cluster create the infrastructure required for
+        its own existence introduces some entertaining bootstrap problems.
+      </p>
+
+      <p>
+        The eventual boundary may be that Terraform establishes foundational
+        infrastructure while Kubernetes and Crossplane manage capabilities
+        consumed through the running platform. Where exactly that boundary
+        belongs is something I want to learn through implementation rather than
+        declare in advance.
+      </p>
+
+
+      <h2>The abstraction has to earn its existence</h2>
+
+      <p>
+        BusyNow is intentionally more complicated underneath than a small
+        application strictly needs to be because it is both a product and my
+        platform engineering laboratory. I don't want to learn these ideas by
+        drawing architecture diagrams for fictional companies. I want the
+        infrastructure to have an actual job. If I create a bad abstraction, I
+        have to live with it. If reconciliation behaves unexpectedly, I have to
+        debug it. If adding Crossplane creates more operational burden than it
+        removes, that's useful information too.
+      </p>
+
+      <div class="callout">
+        <strong>Production makes abstractions answer for themselves.</strong>
+      </div>
+
+      <p>
+        Crossplane introduces real costs. It's another control plane to operate.
+        Providers have versions. CRDs have lifecycles. Credentials need to be
+        managed. Reconciliation failures need to be observable. Cloud APIs
+        don't always behave like Kubernetes APIs, and deletion semantics become
+        extremely important when a Kubernetes object represents something like
+        a production database. Every abstraction I create also becomes
+        something I eventually have to maintain.
+      </p>
+
+      <p>
+        So I'm deliberately starting small. The first implementation needs to
+        prove that Crossplane can safely manage a real cloud resource used by
+        BusyNow, that I can wrap it behind a simpler BusyNow-specific API, that
+        Argo CD can remain the path through which desired state enters the
+        cluster, and that reconciliation, failure, deletion, and recovery are
+        understandable and observable.
+      </p>
+
+      <p>
+        The most important test is simpler than any of those.
+      </p>
+
+      <div class="callout">
+        <strong>
+          Is the resulting system easier to reason about than what I had before?
+        </strong>
+      </div>
+
+      <p>
+        If the answer is no, the experiment failed. That's okay. Platform
+        engineering has a tendency to produce beautiful abstractions that solve
+        problems developers never had. If my <code>Database</code> API saves
+        thirty seconds but requires months of platform maintenance, that's not
+        a platform improvement. That's architecture cosplay.
+      </p>
+
+      <p>
+        The abstraction has to earn its existence.
+      </p>
+
+    </article>
+
+    <footer>
+      © 2026 Thomas Howard
+    </footer>
+
+  </main>
+</body>
+</html>
