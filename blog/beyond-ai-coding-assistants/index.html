@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A technical examination of the control plane for autonomous software delivery: orchestration, fencing tokens, isolation, failure recovery, evaluations, provenance, and engineering metrics.">
+  <meta name="author" content="Thomas Howard">
+  <title>Beyond AI Coding Assistants: Engineering the Control Plane for Autonomous Software Delivery | Thomas Howard</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <style>
+    /* Article-specific formatting only. The site stylesheet owns the visual system. */
+    .article-table-wrap { width: 100%; overflow-x: auto; margin: 1.5rem 0 2rem; }
+    .article-table { width: 100%; border-collapse: collapse; text-align: left; min-width: 570px; }
+    .article-table th, .article-table td { padding: .75rem .85rem; border-bottom: 1px solid #d6dadf; vertical-align: top; }
+    .article-table th { font-weight: 650; }
+    .article-code { overflow-x: auto; padding: 1.25rem 1.4rem; border: 1px solid #dfe3e8; border-radius: 8px; background: #f6f7f8; font-size: .875rem; line-height: 1.55; margin: 1.25rem 0 1.75rem; tab-size: 4; }
+    .article-code code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .article-architecture { font-size: .8rem; line-height: 1.35; }
+    .article-references { padding-left: 1.5rem; }
+    .article-references li { margin-bottom: .65rem; }
+    .article-content a { text-underline-offset: .16em; overflow-wrap: anywhere; }
+    .article-content h2 { margin-top: 2.5rem; }
+    .article-content h3 { margin-top: 1.5rem; }
+    .article-content p, .article-content li { line-height: 1.75; }
+    @media (max-width: 640px) { .article-code { padding: 1rem; } }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site">
+      <nav aria-label="Main navigation">
+        <a href="../../" class="brand">Thomas Howard</a>
+        <a href="../">Writing</a>
+        <a href="../../projects/">Projects</a>
+        <a href="../../about/">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="site">
+    <article class="article-content">
+      <header>
+        <h1>Beyond AI Coding Assistants: Engineering the Control Plane for Autonomous Software Delivery</h1>
+        <p class="deck">The next frontier in AI engineering is not generating more code. It is building the systems that allow autonomous agents to deliver software reliably, safely, and with verifiable evidence.</p>
+        <p class="meta">October 2026 · Thomas Howard</p>
+      </header>
+
+      <p>AI has fundamentally changed the mechanics of writing software. Coding agents can inspect repositories, diagnose defects, implement features, generate tests, and propose changes that once required hours of engineering effort.</p>
+      <p>But writing code and delivering software are different engineering problems.</p>
+      <p>A coding agent can produce a technically correct patch and still leave an organization with an operational failure. It might work against the wrong branch, modify files outside its intended scope, duplicate another agent's work, overlook a failing integration test, or create a pull request after its execution authority has expired.</p>
+      <p>These are not necessarily failures of model intelligence. They are failures of the system surrounding the model.</p>
+      <p>As engineering organizations move from AI-assisted development toward autonomous execution, the central architectural question changes: <strong>How do we give AI agents enough freedom to complete meaningful engineering work while retaining deterministic control over what they can execute, modify, approve, and deliver?</strong></p>
+      <p>The answer requires more than better prompts, larger context windows, or more sophisticated models. It requires an engineering control plane.</p>
+
+      <h2>1. The distinction between coding assistance and autonomous delivery</h2>
+      <p>Consider the progression of AI within an engineering organization.</p>
+      <div class="article-table-wrap">
+        <table class="article-table">
+          <thead><tr><th scope="col">Stage</th><th scope="col">Engineering capability</th><th scope="col">Primary challenge</th></tr></thead>
+          <tbody>
+            <tr><td>1. AI-assisted development</td><td>Engineers use AI to write, debug, and test code</td><td>Individual productivity</td></tr>
+            <tr><td>2. Agentic engineering</td><td>Agents independently execute bounded engineering tasks</td><td>Task completion and validation</td></tr>
+            <tr><td>3. Orchestrated engineering</td><td>Multiple workflows coordinate implementation, testing, and review</td><td>Scheduling, concurrency, and recovery</td></tr>
+            <tr><td>4. Governed autonomous delivery</td><td>Policies, isolation, evaluations, and approvals control delivery</td><td>Reliability, security, and accountability</td></tr>
+            <tr><td>5. Adaptive engineering</td><td>Operational outcomes improve agent workflows and policies</td><td>Continuous optimization</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The transition between stages three and four is particularly important. A collection of successful coding agents is not automatically a reliable engineering organization.</p>
+      <p>Each agent may perform its assigned task effectively while the surrounding system fails to coordinate work, enforce permissions, or establish whether changes are safe to deliver.</p>
+      <p>Traditional engineering organizations solve these problems through ownership, process, technical controls, and human judgment. Autonomous engineering must turn much of that coordination into executable infrastructure.</p>
+
+      <h2>2. What OpenAI's harness engineering experiment demonstrates</h2>
+      <p>In February 2026, OpenAI published <a href="https://openai.com/index/harness-engineering/" target="_blank" rel="noopener noreferrer">Harness engineering: leveraging Codex in an agent-first world</a>.</p>
+      <p>The team reported building a product containing approximately one million lines of code and merging roughly 1,500 pull requests over five months, initially with three engineers directing Codex.</p>
+      <p>The headline numbers are striking, but the more significant finding is architectural.</p>
+      <p>The engineers did not simply ask agents to write more code. They invested in the environment that enabled agents to work independently. They made applications executable within isolated development worktrees. They exposed application logs, metrics, traces, and browser inspection capabilities to agents. They established repository conventions and mechanically enforced architectural boundaries.</p>
+      <p>Their central constraint was that humans would steer the engineering process while agents generated the code.</p>
+      <p>That changed the engineers' responsibilities. Instead of directly implementing every feature, engineers increasingly defined requirements, designed feedback mechanisms, improved development environments, and established constraints that made autonomous execution repeatable.</p>
+      <p>The lesson is not that every organization should eliminate manual code writing. It is that <strong>agent productivity is strongly influenced by the quality of the engineering environment in which the agent operates.</strong></p>
+      <p>A capable model operating inside an opaque, poorly documented repository has fewer opportunities to validate its decisions. The same model operating inside a well-structured repository, with accessible tests, observability, architecture rules, and clear task boundaries, can work with substantially more independence.</p>
+      <p>This is harness engineering: designing the surrounding system so the agent can do useful work and determine whether that work is correct. But harness engineering alone does not solve coordination across dozens of autonomous tasks. For that, we need a control plane.</p>
+
+      <h2>3. The control plane architecture</h2>
+      <p>OpenAI's <a href="https://github.com/openai/symphony/blob/main/SPEC.md" target="_blank" rel="noopener noreferrer">Symphony specification</a> describes a service that monitors an issue tracker, dispatches coding agents into dedicated workspaces, and manages their execution.</p>
+      <p>Its design includes a workflow definition, issue tracker adapter, orchestrator, workspace manager, agent runner, and observability. That is an important architectural foundation.</p>
+      <p>However, scheduling an agent and governing its actions are separate responsibilities. Symphony's published specification explicitly leaves some security and approval choices to implementations.</p>
+      <p>For governed autonomous delivery, I would separate the system into three boundaries.</p>
+      <p><strong>The control plane</strong> decides what should run, who owns the task, what permissions apply, and whether the result can progress.</p>
+      <p><strong>The execution plane</strong> runs agents in bounded workspaces with the tools and resources needed to perform their assigned work.</p>
+      <p><strong>The evidence and promotion plane</strong> validates results, records provenance, and controls which changes can become reviewable or deployable artifacts.</p>
+
+      <h3>Reference architecture</h3>
+      <pre class="article-code article-architecture"><code>                ENGINEERING CONTROL PLANE
+  ┌─────────────────────────────────────────────┐
+  │ Issue Tracker / Task Intake                 │
+  │         ↓                                   │
+  │ Policy and Eligibility Evaluation           │
+  │         ↓                                   │
+  │ Scheduler + Durable Claims + Leases         │
+  │         ↓                                   │
+  │ Execution Assignment and Revocation         │
+  └──────────────────┬──────────────────────────┘
+                     │ bounded authority
+                     ▼
+                EXECUTION PLANE
+  ┌─────────────────────────────────────────────┐
+  │ Isolated Workspace                          │
+  │   Repository Snapshot / Worktree            │
+  │   Coding Agent + Approved Tools             │
+  │   Build, Tests, Static Analysis             │
+  │   Logs, Metrics, Traces                     │
+  └──────────────────┬──────────────────────────┘
+                     │ candidate + evidence
+                     ▼
+             EVIDENCE AND PROMOTION
+  ┌─────────────────────────────────────────────┐
+  │ Artifact and Provenance Verification        │
+  │ Policy and Evaluation Gates                 │
+  │ Human Review When Required                  │
+  │ Authorized PR / Merge / Deployment Actions  │
+  └──────────────────┬──────────────────────────┘
+                     │
+                     ▼
+           Outcomes and Feedback
+                     │
+                     └────→ Control Plane</code></pre>
+
+      <p>The essential principle is that the agent does not independently grant itself delivery authority.</p>
+      <p>An agent may produce a patch, tests, documentation, and a recommendation. A separate, trusted component determines whether that result satisfies the organization's delivery policy.</p>
+      <p>This distinction becomes increasingly important when multiple agents work concurrently.</p>
+
+      <h2>4. Why autonomous engineering needs durable execution authority</h2>
+      <p>Imagine two coding agents working on the same engineering ticket.</p>
+      <p>Agent A claims the ticket and begins implementing a change. Its execution lease expires because the host becomes unresponsive. The orchestrator assigns the ticket to Agent B.</p>
+      <p>Agent B completes the task and produces a validated change. Several minutes later, Agent A resumes.</p>
+      <p>If Agent A still possesses valid repository write credentials, it might submit its outdated patch or create a second pull request. The original task assignment may be expired, but the operational capability remains.</p>
+      <p>This is a classic distributed-systems problem.</p>
+      <p>One technique for addressing it is a <strong>fencing token</strong>, typically a monotonically increasing generation number associated with an execution.</p>
+      <p>When a new worker claims a task, the generation advances. The trusted component responsible for accepting a result verifies that the worker still holds the current generation.</p>
+      <p>An old worker may continue computing, but its stale authority must not allow it to promote a result. The critical detail is where the check occurs.</p>
+      <p>Checking a lease when work begins is insufficient. Authority must be checked again at the boundary where consequential actions are accepted.</p>
+
+      <h3>A reproducible fencing experiment</h3>
+      <p>The following Python example demonstrates the fundamental principle using SQLite. It does not launch an AI agent, contact GitHub, or modify a real repository.</p>
+      <p>Save it as <code>fencing_demo.py</code> and run it with <code>python3 fencing_demo.py</code>.</p>
+      <pre class="article-code"><code>import sqlite3
+import tempfile
+from pathlib import Path
+
+with tempfile.TemporaryDirectory() as directory:
+    db = sqlite3.connect(Path(directory) / "control.sqlite")
+
+    db.execute("""
+        CREATE TABLE runs (
+            issue TEXT PRIMARY KEY,
+            generation INTEGER NOT NULL,
+            state TEXT NOT NULL
+        )
+    """)
+
+    def claim(issue):
+        row = db.execute(
+            "SELECT generation FROM runs WHERE issue = ?",
+            (issue,)
+        ).fetchone()
+
+        generation = row[0] + 1 if row else 1
+
+        with db:
+            db.execute("""
+                INSERT INTO runs VALUES (?, ?, 'RUNNING')
+                ON CONFLICT(issue) DO UPDATE SET
+                    generation = excluded.generation,
+                    state = 'RUNNING'
+            """, (issue, generation))
+
+        return generation
+
+    def revoke(issue):
+        with db:
+            db.execute("""
+                UPDATE runs
+                SET generation = generation + 1,
+                    state = 'REVOKED'
+                WHERE issue = ?
+            """, (issue,))
+
+    def submit_for_review(issue, generation):
+        with db:
+            result = db.execute("""
+                UPDATE runs SET state = 'REVIEW'
+                WHERE issue = ?
+                  AND generation = ?
+                  AND state = 'RUNNING'
+            """, (issue, generation))
+
+        return result.rowcount == 1
+
+    old_worker = claim("ENG-42")
+    revoke("ENG-42")
+
+    assert not submit_for_review("ENG-42", old_worker)
+
+    new_worker = claim("ENG-42")
+    assert submit_for_review("ENG-42", new_worker)
+
+    print("Stale worker denied")
+    print("Current worker accepted")</code></pre>
+      <p>Expected output:</p>
+      <pre class="article-code"><code>Stale worker denied
+Current worker accepted</code></pre>
+      <p>This is deliberately a small experiment. The trusted database transition is atomic, but it is not an atomic transaction with an external Git hosting provider.</p>
+      <p>A production system still needs to handle retries, duplicate submissions, delayed external API calls, crash recovery, and uncertainty about whether an external side effect occurred.</p>
+      <p>It also needs to control the worker's credentials. Fencing a trusted submission service is ineffective if the agent can bypass that service and directly push changes.</p>
+      <div class="callout"><strong>A fencing token is useful only when the authority that matters actually enforces it.</strong></div>
+
+      <h2>5. The failure modes that matter</h2>
+      <p>A production control plane should be evaluated against failure scenarios, not merely successful demonstrations.</p>
+      <div class="article-table-wrap">
+        <table class="article-table">
+          <thead><tr><th scope="col">Failure scenario</th><th scope="col">Potential consequence</th><th scope="col">Required control</th></tr></thead>
+          <tbody>
+            <tr><td>Duplicate task dispatch</td><td>Two agents modify the same feature</td><td>Exclusive claims and concurrency policy</td></tr>
+            <tr><td>Expired worker resumes</td><td>Stale changes are submitted</td><td>Fencing at trusted action boundaries</td></tr>
+            <tr><td>Agent process crashes</td><td>Partial work and uncertain execution</td><td>Durable state and reconciliation</td></tr>
+            <tr><td>API timeout during publication</td><td>Duplicate or unknown external effect</td><td>Idempotency and outcome verification</td></tr>
+            <tr><td>Repository instructions are malicious</td><td>Agent follows untrusted directions</td><td>Trust boundaries and tool policy</td></tr>
+            <tr><td>Tests pass but architecture is violated</td><td>Long-term structural degradation</td><td>Mechanical architecture checks</td></tr>
+            <tr><td>Agent exceeds expected runtime</td><td>Resource consumption or runaway execution</td><td>Execution deadlines and bounded resources</td></tr>
+            <tr><td>Agent claims success without evidence</td><td>Invalid or incomplete delivery</td><td>Independent validation gates</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The most dangerous failures are not always obvious exceptions. A failed command is relatively easy to detect.</p>
+      <p>A worker that times out after an external service accepted its request is more difficult. Retrying blindly might duplicate the action, while assuming failure might leave untracked changes behind.</p>
+      <p>The correct state in such cases is often <em>uncertain</em>, not failed or successful. An autonomous system needs a reconciliation process capable of establishing what actually happened.</p>
+      <p>Likewise, stopping an agent process is not identical to revoking its authority. A delayed request, surviving child process, or previously granted credential may still have consequences.</p>
+      <p>Termination, revocation, and evidence of cleanup should be treated as distinct concepts.</p>
+
+      <h2>6. Why isolation is necessary but not sufficient</h2>
+      <p>Execution isolation is another essential layer.</p>
+      <p>A coding agent might require the ability to run shell commands, install development dependencies, execute tests, and inspect application behavior. Granting those capabilities directly against a developer's unrestricted environment creates unnecessary exposure.</p>
+      <p>An isolated execution environment can constrain filesystem access, network connectivity, process privileges, resource consumption, and credential availability.</p>
+      <p>But a workspace is not automatically a security boundary. A Git worktree provides useful source-code separation. It does not, by itself, prevent a process from reading other host files.</p>
+      <p>Likewise, a container configuration that requests network isolation or reduced privileges does not prove that every runtime restriction was enforced. The distinction is between <strong>requested configuration and observed behavior</strong>.</p>
+      <p>In one local execution experiment, I encountered an instructive example: a test worker launched, but the supervising controller rejected the runtime inspection because a Docker field was represented differently from the expected configuration.</p>
+      <p>The worker subsequently exited, yet the controller could not automatically establish the full cleanup lifecycle.</p>
+      <p>That is not evidence of a compromised container, nor is it a successful lifecycle verification. It illustrates an important operational tension. Fail-closed validation can prevent unsafe assumptions, but overly rigid compatibility checks can also create operational friction.</p>
+      <p>The engineering response is to distinguish meaningful security invariants from harmless serialization differences, test those assumptions, and preserve uncertain execution records.</p>
+      <p>The goal is not endless infrastructure hardening. It is a sufficiently strong and observable execution boundary that enables real engineering work without making every configuration detail a manual intervention.</p>
+
+      <h2>7. The repository becomes part of the agent harness</h2>
+      <p>A governed control plane cannot compensate for a repository that agents cannot understand.</p>
+      <p>Repositories designed primarily around human tribal knowledge create a serious problem for autonomous execution. An agent needs to determine where functionality belongs, which contracts must remain stable, how tests should be executed, and what constitutes a valid change.</p>
+      <p>That information should be discoverable from the repository itself.</p>
+      <p>A useful agent-ready repository includes:</p>
+      <ul>
+        <li>A concise <code>AGENTS.md</code> describing operating conventions, boundaries, and validation commands.</li>
+        <li>A versioned <code>WORKFLOW.md</code> when using an orchestration system such as Symphony.</li>
+        <li>Clearly defined module ownership and architectural dependency rules.</li>
+        <li>Deterministic setup, build, and test commands.</li>
+        <li>Machine-readable interface contracts and schemas.</li>
+        <li>Small, purpose-specific skills that explain repeatable engineering procedures.</li>
+        <li>Representative fixtures and isolated integration environments.</li>
+        <li>Accessible logs, metrics, traces, and reproducible failure scenarios.</li>
+      </ul>
+      <p>The distinction between instructions and enforcement matters here.</p>
+      <p>An <code>AGENTS.md</code> file can explain that domain code must not access the database directly. A structural test or architecture linter can enforce that rule.</p>
+      <p>A prompt can request adequate test coverage. A CI gate can verify the relevant tests and coverage criteria.</p>
+      <p>An agent may disregard or misunderstand written instructions. It should not be able to bypass trusted validation merely by announcing that it has completed the task.</p>
+      <div class="callout"><strong>The most valuable repository instructions are those paired with executable checks.</strong></div>
+      <p>This approach also reduces the need to repeatedly provide agents with large amounts of explanatory context. The necessary knowledge becomes part of the environment and can evolve with the codebase.</p>
+
+      <h2>8. Evidence, evaluations, and provenance</h2>
+      <p>Successful autonomous delivery requires a definition of completion that is stronger than an agent's final message.</p>
+      <p>Anthropic's engineering work on <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents" target="_blank" rel="noopener noreferrer">evaluating AI agents</a> emphasizes the importance of evaluating outcomes and trajectories, rather than relying on a model's description of its own performance.</p>
+      <p>For software engineering, that means independently establishing whether the resulting system behaves as required.</p>
+      <p>A reviewable autonomous execution should produce a structured evidence bundle containing:</p>
+      <div class="article-table-wrap">
+        <table class="article-table">
+          <thead><tr><th scope="col">Evidence</th><th scope="col">Engineering question answered</th></tr></thead>
+          <tbody>
+            <tr><td>Issue ID, run ID, and execution generation</td><td>Who owned this work?</td></tr>
+            <tr><td>Base commit and resulting change digest</td><td>Exactly what changed?</td></tr>
+            <tr><td>Agent and tool versions</td><td>What executed the task?</td></tr>
+            <tr><td>Test commands, exit codes, and reports</td><td>What validation occurred?</td></tr>
+            <tr><td>Static analysis and security results</td><td>Which mechanical checks passed?</td></tr>
+            <tr><td>Execution duration and resource usage</td><td>What did the run consume?</td></tr>
+            <tr><td>Approval and policy decisions</td><td>Why was progression allowed?</td></tr>
+            <tr><td>PR reference and review outcome</td><td>What happened to the result?</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Provenance should link the task, source revision, execution, validation, and resulting artifact.</p>
+      <p>Cryptographic attestations can further establish where and how build artifacts were produced. GitHub, for example, supports <a href="https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations" target="_blank" rel="noopener noreferrer">artifact attestations</a> that associate builds with workflow and repository information.</p>
+      <p>However, a signed attestation does not prove that the code is correct or secure. It establishes the provenance of the attested artifact. Correctness and security still require appropriate validation.</p>
+      <p>A practical promotion policy might require all critical tests to pass, no prohibited file changes, verified source identity, a complete evidence record, and an independent approval for higher-risk changes.</p>
+      <p>The agent generates the candidate. The trusted system evaluates whether that candidate is eligible to advance.</p>
+
+      <h2>9. How to measure autonomous engineering</h2>
+      <p>Counting generated lines of code is a poor measure of engineering value. Counting agent runs is not much better.</p>
+      <p>Even pull request volume can be misleading if reviewers spend more time correcting changes or production stability declines.</p>
+      <p>Google's <a href="https://research.google/pubs/dora-2025-state-of-ai-assisted-software-development-report/" target="_blank" rel="noopener noreferrer">2025 DORA research</a> describes AI as an amplifier of existing engineering capabilities. Greater throughput without sufficient organizational and technical foundations can expose underlying weaknesses.</p>
+      <p>For autonomous engineering, I would establish a measurement framework before scaling concurrency.</p>
+      <div class="article-table-wrap">
+        <table class="article-table">
+          <thead><tr><th scope="col">Metric</th><th scope="col">Definition</th><th scope="col">Why it matters</th></tr></thead>
+          <tbody>
+            <tr><td>Autonomous completion rate</td><td>Accepted tasks completed without routine human intervention divided by eligible tasks</td><td>Measures useful autonomy</td></tr>
+            <tr><td>Time to reviewable change</td><td>Time from task eligibility to independently validated candidate</td><td>Measures delivery latency</td></tr>
+            <tr><td>First-pass validation rate</td><td>Candidates passing required checks on the first submission</td><td>Measures implementation quality</td></tr>
+            <tr><td>Human rework time</td><td>Reviewer and engineer time required to reach acceptance</td><td>Measures whether autonomy saves attention</td></tr>
+            <tr><td>Unresolved execution rate</td><td>Runs lacking conclusive completion or cleanup evidence</td><td>Measures operational reliability</td></tr>
+            <tr><td>Cost per accepted change</td><td>Agent, compute, and validation cost divided by accepted changes</td><td>Measures economic efficiency</td></tr>
+            <tr><td>Safety violation rate</td><td>Unauthorized consequential effects per execution, with attempted violations tracked separately</td><td>Measures policy effectiveness</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>These are proposed metrics, not claimed experimental results.</p>
+      <p>A useful baseline requires consistent task categories, comparable complexity, and enough observations to distinguish model behavior from environmental failures. A five-minute documentation fix should not be compared directly with a multi-service database migration.</p>
+      <p>I would also report distributions rather than averages alone. A system with excellent average task completion time but frequent six-hour outliers may impose substantial operational overhead.</p>
+      <p>Most importantly, measurement should distinguish agent failures from harness failures.</p>
+      <p>An incorrect patch is a different problem from a missing dependency, broken test fixture, lost execution lease, or unavailable API. Without that distinction, organizations risk optimizing the model while ignoring the platform.</p>
+
+      <h2>10. Three experiments I would run before scaling</h2>
+      <p>Before allowing a control plane to execute a large backlog unattended, I would run three controlled experiments in a disposable repository.</p>
+
+      <h3>Experiment A: Duplicate ownership and stale execution</h3>
+      <p>Dispatch a task, deliberately expire or revoke the first execution, and assign a second generation. Allow the old worker to submit a delayed result. Verify that the trusted promotion boundary rejects it and records the reason.</p>
+      <p><strong>Pass criterion:</strong> Zero stale results promoted, with both generations preserved in the audit record.</p>
+
+      <h3>Experiment B: Crash and uncertain external effects</h3>
+      <p>Interrupt execution at several points: before claiming work, after workspace creation, during validation, and after a simulated external submission whose acknowledgment is lost.</p>
+      <p>Restart the orchestrator and verify that it reconciles existing state instead of blindly repeating work.</p>
+      <p><strong>Pass criterion:</strong> No duplicate consequential effects, no lost ownership history, and every unresolved outcome explicitly identified.</p>
+
+      <h3>Experiment C: Policy violation during an otherwise successful task</h3>
+      <p>Provide a legitimate feature request that an agent can complete correctly, then introduce a conflicting instruction inside an untrusted repository file requesting an unauthorized action.</p>
+      <p>Verify that the agent's available tools and trusted promotion gate prevent the unauthorized result from progressing, regardless of whether the agent attempts it.</p>
+      <p><strong>Pass criterion:</strong> Legitimate changes can be accepted while prohibited actions are denied and recorded.</p>
+      <p>Each experiment should be repeated enough times to expose nondeterministic behavior. These tests measure the engineering system, not just the coding model.</p>
+
+      <h2>11. Autonomy should reduce supervision, not eliminate accountability</h2>
+      <p>There is a temptation to equate autonomous engineering with removing humans from the entire delivery process. That is the wrong objective.</p>
+      <p>The more useful goal is to remove unnecessary human intervention while preserving meaningful human authority.</p>
+      <p>An agent should not require an engineer to approve every test execution, inspect every intermediate file, or manually restart routine recoverable work. Those activities should be handled through bounded permissions, deterministic checks, and automatic remediation.</p>
+      <p>At the same time, organizations should retain explicit authority over consequential actions such as production deployment, sensitive data access, infrastructure destruction, or changes that exceed the established risk policy.</p>
+      <p>Human review should be risk-based rather than universal or arbitrary. A documentation change and a database migration should not necessarily require the same approval process.</p>
+      <p>This is where the control plane becomes more than an agent scheduler. It becomes the mechanism for expressing and enforcing engineering risk.</p>
+
+      <h2>12. The real shift in engineering leadership</h2>
+      <p>The most consequential change introduced by autonomous engineering is not that software developers stop writing code.</p>
+      <p>It is that engineering organizations must become better at specifying intent, defining system boundaries, exposing feedback, and measuring outcomes.</p>
+      <p>That changes the role of platform engineering.</p>
+      <p>Developer platforms are no longer simply environments that make human engineers more productive. They increasingly become the environments in which autonomous workers operate.</p>
+      <p>Repository architecture becomes agent navigation infrastructure. CI becomes an evidence-producing evaluation system. Observability becomes an input to diagnosis and remediation. Policy becomes executable authority.</p>
+      <p>And engineering leadership shifts from supervising individual implementation steps toward designing a system capable of producing reliable engineering outcomes.</p>
+      <p>The essential question is no longer: <em>How much code can an AI agent generate?</em></p>
+      <p>It is: <strong>How much verified engineering work can our organization safely complete without requiring continuous human supervision?</strong></p>
+      <p>That is a much harder question. It requires distributed-systems thinking, software architecture, security engineering, developer platforms, evaluation design, and operational discipline.</p>
+      <p>It also provides a more meaningful benchmark for progress.</p>
+      <p>The organizations that succeed will not necessarily be those running the largest number of agents or using the most sophisticated orchestration framework.</p>
+      <p>They will be those that make autonomous work understandable, constrained, measurable, recoverable, and ultimately useful.</p>
+      <div class="callout"><strong>The coding agent is a component. The engineering system is the product.</strong></div>
+
+      <h2>Technical references</h2>
+      <ol class="article-references">
+        <li>OpenAI: <a href="https://openai.com/index/harness-engineering/" target="_blank" rel="noopener noreferrer">Harness engineering: leveraging Codex in an agent-first world</a></li>
+        <li>OpenAI: <a href="https://github.com/openai/symphony/blob/main/SPEC.md" target="_blank" rel="noopener noreferrer">Symphony service specification</a></li>
+        <li>OpenAI: <a href="https://openai.com/index/unlocking-the-codex-harness/" target="_blank" rel="noopener noreferrer">Unlocking the Codex harness: how we built the App Server</a></li>
+        <li>Anthropic: <a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents" target="_blank" rel="noopener noreferrer">Effective harnesses for long-running agents</a></li>
+        <li>Anthropic: <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents" target="_blank" rel="noopener noreferrer">Demystifying evals for AI agents</a></li>
+        <li>Google DORA: <a href="https://research.google/pubs/dora-2025-state-of-ai-assisted-software-development-report/" target="_blank" rel="noopener noreferrer">2025 State of AI-assisted Software Development</a></li>
+        <li>GitHub: <a href="https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations" target="_blank" rel="noopener noreferrer">Artifact attestations and build provenance</a></li>
+      </ol>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site">
+      <p>© 2026 Thomas Howard</p>
+    </div>
+  </footer>
+</body>
+</html>
