@@ -14,6 +14,249 @@
   <title>Beyond AI Coding Assistants: Engineering the Control Plane for Autonomous Software Delivery | Thomas Howard</title>
 
   <link rel="stylesheet" href="../../styles.css">
+  <style>
+    /* Article components only. The site's header, navigation and typography
+       continue to come from ../../styles.css. */
+    article .article-table-wrap {
+      width: 100%;
+      max-width: 100%;
+      margin: 1.65rem 0 2rem;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border: 1px solid #dce2e2;
+      border-radius: 10px;
+      background: #ffffff;
+      box-shadow: 0 2px 9px rgba(24, 34, 42, .035);
+    }
+    article .article-table-wrap .article-table {
+      display: table;
+      width: 100%;
+      min-width: 620px;
+      margin: 0;
+      border: 0;
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+      font-family: inherit;
+      font-size: 15px;
+      line-height: 1.55;
+      color: #283039;
+      background: #fff;
+    }
+    article .article-table th,
+    article .article-table td {
+      box-sizing: border-box;
+      padding: 15px 19px;
+      border: 0;
+      border-bottom: 1px solid #e5e9e8;
+      text-align: left;
+      vertical-align: top;
+      overflow-wrap: break-word;
+      word-break: normal;
+      hyphens: none;
+      font-size: inherit;
+      line-height: inherit;
+    }
+    article .article-table thead th {
+      background: #f3f5f4;
+      color: #33414a;
+      font-size: 12.5px;
+      font-weight: 700;
+      letter-spacing: .025em;
+      line-height: 1.4;
+    }
+    article .article-table tbody tr:nth-child(even) td { background: #fafbfa; }
+    article .article-table tbody tr:last-child td { border-bottom: 0; }
+    article .article-table tbody td:first-child {
+      font-weight: 600;
+      color: #26363e;
+    }
+    article .article-table tbody tr:hover td { background: #f3f7f7; }
+    article .article-table.table-stages th:nth-child(1),
+    article .article-table.table-stages td:nth-child(1) { width: 29%; }
+    article .article-table.table-stages th:nth-child(2),
+    article .article-table.table-stages td:nth-child(2) { width: 43%; }
+    article .article-table.table-stages th:nth-child(3),
+    article .article-table.table-stages td:nth-child(3) { width: 28%; }
+    article .article-table.table-failures th:nth-child(1),
+    article .article-table.table-failures td:nth-child(1) { width: 29%; }
+    article .article-table.table-failures th:nth-child(2),
+    article .article-table.table-failures td:nth-child(2) { width: 33%; }
+    article .article-table.table-failures th:nth-child(3),
+    article .article-table.table-failures td:nth-child(3) { width: 38%; }
+    article .article-table.table-evidence th:nth-child(1),
+    article .article-table.table-evidence td:nth-child(1) { width: 51%; }
+    article .article-table.table-evidence th:nth-child(2),
+    article .article-table.table-evidence td:nth-child(2) { width: 49%; }
+    article .article-table.table-metrics th:nth-child(1),
+    article .article-table.table-metrics td:nth-child(1) { width: 26%; }
+    article .article-table.table-metrics th:nth-child(2),
+    article .article-table.table-metrics td:nth-child(2) { width: 46%; }
+    article .article-table.table-metrics th:nth-child(3),
+    article .article-table.table-metrics td:nth-child(3) { width: 28%; }
+    article .article-table.table-stages tr:nth-child(4) td:first-child {
+      box-shadow: inset 3px 0 0 #617e80;
+    }
+
+    /* Code remains preformatted, with independently scrollable long lines. */
+    article pre.article-code {
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
+      margin: 1.35rem 0 1.8rem;
+      padding: 22px 24px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      border: 1px solid #263644;
+      border-radius: 10px;
+      background: #1b2530;
+      color: #e7edf3;
+      box-shadow: 0 3px 12px rgba(15, 23, 32, .07);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.65;
+      letter-spacing: 0;
+      tab-size: 4;
+      white-space: pre;
+      -webkit-overflow-scrolling: touch;
+    }
+    article pre.article-code code,
+    article pre.article-code code * {
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      line-height: inherit;
+      letter-spacing: inherit;
+      white-space: inherit;
+      background: transparent;
+      border: 0;
+      padding: 0;
+    }
+    article pre.article-code .k,
+    article pre.article-code .kn,
+    article pre.article-code .kd { color: #b8c8ff; }
+    article pre.article-code .s,
+    article pre.article-code .s1,
+    article pre.article-code .s2,
+    article pre.article-code .sa,
+    article pre.article-code .sd { color: #eec58f; }
+    article pre.article-code .nb,
+    article pre.article-code .nf,
+    article pre.article-code .fm { color: #91d9cf; }
+    article pre.article-code .c,
+    article pre.article-code .c1 { color: #a1acb5; }
+    article pre.article-code .mi,
+    article pre.article-code .mf { color: #d7b8f0; }
+    article .code-caption {
+      margin: 1.45rem 0 -.8rem;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: #53636e;
+    }
+
+    /* Accessible HTML diagram, not oversized ASCII art. */
+    article figure.engineering-diagram {
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
+      margin: 1.65rem 0 2rem;
+      padding: 24px;
+      border: 1px solid #dce2e2;
+      border-radius: 12px;
+      background: #f7f8f7;
+    }
+    article .engineering-diagram .diagram-stage {
+      padding: 20px 22px;
+      background: #fff;
+      border: 1px solid #d8dfdf;
+      border-left: 4px solid #5d777c;
+      border-radius: 8px;
+    }
+    article .engineering-diagram .diagram-stage:nth-of-type(3) { border-left-color: #80918b; }
+    article .engineering-diagram .diagram-stage:nth-of-type(5) { border-left-color: #677487; }
+    article .engineering-diagram .diagram-eyebrow {
+      margin: 0 0 4px;
+      color: #6a7780;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    article .engineering-diagram .diagram-title {
+      margin: 0 0 13px;
+      color: #202d33;
+      font-family: inherit;
+      font-size: 19px;
+      font-weight: 750;
+      line-height: 1.3;
+      letter-spacing: -.01em;
+    }
+    article .engineering-diagram .diagram-contents {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 7px 21px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    article .engineering-diagram .diagram-contents li {
+      margin: 0;
+      padding: 0;
+      color: #3f5059;
+      font-family: inherit;
+      font-size: 13.5px;
+      line-height: 1.45;
+    }
+    article .engineering-diagram .diagram-contents li::before {
+      content: "·";
+      margin-right: 8px;
+      font-weight: 700;
+      color: #657e84;
+    }
+    article .engineering-diagram .diagram-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 53px;
+      padding: 4px;
+      color: #60717b;
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: .015em;
+      text-align: center;
+      line-height: 1.4;
+    }
+    article .engineering-diagram .diagram-connector::after {
+      content: "↓";
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.15;
+    }
+    article .engineering-diagram figcaption {
+      margin: 17px 0 0;
+      padding: 13px 15px 0;
+      border-top: 1px solid #dee4e4;
+      color: #4d5f67;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    @media (max-width: 640px) {
+      article .article-table-wrap .article-table { min-width: 590px; font-size: 14px; }
+      article .article-table th, article .article-table td { padding: 12px 14px; }
+      article pre.article-code { padding: 16px; font-size: 12px; }
+      article figure.engineering-diagram { padding: 14px; }
+      article .engineering-diagram .diagram-stage { padding: 16px; }
+      article .engineering-diagram .diagram-title { font-size: 17px; }
+      article .engineering-diagram .diagram-contents { grid-template-columns: 1fr; }
+    }
+  </style>
+
 </head>
 
 <body>
@@ -33,13 +276,17 @@
   </nav>
 </header>
 
-  <main class="site">
-    <article class="article-content">
-      <header>
-        <h1>Beyond AI Coding Assistants: Engineering the Control Plane for Autonomous Software Delivery</h1>
-        <p class="deck">The next frontier in AI engineering is not generating more code. It is building the systems that allow autonomous agents to deliver software reliably, safely, and with verifiable evidence.</p>
-        <p class="meta">October 2026 · Thomas Howard</p>
-      </header>
+<article>
+
+  <h1>Beyond AI Coding Assistants: Engineering the Control Plane for Autonomous Software Delivery</h1>
+
+  <p class="deck">
+    The next frontier in AI engineering is not generating more code. It is building
+    the systems that allow autonomous agents to deliver software reliably, safely,
+    and with verifiable evidence.
+  </p>
+
+  <p class="meta">October 2026 · Thomas Howard</p>
 
       <p>AI has fundamentally changed the mechanics of writing software. Coding agents can inspect repositories, diagnose defects, implement features, generate tests, and propose changes that once required hours of engineering effort.</p>
       <p>But writing code and delivering software are different engineering problems.</p>
@@ -51,7 +298,7 @@
       <h2>1. The distinction between coding assistance and autonomous delivery</h2>
       <p>Consider the progression of AI within an engineering organization.</p>
       <div class="article-table-wrap">
-        <table class="article-table">
+        <table class="article-table table-stages">
           <thead><tr><th scope="col">Stage</th><th scope="col">Engineering capability</th><th scope="col">Primary challenge</th></tr></thead>
           <tbody>
             <tr><td>1. AI-assisted development</td><td>Engineers use AI to write, debug, and test code</td><td>Individual productivity</td></tr>
@@ -87,40 +334,41 @@
       <p><strong>The evidence and promotion plane</strong> validates results, records provenance, and controls which changes can become reviewable or deployable artifacts.</p>
 
       <h3>Reference architecture</h3>
-      <pre class="article-code article-architecture"><code>                ENGINEERING CONTROL PLANE
-  ┌─────────────────────────────────────────────┐
-  │ Issue Tracker / Task Intake                 │
-  │         ↓                                   │
-  │ Policy and Eligibility Evaluation           │
-  │         ↓                                   │
-  │ Scheduler + Durable Claims + Leases         │
-  │         ↓                                   │
-  │ Execution Assignment and Revocation         │
-  └──────────────────┬──────────────────────────┘
-                     │ bounded authority
-                     ▼
-                EXECUTION PLANE
-  ┌─────────────────────────────────────────────┐
-  │ Isolated Workspace                          │
-  │   Repository Snapshot / Worktree            │
-  │   Coding Agent + Approved Tools             │
-  │   Build, Tests, Static Analysis             │
-  │   Logs, Metrics, Traces                     │
-  └──────────────────┬──────────────────────────┘
-                     │ candidate + evidence
-                     ▼
-             EVIDENCE AND PROMOTION
-  ┌─────────────────────────────────────────────┐
-  │ Artifact and Provenance Verification        │
-  │ Policy and Evaluation Gates                 │
-  │ Human Review When Required                  │
-  │ Authorized PR / Merge / Deployment Actions  │
-  └──────────────────┬──────────────────────────┘
-                     │
-                     ▼
-           Outcomes and Feedback
-                     │
-                     └────→ Control Plane</code></pre>
+            <figure class="engineering-diagram" aria-label="Governed autonomous delivery architecture">
+        <section class="diagram-stage" aria-label="Control plane">
+          <p class="diagram-eyebrow">01 / Decisions and authority</p>
+          <h4 class="diagram-title">Engineering control plane</h4>
+          <ul class="diagram-contents">
+            <li>Issue intake and task scope</li>
+            <li>Policy and eligibility checks</li>
+            <li>Scheduler, durable claims, and leases</li>
+            <li>Assignment, fencing, and revocation</li>
+          </ul>
+        </section>
+        <div class="diagram-connector" aria-hidden="true">Bounded execution authority</div>
+        <section class="diagram-stage" aria-label="Execution plane">
+          <p class="diagram-eyebrow">02 / Isolated work</p>
+          <h4 class="diagram-title">Execution plane</h4>
+          <ul class="diagram-contents">
+            <li>Repository snapshot or worktree</li>
+            <li>Coding agent with approved tools</li>
+            <li>Builds, tests, and static analysis</li>
+            <li>Logs, metrics, and traces</li>
+          </ul>
+        </section>
+        <div class="diagram-connector" aria-hidden="true">Candidate change and evidence</div>
+        <section class="diagram-stage" aria-label="Evidence and promotion plane">
+          <p class="diagram-eyebrow">03 / Verification and release authority</p>
+          <h4 class="diagram-title">Evidence and promotion</h4>
+          <ul class="diagram-contents">
+            <li>Artifact and provenance verification</li>
+            <li>Policy and evaluation gates</li>
+            <li>Human review when required</li>
+            <li>Authorized PR, merge, and deploy actions</li>
+          </ul>
+        </section>
+        <figcaption><strong>Feedback loop:</strong> engineering outcomes and operational evidence inform future control-plane scheduling, evaluations, and policy decisions.</figcaption>
+      </figure>
 
       <p>The essential principle is that the agent does not independently grant itself delivery authority.</p>
       <p>An agent may produce a patch, tests, documentation, and a recommendation. A separate, trusted component determines whether that result satisfies the organization's delivery policy.</p>
@@ -140,69 +388,70 @@
       <h3>A reproducible fencing experiment</h3>
       <p>The following Python example demonstrates the fundamental principle using SQLite. It does not launch an AI agent, contact GitHub, or modify a real repository.</p>
       <p>Save it as <code>fencing_demo.py</code> and run it with <code>python3 fencing_demo.py</code>.</p>
-      <pre class="article-code"><code>import sqlite3
-import tempfile
-from pathlib import Path
+      <p class="code-caption">Example · Python 3 / SQLite</p>
+      <pre class="article-code article-code-python"><code><span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-with tempfile.TemporaryDirectory() as directory:
-    db = sqlite3.connect(Path(directory) / "control.sqlite")
+<span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">directory</span><span class="p">:</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;control.sqlite&quot;</span><span class="p">)</span>
 
-    db.execute("""
-        CREATE TABLE runs (
-            issue TEXT PRIMARY KEY,
-            generation INTEGER NOT NULL,
-            state TEXT NOT NULL
-        )
-    """)
+    <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        CREATE TABLE runs (</span>
+<span class="s2">            issue TEXT PRIMARY KEY,</span>
+<span class="s2">            generation INTEGER NOT NULL,</span>
+<span class="s2">            state TEXT NOT NULL</span>
+<span class="s2">        )</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
 
-    def claim(issue):
-        row = db.execute(
-            "SELECT generation FROM runs WHERE issue = ?",
-            (issue,)
-        ).fetchone()
+    <span class="k">def</span><span class="w"> </span><span class="nf">claim</span><span class="p">(</span><span class="n">issue</span><span class="p">):</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+            <span class="s2">&quot;SELECT generation FROM runs WHERE issue = ?&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">issue</span><span class="p">,)</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
 
-        generation = row[0] + 1 if row else 1
+        <span class="n">generation</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">row</span> <span class="k">else</span> <span class="mi">1</span>
 
-        with db:
-            db.execute("""
-                INSERT INTO runs VALUES (?, ?, 'RUNNING')
-                ON CONFLICT(issue) DO UPDATE SET
-                    generation = excluded.generation,
-                    state = 'RUNNING'
-            """, (issue, generation))
+        <span class="k">with</span> <span class="n">db</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                INSERT INTO runs VALUES (?, ?, &#39;RUNNING&#39;)</span>
+<span class="s2">                ON CONFLICT(issue) DO UPDATE SET</span>
+<span class="s2">                    generation = excluded.generation,</span>
+<span class="s2">                    state = &#39;RUNNING&#39;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">issue</span><span class="p">,</span> <span class="n">generation</span><span class="p">))</span>
 
-        return generation
+        <span class="k">return</span> <span class="n">generation</span>
 
-    def revoke(issue):
-        with db:
-            db.execute("""
-                UPDATE runs
-                SET generation = generation + 1,
-                    state = 'REVOKED'
-                WHERE issue = ?
-            """, (issue,))
+    <span class="k">def</span><span class="w"> </span><span class="nf">revoke</span><span class="p">(</span><span class="n">issue</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">db</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                UPDATE runs</span>
+<span class="s2">                SET generation = generation + 1,</span>
+<span class="s2">                    state = &#39;REVOKED&#39;</span>
+<span class="s2">                WHERE issue = ?</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">issue</span><span class="p">,))</span>
 
-    def submit_for_review(issue, generation):
-        with db:
-            result = db.execute("""
-                UPDATE runs SET state = 'REVIEW'
-                WHERE issue = ?
-                  AND generation = ?
-                  AND state = 'RUNNING'
-            """, (issue, generation))
+    <span class="k">def</span><span class="w"> </span><span class="nf">submit_for_review</span><span class="p">(</span><span class="n">issue</span><span class="p">,</span> <span class="n">generation</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">db</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                UPDATE runs SET state = &#39;REVIEW&#39;</span>
+<span class="s2">                WHERE issue = ?</span>
+<span class="s2">                  AND generation = ?</span>
+<span class="s2">                  AND state = &#39;RUNNING&#39;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">issue</span><span class="p">,</span> <span class="n">generation</span><span class="p">))</span>
 
-        return result.rowcount == 1
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">rowcount</span> <span class="o">==</span> <span class="mi">1</span>
 
-    old_worker = claim("ENG-42")
-    revoke("ENG-42")
+    <span class="n">old_worker</span> <span class="o">=</span> <span class="n">claim</span><span class="p">(</span><span class="s2">&quot;ENG-42&quot;</span><span class="p">)</span>
+    <span class="n">revoke</span><span class="p">(</span><span class="s2">&quot;ENG-42&quot;</span><span class="p">)</span>
 
-    assert not submit_for_review("ENG-42", old_worker)
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">submit_for_review</span><span class="p">(</span><span class="s2">&quot;ENG-42&quot;</span><span class="p">,</span> <span class="n">old_worker</span><span class="p">)</span>
 
-    new_worker = claim("ENG-42")
-    assert submit_for_review("ENG-42", new_worker)
+    <span class="n">new_worker</span> <span class="o">=</span> <span class="n">claim</span><span class="p">(</span><span class="s2">&quot;ENG-42&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">submit_for_review</span><span class="p">(</span><span class="s2">&quot;ENG-42&quot;</span><span class="p">,</span> <span class="n">new_worker</span><span class="p">)</span>
 
-    print("Stale worker denied")
-    print("Current worker accepted")</code></pre>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Stale worker denied&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Current worker accepted&quot;</span><span class="p">)</span></code></pre>
       <p>Expected output:</p>
       <pre class="article-code"><code>Stale worker denied
 Current worker accepted</code></pre>
@@ -214,7 +463,7 @@ Current worker accepted</code></pre>
       <h2>5. The failure modes that matter</h2>
       <p>A production control plane should be evaluated against failure scenarios, not merely successful demonstrations.</p>
       <div class="article-table-wrap">
-        <table class="article-table">
+        <table class="article-table table-failures">
           <thead><tr><th scope="col">Failure scenario</th><th scope="col">Potential consequence</th><th scope="col">Required control</th></tr></thead>
           <tbody>
             <tr><td>Duplicate task dispatch</td><td>Two agents modify the same feature</td><td>Exclusive claims and concurrency policy</td></tr>
@@ -274,7 +523,7 @@ Current worker accepted</code></pre>
       <p>For software engineering, that means independently establishing whether the resulting system behaves as required.</p>
       <p>A reviewable autonomous execution should produce a structured evidence bundle containing:</p>
       <div class="article-table-wrap">
-        <table class="article-table">
+        <table class="article-table table-evidence">
           <thead><tr><th scope="col">Evidence</th><th scope="col">Engineering question answered</th></tr></thead>
           <tbody>
             <tr><td>Issue ID, run ID, and execution generation</td><td>Who owned this work?</td></tr>
@@ -300,7 +549,7 @@ Current worker accepted</code></pre>
       <p>Google's <a href="https://research.google/pubs/dora-2025-state-of-ai-assisted-software-development-report/" target="_blank" rel="noopener noreferrer">2025 DORA research</a> describes AI as an amplifier of existing engineering capabilities. Greater throughput without sufficient organizational and technical foundations can expose underlying weaknesses.</p>
       <p>For autonomous engineering, I would establish a measurement framework before scaling concurrency.</p>
       <div class="article-table-wrap">
-        <table class="article-table">
+        <table class="article-table table-metrics">
           <thead><tr><th scope="col">Metric</th><th scope="col">Definition</th><th scope="col">Why it matters</th></tr></thead>
           <tbody>
             <tr><td>Autonomous completion rate</td><td>Accepted tasks completed without routine human intervention divided by eligible tasks</td><td>Measures useful autonomy</td></tr>
@@ -370,13 +619,12 @@ Current worker accepted</code></pre>
         <li>Google DORA: <a href="https://research.google/pubs/dora-2025-state-of-ai-assisted-software-development-report/" target="_blank" rel="noopener noreferrer">2025 State of AI-assisted Software Development</a></li>
         <li>GitHub: <a href="https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations" target="_blank" rel="noopener noreferrer">Artifact attestations and build provenance</a></li>
       </ol>
-    </article>
-  </main>
+</article>
 
-  <footer class="site-footer">
-    <div class="site">
-      <p>© 2026 Thomas Howard</p>
-    </div>
-  </footer>
+<footer>
+  © 2026 Thomas Howard
+</footer>
+
+  </main>
 </body>
 </html>
