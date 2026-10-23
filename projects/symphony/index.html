@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Adapting OpenAI Symphony at Snap eHealth: task intake, scoped agent context, isolated execution, independent verification, and the path from a local harness to a shared service.">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>Building with Symphony: from a task to a reviewable change | Thomas Howard</title>
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../styles.css?v=project-essays-1">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a>
+      <nav class="desktop-nav" aria-label="Main navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/" aria-current="page">Projects</a><span class="nav-github"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a></span></nav>
+      <details class="mobile-nav">
+        <summary>Menu</summary>
+        <nav aria-label="Mobile navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/" aria-current="page">Projects</a><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a></nav>
+      </details>
+    </div>
+  </header>
+  <main id="main" class="site">
+    <a class="back-link" href="../">← All projects</a>
+    <article class="reading case-study">
+      <p class="eyebrow">Project essay · 02 / 04</p>
+      <h1>Building with Symphony: from a task to a reviewable change</h1>
+      <p class="deck">How I approach agent context, specialized roles, bounded execution, and evidence in engineering workflows built around Codex and Symphony.</p>
+      <p class="meta"><time datetime="2026-10-23">October 23, 2026</time> · Thomas Howard · 5 min read</p>
+      <dl class="case-facts">
+        <div><dt>My role</dt><dd>Agentic architecture &amp; workflow design</dd></div>
+        <div><dt>Focus</dt><dd>Codex · Symphony · Agent orchestration</dd></div>
+        <div><dt>Project stage</dt><dd>Local harness · Shared service in preparation</dd></div>
+      </dl>
+      <nav class="essay-nav" aria-label="In this essay"><p>In this essay</p><ul><li><a href="#contract">Task contracts</a></li><li><a href="#roles">Specialized roles</a></li><li><a href="#execution">Execution boundaries</a></li><li><a href="#validation">Runtime validation</a></li><li><a href="#status">Current status</a></li></ul></nav>
+<p>A coding agent can make a useful change while leaving a surprisingly difficult coordination problem behind it. Which version of the repository did it use? What was it allowed to change? Can another agent reproduce its result? Who decides that the work is ready to merge?</p>
+<p>My work with Codex and Symphony at Snap eHealth starts with those questions. I have been developing workflows for specialized engineering agents across implementation, testing, review, debugging, and remediation. The goal is to turn a bounded engineering request into a reviewable result whose scope and evidence are easy to understand.</p>
+<p>Symphony originates with <a href="https://github.com/openai/symphony/blob/main/SPEC.md">OpenAI’s open-source specification</a>. Our project adapts that foundation to Snap’s work intake, execution constraints, and review process. The work described here includes a local single-ticket harness and a prepared shared-service runtime. The shared automatic dispatcher is not active.</p>
+
+<h2 id="contract">Start with a task that can be completed</h2>
+<p>We designed intake around a human-selected, bounded work item. It identifies one repository, describes the intended change, and supplies acceptance criteria. A broad instruction such as “improve this application” leaves too many decisions implicit for an unattended worker. A specific defect, its expected behavior, and the relevant verification give the agent a much more useful starting point.</p>
+<p>A candidate label expresses interest in running the work; it does not grant execution authority. The admission design separately considers source and policy versions, budget, reviewer, and whether the service has been placed on hold. This separates the business request from the operational decision to execute it.</p>
+<p>The context supplied to an agent is part of the solution. Repository guidance, known constraints, test commands, and relevant architecture need to be discoverable. The aim is to give a worker enough information to act independently without asking it to reconstruct the organization from a directory of source files.</p>
+
+<figure class="case-diagram"><figcaption>The intended shared-service workflow</figcaption><ol class="system-flow"><li><span>01 · Scope</span><strong>Admit a bounded task</strong><p>Validate the repository, source, permissions, budget, and stop state.</p></li><li><span>02 · Execute</span><strong>Build a candidate</strong><p>Give an isolated worker scoped context and tools for implementation and testing.</p></li><li><span>03 · Verify</span><strong>Prepare review evidence</strong><p>A constrained publisher proposes a change; independent checks evaluate it.</p></li><li><span>04 · Decide</span><strong>Keep human ownership</strong><p>A human reviews and merges. Worker completion grants no deployment authority.</p></li></ol></figure>
+
+<h2 id="roles">Specialization makes the handoffs explicit</h2>
+<p>The engineering workflow uses specialized roles because implementation, testing, and review ask different questions. An implementation agent is trying to satisfy a requirement. A reviewer is looking for mistakes, missing cases, and unintended consequences. A debugging agent needs to investigate a failure before proposing another patch.</p>
+<p>My broader agent work has involved ten specialized engineering agents. The meaningful design choice is what each role can see, change, and return. A review that silently rewrites the implementation makes it harder to understand what was evaluated. A test agent that reports only “passed” leaves the next person without a reproducible basis for confidence.</p>
+<p>The handoff therefore needs an artifact and its evidence: a candidate change, the checks performed, unresolved findings, and enough context for the next role to continue. Adding more agents helps only when their responsibilities and exchanges reduce ambiguity. Otherwise, it creates more coordination work.</p>
+
+<h2 id="execution">Execution and publication are separate capabilities</h2>
+<p>We designed the worker to operate inside a bounded environment. The prepared runtime package combines pinned Symphony and Codex components with restricted container checks. Those checks inspect the actual configuration: network access, filesystem mounts, user privileges, resource limits, and deadlines. A declared configuration is useful, but the running environment is what determines the worker’s effective capabilities.</p>
+<p>Publication is a separate responsibility. The shared-service design uses a constrained publisher to create a pull request, followed by independent CI and human review. Workers do not approve their own work, merge protected branches, or deploy a result. This makes it possible to give an agent room to investigate and test while keeping the acceptance of its output explicit.</p>
+<p>Cancellation also requires more than stopping the most visible process. The design needs a durable stop state and a way to prevent stale work from being accepted after authority changes. In my <a href="../../blog/beyond-ai-coding-assistants/">earlier control-plane essay</a>, I examine leases, fencing, and reconciliation in more detail. Here, those concerns are acceptance requirements for the shared service, not claims that every part is already commissioned.</p>
+
+<h2 id="validation">A runtime package is a useful, limited milestone</h2>
+<p>Preparing the runtime gave us a concrete artifact to inspect and test. The recorded checks built a native ARM64 image, ran selected upstream tests, and completed the Codex initialization handshake inside a restricted container. They did not send a model prompt or launch a live shared dispatcher.</p>
+<p>That distinction exposed an important integration issue: initialization could succeed while the inner command sandbox still lacked a capability it expected. Treating the handshake as proof of end-to-end execution would have hidden the remaining work. The useful result was a narrower one: the package could be built and initialized, while live command execution still needed its intended boundary resolved and tested.</p>
+<p>Our verification approach separates several questions. Does the package build? Can a worker initialize? Can it execute a bounded task under the intended restrictions? Can it be stopped and recovered? Can the accepted result reach review without giving the worker additional authority? Each question requires its own evidence.</p>
+
+<h2 id="status">From a local harness to a shared service</h2>
+<p>The project currently has a local single-ticket foundation, a prepared runtime package, and a defined shared-service workflow. Shared-host commissioning, portable admission and stop handling, budget integration, and the full publication handoff remain part of the next stage. The preparation repository keeps automatic execution disabled.</p>
+<p>That is a substantial architecture project in its own right: taking an interaction that works for one engineer and making its assumptions explicit enough for a team to operate. The important outcome is a path from an authorized task to a candidate change with evidence. Agent count and generated code volume are secondary to whether someone else can understand, verify, and safely accept the result.</p>
+
+    </article>
+    <aside class="related-essays" aria-labelledby="related-title"><h2 id="related-title">Explore the other projects</h2><ul><li><a href="../sally/">Sally <span aria-hidden="true">→</span></a><span>Conversational AI</span></li><li><a href="../ai-evaluation/">AI Evaluation <span aria-hidden="true">→</span></a><span>Quality &amp; evaluation</span></li><li><a href="../referral-intelligence/">Referral Intelligence <span aria-hidden="true">→</span></a><span>Decision support</span></li></ul><a class="back-link" href="../../blog/">Browse all writing →</a></aside>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-intro"><a class="brand" href="../../" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a><p>Applied AI, conversational agents, and the architecture behind useful agentic systems.</p></div>
+        <div><h2 class="footer-title">// explore</h2><nav class="footer-links" aria-label="Footer navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/">Projects</a></nav></div>
+        <div><h2 class="footer-title">// connect</h2><div class="footer-links"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X ↗</a></div></div>
+      </div>
+      <div class="footer-bottom">© 2026 Thomas Howard</div>
+    </div>
+  </footer>
+</body>
+</html>

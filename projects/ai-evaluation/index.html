@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Inside Snap eHealth’s AI evaluation work: goldsets, guardrails, independent LLM judges, repeated sampling, demographic invariance, and real-model validation through Amazon Bedrock.">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>Building AI evaluations that explain what changed | Thomas Howard</title>
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../styles.css?v=project-essays-1">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a>
+      <nav class="desktop-nav" aria-label="Main navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/" aria-current="page">Projects</a><span class="nav-github"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a></span></nav>
+      <details class="mobile-nav">
+        <summary>Menu</summary>
+        <nav aria-label="Mobile navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/" aria-current="page">Projects</a><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a></nav>
+      </details>
+    </div>
+  </header>
+  <main id="main" class="site">
+    <a class="back-link" href="../">← All projects</a>
+    <article class="reading case-study">
+      <p class="eyebrow">Project essay · 03 / 04</p>
+      <h1>Building AI evaluations that explain what changed</h1>
+      <p class="deck">How we combine deterministic checks, independent judging, repeated sampling, and reproducible datasets to evaluate healthcare AI behavior.</p>
+      <p class="meta"><time datetime="2026-10-23">October 23, 2026</time> · Thomas Howard · 5 min read</p>
+      <dl class="case-facts">
+        <div><dt>My role</dt><dd>Evaluation architecture &amp; quality workflows</dd></div>
+        <div><dt>Focus</dt><dd>Python · Amazon Bedrock · Model evaluation</dd></div>
+        <div><dt>Project stage</dt><dd>Implemented suite · Validation ongoing</dd></div>
+      </dl>
+      <nav class="essay-nav" aria-label="In this essay"><p>In this essay</p><ul><li><a href="#contract">Behavior contracts</a></li><li><a href="#layers">Four layers</a></li><li><a href="#reproducibility">Reproducible bundles</a></li><li><a href="#mock-and-real">Mock and real models</a></li><li><a href="#debugging">Diagnosing failures</a></li><li><a href="#status">Current status</a></li></ul></nav>
+<p>When we change a prompt, model, or guardrail, we change the behavior of an application. The difficult part is establishing what changed. A handful of convincing responses cannot tell us whether the system has become less faithful to its input, more inconsistent, or more willing to cross a boundary.</p>
+<p>At Snap eHealth, my evaluation work has focused on making those changes inspectable. The central suite covers a patient-facing health chatbot and Health Risk Assessment summaries. It brings together reference datasets, deterministic checks, independent model judging, repeated sampling, and comparisons across equivalent scenarios.</p>
+<p>I think of the harness as part of the application’s architecture. It defines which behaviors matter, how we collect evidence about them, and what happens when the evidence does not support a release. The result should help an engineer explain a decision, not merely produce a score.</p>
+
+<h2 id="contract">Define the behavior before measuring it</h2>
+<p>We started by separating the two product families. A chatbot needs to respond appropriately within its scope. An HRA summary needs to preserve the meaning of supplied answers. They share privacy and safety concerns, but the outputs have different jobs.</p>
+<p>For a summary, a small change in language can alter meaning. An illustrative input such as “the patient denies a symptom” must not become a positive finding. Missing information should stay missing, and a stated uncertainty should not become a confident diagnosis. Those are concrete properties we can test even when multiple phrasings would be acceptable.</p>
+<p>The datasets reflect that distinction. Goldsets contain ordinary expected behavior. Separate collections exercise adversarial input, privacy boundaries, and high-risk scenarios. Expanded cases examine faithfulness, completeness, and consistency. Keeping those categories visible prevents a strong average on easy examples from hiding a recurring failure in a smaller, consequential group.</p>
+
+<h2 id="layers">Four complementary evaluation layers</h2>
+<figure class="case-diagram"><figcaption>One candidate response, several kinds of evidence</figcaption><ol class="system-flow"><li><span>Required behavior</span><strong>Deterministic checks</strong><p>Test explicit constraints, forbidden content, privacy rules, and expected concepts.</p></li><li><span>Meaning and quality</span><strong>Independent judging</strong><p>Assess semantic qualities using a separate model and an explicit rubric.</p></li><li><span>Stability</span><strong>Repeated sampling</strong><p>Retain multiple responses to find cases that pass only intermittently.</p></li><li><span>Consistency</span><strong>Paired scenarios</strong><p>Compare equivalent inputs with controlled synthetic demographic variations.</p></li></ol></figure>
+<p>Deterministic checks are the first layer because some requirements need an explicit answer. A favorable quality score cannot excuse a hard privacy or safety failure. That precedence is built into the evaluation logic.</p>
+<p>A separate LLM judge helps with questions that exact matching handles poorly: whether an answer is clear, complete, appropriately scoped, or semantically faithful. It can recognize an acceptable response that uses different wording from the reference. Its score remains evidence for review, and it cannot override a hard failure.</p>
+<p>Repeated sampling addresses another weakness of a single demonstration. The same input can produce different responses. Retaining every sample lets us identify unstable cases instead of allowing one successful response to stand in for consistent behavior.</p>
+<p>Paired scenarios then ask whether equivalent inputs receive equivalent treatment when controlled demographic wording changes. These tests are a practical way to reveal inconsistencies. Passing a limited set does not establish fairness across every population or clinical setting; the scope of the conclusion has to match the scope of the cases.</p>
+
+<h2 id="reproducibility">The unit of change is larger than a prompt</h2>
+<p>We version prompts with their model parameters, guardrail policies, datasets, and evaluation configuration. The bundle describes the assets that belong together. Without that connection, a report can say that a candidate passed while leaving everyone uncertain about which instructions or rules were evaluated.</p>
+<p>The reports preserve the individual responses, check results, judge explanations, repeated samples, and category summaries. That makes a regression actionable. An engineer can inspect the failing behavior and determine whether it is concentrated in a scenario family, tied to one policy, or spread across the entire candidate.</p>
+<p>The current release configuration considers the overall pass rate, critical failures, judge quality, and paired-scenario consistency. Multiple criteria matter because these measurements answer different questions. Improving an average does not make a critical failure disappear.</p>
+
+<h2 id="mock-and-real">Testing the evaluator and testing the model</h2>
+<p>The harness has mock and real-provider execution paths. Mock runs exercise the evaluation infrastructure without calling AWS: loading cases, applying checks, producing reports, and running CI. They are useful for finding defects in the machinery that measures the model.</p>
+<p>Real-model runs use Amazon Bedrock for candidate and judge inference. They answer a different question: how the selected models behave on the chosen cases under the recorded configuration. We use a separate judge model where practical, while recognizing that model-based judging still has limitations and can share blind spots with the candidate.</p>
+<p>The documented chatbot baseline from July 16, 2026 passed all 77 cases in that run. The suite also contains 34 HRA scenarios, but its documented real-model HRA baseline remains pending. Those are deliberately separate statements. A passing mock HRA run cannot establish HRA model quality, and one passing chatbot run cannot establish stability across future releases.</p>
+<p>Public <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/evaluation.html">Amazon Bedrock evaluation documentation</a> describes automated, model-judged, and human evaluation options. Our project’s contribution is the application-specific datasets, rules, runners, and interpretation of their results.</p>
+
+<h2 id="debugging">Failures need diagnosis before a prompt change</h2>
+<p>A red result can indicate an unsafe response, a false positive in the evaluator, an ambiguous expected answer, or a policy question the test cannot settle. We treat those as different failure classes. Otherwise, the easiest way to improve the dashboard is to weaken the check or overfit the prompt to a particular phrase.</p>
+<p>Sally supplied a useful example of why this matters. A conversational screen moved through its synthetic turns faster after an improvement to the speech path. The background analysis then had less time to arrive, so the screen appeared to regress. The evaluator was partly measuring its own pacing. Making that timing explicit was necessary before judging the application.</p>
+<p>This is also where evaluation connects to agentic delivery. A structured finding can guide a bounded repair, followed by a rerun of the relevant checks. The repair does not authorize its own acceptance. The evidence must still survive the independent checks that govern the change.</p>
+
+<h2 id="status">What this work makes possible</h2>
+<p>The implemented foundation gives us a repeatable way to compare candidates and inspect failure modes. Release automation and monitoring are still being developed, and real HRA validation and policy review remain outstanding. The harness supports those decisions without pretending that automated results settle every clinical or product question.</p>
+<p>The most useful output is an explanation: what was tested, what changed, which cases failed, and why the candidate should progress or stop. That makes evaluation a working part of AI development rather than a percentage attached after the implementation is finished.</p>
+
+    </article>
+    <aside class="related-essays" aria-labelledby="related-title"><h2 id="related-title">Explore the other projects</h2><ul><li><a href="../sally/">Sally <span aria-hidden="true">→</span></a><span>Conversational AI</span></li><li><a href="../symphony/">Symphony <span aria-hidden="true">→</span></a><span>Agent orchestration</span></li><li><a href="../referral-intelligence/">Referral Intelligence <span aria-hidden="true">→</span></a><span>Decision support</span></li></ul><a class="back-link" href="../../blog/">Browse all writing →</a></aside>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-intro"><a class="brand" href="../../" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a><p>Applied AI, conversational agents, and the architecture behind useful agentic systems.</p></div>
+        <div><h2 class="footer-title">// explore</h2><nav class="footer-links" aria-label="Footer navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/">Projects</a></nav></div>
+        <div><h2 class="footer-title">// connect</h2><div class="footer-links"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X ↗</a></div></div>
+      </div>
+      <div class="footer-bottom">© 2026 Thomas Howard</div>
+    </div>
+  </footer>
+</body>
+</html>

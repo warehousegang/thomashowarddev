@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A technical case study of Sally: shared phone and browser conversation logic, fast and slow AI loops, tool-result validation, and structured visit briefs.">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>Building Sally: conversation, context, and a trustworthy visit brief | Thomas Howard</title>
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../styles.css?v=project-essays-1">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a>
+      <nav class="desktop-nav" aria-label="Main navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/" aria-current="page">Projects</a><span class="nav-github"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a></span></nav>
+      <details class="mobile-nav">
+        <summary>Menu</summary>
+        <nav aria-label="Mobile navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/" aria-current="page">Projects</a><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a></nav>
+      </details>
+    </div>
+  </header>
+  <main id="main" class="site">
+    <a class="back-link" href="../">← All projects</a>
+    <article class="reading case-study">
+      <p class="eyebrow">Project essay · 01 / 04</p>
+      <h1>Building Sally: conversation, context, and a trustworthy visit brief</h1>
+      <p class="deck">How we separated real-time conversation, background analysis, and evidence-backed extraction in a healthcare voice agent.</p>
+      <p class="meta"><time datetime="2026-10-23">October 23, 2026</time> · Thomas Howard · 5 min read</p>
+      <dl class="case-facts">
+        <div><dt>My role</dt><dd>Applied AI architecture &amp; development</dd></div>
+        <div><dt>Focus</dt><dd>TypeScript · Voice · Structured outputs</dd></div>
+        <div><dt>Project stage</dt><dd>Restricted synthetic prototype</dd></div>
+      </dl>
+      <nav class="essay-nav" aria-label="In this essay"><p>In this essay</p><ul><li><a href="#workloads">Three workloads</a></li><li><a href="#context">Background context</a></li><li><a href="#actions">Action evidence</a></li><li><a href="#evaluation">Evaluation lessons</a></li><li><a href="#status">Current status</a></li></ul></nav>
+<p>A voice agent has very little room to hide a poor architectural decision. The caller experiences a slow model as silence, a stale response as an interruption, and an unsupported claim as a broken promise. Sally brought those problems together in one product: a healthcare voice agent that can hold a conversation, use tools, and turn what it learns into a structured visit brief.</p>
+<p>I lead Sally’s applied AI architecture and development at Snap eHealth. The work spans the conversation itself, the tools available to it, the background analysis, and the evidence used to check the resulting brief. The central design problem has been deciding which work belongs in the caller’s immediate experience and which work can happen alongside it.</p>
+
+<h2 id="workloads">Three workloads with different deadlines</h2>
+<p>We separated Sally into a fast conversation loop, a slower analysis loop, and a final extraction step. Each has a different output and a different tolerance for waiting. The conversation loop needs to respond to the person. Background analysis needs to retain useful context. Final extraction needs to produce an accurate account of the completed conversation.</p>
+<figure class="case-diagram"><figcaption>Three workloads, different deadlines</figcaption><ol class="system-flow"><li><span>During the conversation</span><strong>Respond and use tools</strong><p>Handle the current turn and return a response that reflects confirmed tool results.</p></li><li><span>Alongside the conversation</span><strong>Update context</strong><p>Build a narrative and useful follow-up questions without blocking ordinary speech.</p></li><li><span>After the conversation</span><strong>Produce the visit brief</strong><p>Extract structured information and check it against the transcript and action evidence.</p></li></ol></figure>
+<p>That separation lets us make different choices for each workload. A model that produces a thoughtful analysis may still be a poor choice for the speaking role if callers wait too long between turns. Conversely, the fastest speaker is not automatically the best model for extracting a careful record. We evaluate those responsibilities separately.</p>
+<p>The implementation uses TypeScript, with shared conversation logic behind browser and phone transports. Retell handles the live audio session and Twilio supplies the telephone route. Our application owns the conversation and its state. Keeping that ownership clear gives us one place to evolve prompts, tools, and extraction behavior instead of maintaining a separate agent for every channel.</p>
+
+<h2 id="context">Keeping analysis off the conversation path</h2>
+<p>Moving analysis into the background sounds straightforward until a person corrects themselves while that analysis is running. A result can be valid for an earlier transcript and already be stale when it returns. Applying it blindly would let old context overwrite newer information.</p>
+<p>We built and tested the separation around those timing problems. Background work can be coalesced, and stale revisions are rejected. A regression test holds the slow provider response open while the conversation completes its speech path, then checks how the later update is handled. That proves an architectural property: routine background work does not have to finish before Sally responds.</p>
+<p>It does not prove how quickly a caller hears audio over a real phone connection. Provider inference, transport, synthesis, and playback contribute their own delay. Keeping those measurements separate helps us improve the part of the system responsible for a problem.</p>
+
+<h2 id="actions">A spoken promise needs an actual result</h2>
+<p>Tool use introduces another kind of timing problem. A model can generate a sentence that assumes an action succeeded before the tool has confirmed it. In an appointment scenario, “you’re booked” is a consequential claim. A fluent sentence is insufficient evidence that anything was booked.</p>
+<p>We treat tool results as a separate source of truth. The final brief is checked against action evidence as well as the conversation. A booking claim in a transcript cannot substitute for a successful function result. Patient statements also need evidence: extraction validation checks references and quotations, and it rejects unsupported claims of chart verification when no chart integration exists.</p>
+<p>The same principle applies when a response is interrupted or a session closes. An earlier model response must not continue causing tool effects simply because its request eventually completes. Tests cover response identity, closed-session state, and disabled-call gates so delayed work does not inherit authority from an obsolete turn.</p>
+
+<h2 id="evaluation">What the evaluations taught us</h2>
+<p>We use deterministic tests to check state transitions and evidence handling, then separate provider screens to examine behavior with actual models. One useful technique is replaying a fixed caller turn against multiple candidates. The conversation history stays fixed up to that point, and each candidate supplies the next response.</p>
+<p>This avoids a misleading comparison. Once a different model says something different, the caller might answer differently too. Replaying the original caller’s later words as if nothing changed would no longer be the same conversation. A fixed-turn comparison answers a narrower, more defensible question.</p>
+<p>Some of the most useful findings were defects in the surrounding instructions and evaluator. An unavailable-slot scenario exposed a missing statement that the offered slots represented the complete availability. Correcting that context was more appropriate than rewriting the speaking model’s personality. Another screen progressed through a synthetic conversation so quickly that background analysis could not arrive in time; its result partly rewarded a slower speech path. Making turn pacing explicit helped separate a test artifact from a product regression.</p>
+<p>These investigations changed how I approach model selection. I want to know which behavior failed, what information the model actually received, and whether the test represents the workload. A larger model or a longer prompt is only useful if it addresses the demonstrated cause.</p>
+
+<h2 id="status">What is implemented, and what comes next</h2>
+<p>Sally has implemented conversation, analysis, extraction, transport, and validation components, alongside a synthetic scheduling demonstration. The scheduling presentation uses prerecorded dialogue; it does not book appointments. The interactive application is also restricted to approved synthetic demonstrations.</p>
+<p>The current source requires AI disclosure and recipient verification before protected context, model conversation, or actions. With no production verification adapter installed, that gate permits only a neutral introduction and safe termination. Live EHR connectivity and production scheduling remain separate integration work. Earlier prototype and provider-test results establish specific capabilities; they do not establish a production healthcare deployment.</p>
+<p>The work has given me a concrete way to reason about conversational AI: separate the workloads by their deadlines, preserve the distinction between statements and completed actions, and evaluate each boundary with evidence that actually exercises it. That is how an engaging conversation becomes part of a dependable application.</p>
+
+    </article>
+    <aside class="related-essays" aria-labelledby="related-title"><h2 id="related-title">Explore the other projects</h2><ul><li><a href="../symphony/">Symphony <span aria-hidden="true">→</span></a><span>Agent orchestration</span></li><li><a href="../ai-evaluation/">AI Evaluation <span aria-hidden="true">→</span></a><span>Quality &amp; evaluation</span></li><li><a href="../referral-intelligence/">Referral Intelligence <span aria-hidden="true">→</span></a><span>Decision support</span></li></ul><a class="back-link" href="../../blog/">Browse all writing →</a></aside>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-intro"><a class="brand" href="../../" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a><p>Applied AI, conversational agents, and the architecture behind useful agentic systems.</p></div>
+        <div><h2 class="footer-title">// explore</h2><nav class="footer-links" aria-label="Footer navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/">Projects</a></nav></div>
+        <div><h2 class="footer-title">// connect</h2><div class="footer-links"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X ↗</a></div></div>
+      </div>
+      <div class="footer-bottom">© 2026 Thomas Howard</div>
+    </div>
+  </footer>
+</body>
+</html>

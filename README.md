@@ -18,7 +18,7 @@ Then open http://localhost:8000.
 
 - `index.html` — terminal introduction, featured work, and recent writing
 - `about/` — applied AI experience and approach to solutions architecture
-- `projects/` — Sally, Symphony, AI evaluation, and referral intelligence
+- `projects/` — project overview and four technical essays: `sally/`, `symphony/`, `ai-evaluation/`, and `referral-intelligence/`
 - `blog/` — all writing, articles, and monthly archives
 - `styles.css` — shared theme, responsive layouts, and reading styles
 - `terminal.js` — progressive typing animation for the homepage introduction
@@ -29,3 +29,5 @@ All content is ordinary HTML. When publishing an article, add it to the writing 
 ## Deploy
 
 Publish the repository as static files using the existing GitHub Pages configuration. `CNAME` preserves the `thomashoward.dev` custom domain. The site also works with any static host.
+
+Project essays use the shared reading styles, local tables of contents, role and stage summaries, and HTML architecture diagrams. They are also listed in Writing and the monthly archive. Keep project-stage descriptions grounded in source evidence: synthetic prototypes, local validation, prepared runtimes, and production deployments are different milestones.

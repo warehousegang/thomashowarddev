@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#0a0a0f">
   <title>AI Projects | Thomas Howard</title>
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../styles.css?v=terminal-2">
+  <link rel="stylesheet" href="../styles.css?v=project-essays-1">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -22,34 +22,38 @@
     </div>
   </header>
   <main id="main" class="container page-main">
-    <div class="page-heading"><p class="command"><span class="prompt" aria-hidden="true">$</span>ls projects/</p><h1><span class="comment" aria-hidden="true">// </span>projects</h1><p class="page-intro">Applied AI solutions for conversation, agent coordination, evaluation, and healthcare decision support.</p></div>
+    <div class="page-heading"><p class="command"><span class="prompt" aria-hidden="true">$</span>ls projects/</p><h1><span class="comment" aria-hidden="true">// </span>projects</h1><p class="page-intro">Four projects, from the problem to the implementation. Explore the architecture, tradeoffs, evaluation methods, and lessons behind my applied AI work.</p></div>
     <div class="card-grid project-grid"><article class="card project-card" id="sally">
         <div class="card-topline"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/><path d="M8 11h8m-8 4h5"/></svg><span class="card-kind">// conversational AI</span></div>
-        <h2>Sally</h2>
-        <p>I lead development of an LLM-powered healthcare voice agent that combines real-time conversation, tool execution, background analysis, and structured visit briefs.</p><p>The solution brings together browser and phone interactions, interruption handling, and consent and verification boundaries. Scenario-based evaluations test conversational behavior, structured outputs, safety rules, and failure handling.</p>
-        <ul class="tags" aria-label="Topics"><li>Conversational AI</li><li>Tool use</li><li>Structured outputs</li></ul>
-
+        <h2><a href="sally/">Sally</a></h2>
+        <p>A healthcare voice agent designed around three workloads: a responsive conversation loop, background analysis, and an evidence-checked visit brief.</p><p>I lead its architecture and development, including shared browser and phone logic, tool-result validation, and scenario tests. The essay follows the timing, context, and evaluation decisions behind the synthetic prototype.</p>
+        <ul class="tags" aria-label="Topics"><li>Conversational AI</li><li>Tool use</li><li>Evaluation</li></ul>
+        <p class="project-state">Restricted synthetic prototype</p>
+        <a class="card-link" href="sally/">Read the Sally essay <span aria-hidden="true">→</span><span class="reading-time">5 min</span></a>
       </article>
 <article class="card project-card" id="symphony">
         <div class="card-topline"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="5" rx="1"/><rect x="2" y="17" width="6" height="5" rx="1"/><rect x="16" y="17" width="6" height="5" rx="1"/><path d="M12 7v5M5 17v-5h14v5"/></svg><span class="card-kind">// agent orchestration</span></div>
-        <h2>Symphony</h2>
-        <p>I architect engineering workflows using Codex and Symphony to coordinate 10 specialized agents across implementation, testing, review, debugging, and remediation.</p><p>The architecture gives agents scoped context and tool permissions, with isolated execution, cancellation, cost accounting, and audit trails. Verification gates retain human authority over merges and production changes.</p>
-        <ul class="tags" aria-label="Topics"><li>Multi-agent systems</li><li>Codex</li><li>Orchestration</li></ul>
-        <a class="card-link" href="../blog/beyond-ai-coding-assistants/">Read about agent architecture <span aria-hidden="true">→</span></a>
+        <h2><a href="symphony/">Symphony</a></h2>
+        <p>Engineering workflows that connect a bounded task to an agent-produced change, reproducible checks, and human review.</p><p>My work adapts OpenAI’s Symphony foundation to scoped context, specialized agents, isolated execution, and a separate publication boundary. The essay explains the local harness, prepared runtime, and remaining steps toward a shared service.</p>
+        <ul class="tags" aria-label="Topics"><li>Agentic systems</li><li>Codex</li><li>Architecture</li></ul>
+        <p class="project-state">Local harness · Shared service in preparation</p>
+        <a class="card-link" href="symphony/">Read the Symphony essay <span aria-hidden="true">→</span><span class="reading-time">5 min</span></a>
       </article>
 <article class="card project-card" id="evaluation">
-        <div class="card-topline"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6v4H9zM9 5H5v17h14V5h-4M8 14l3 3 5-6"/></svg><span class="card-kind">// AI evaluation</span></div>
-        <h2>AI Evaluation &amp; Control</h2>
-        <p>I build evaluation harnesses and reusable agent workflows that turn model behavior into evidence engineers can inspect and act on.</p><p>This includes goldset datasets and guardrails with Amazon Bedrock, scenario tests for conversational agents, and structured findings that feed deterministic triage, bounded remediation, protected verification, and human escalation.</p>
-        <ul class="tags" aria-label="Topics"><li>Agent evaluation</li><li>Amazon Bedrock</li><li>Verification</li></ul>
-        <a class="card-link" href="../blog/building-an-ai-first-engineering-organization/">Read about governed AI delivery <span aria-hidden="true">→</span></a>
+        <div class="card-topline"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6v4H9zM9 5H5v17h14V5h-4M8 14l3 3 5-6"/></svg><span class="card-kind">// quality &amp; evaluation</span></div>
+        <h2><a href="ai-evaluation/">AI Evaluation</a></h2>
+        <p>An evaluation system for healthcare chat and summaries that makes changes in model behavior visible, reproducible, and actionable.</p><p>I work across reference datasets, deterministic rules, independent model judging, repeated sampling, and paired scenarios. The essay explains how the Python and Bedrock harness separates evaluator correctness from model quality—and how we investigate a failed result.</p>
+        <ul class="tags" aria-label="Topics"><li>Evaluation</li><li>Amazon Bedrock</li><li>LLMs</li></ul>
+        <p class="project-state">Implemented suite · Validation ongoing</p>
+        <a class="card-link" href="ai-evaluation/">Read the AI Evaluation essay <span aria-hidden="true">→</span><span class="reading-time">5 min</span></a>
       </article>
 <article class="card project-card" id="referral-intelligence">
         <div class="card-topline"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="5" r="3"/><circle cx="19" cy="5" r="3"/><circle cx="12" cy="19" r="3"/><path d="m7 7 4 9m6-9-4 9M8 5h8"/></svg><span class="card-kind">// decision support</span></div>
-        <h2>Referral Intelligence</h2>
-        <p>I architected a physician referral prediction system and an explainable ranking engine using clinical quality, eligibility, specialty alignment, availability, and historical outcomes.</p><p>Current work includes supervised models for 30-day referral completion: feature engineering, classification, leakage prevention, and evaluation through precision, recall, ROC-AUC, and calibration. Uncertainty handling and abstention safeguards define the decision boundaries.</p>
-        <ul class="tags" aria-label="Topics"><li>Python</li><li>scikit-learn</li><li>Explainable ML</li></ul>
-
+        <h2><a href="referral-intelligence/">Referral Intelligence</a></h2>
+        <p>A specialist assessment service that returns ranked candidates together with scoring contributions, evidence gaps, and reasons to withhold a recommendation.</p><p>I designed the boundary between assessment and workflow execution, with deterministic scoring and parity tests for the service extraction. The essay also distinguishes the current synthetic ranker from ongoing work on 30-day referral-completion prediction.</p>
+        <ul class="tags" aria-label="Topics"><li>Decision support</li><li>Python</li><li>Explainability</li></ul>
+        <p class="project-state">Synthetic assessment service · Local/test</p>
+        <a class="card-link" href="referral-intelligence/">Read the Referral Intelligence essay <span aria-hidden="true">→</span><span class="reading-time">5 min</span></a>
       </article></div>
     <section class="project-details" aria-labelledby="approach-title">
       <h2 id="approach-title"><span class="comment" aria-hidden="true">// </span>solution_design</h2>

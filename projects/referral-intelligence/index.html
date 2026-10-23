@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A case study of Referral Intelligence: deterministic specialist ranking, evidence coverage, explainable contributions, abstention, FastAPI service extraction, and future referral-completion modeling.">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>Building Referral Intelligence: ranking with reasons | Thomas Howard</title>
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../styles.css?v=project-essays-1">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a>
+      <nav class="desktop-nav" aria-label="Main navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/" aria-current="page">Projects</a><span class="nav-github"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a></span></nav>
+      <details class="mobile-nav">
+        <summary>Menu</summary>
+        <nav aria-label="Mobile navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/" aria-current="page">Projects</a><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a></nav>
+      </details>
+    </div>
+  </header>
+  <main id="main" class="site">
+    <a class="back-link" href="../">← All projects</a>
+    <article class="reading case-study">
+      <p class="eyebrow">Project essay · 04 / 04</p>
+      <h1>Building Referral Intelligence: ranking with reasons</h1>
+      <p class="deck">How we extracted an explainable assessment service, preserved its behavior, and made missing evidence and abstention part of the result.</p>
+      <p class="meta"><time datetime="2026-10-23">October 23, 2026</time> · Thomas Howard · 5 min read</p>
+      <dl class="case-facts">
+        <div><dt>My role</dt><dd>Decision-support &amp; service architecture</dd></div>
+        <div><dt>Focus</dt><dd>Python · FastAPI · Explainable scoring</dd></div>
+        <div><dt>Project stage</dt><dd>Synthetic assessment service · Local/test</dd></div>
+      </dl>
+      <nav class="essay-nav" aria-label="In this essay"><p>In this essay</p><ul><li><a href="#boundary">Service boundary</a></li><li><a href="#ranking">Explainable ranking</a></li><li><a href="#missing-evidence">Missing evidence</a></li><li><a href="#abstention">Abstention</a></li><li><a href="#verification">Extraction tests</a></li><li><a href="#prediction">Prediction work</a></li></ul></nav>
+<p>A specialist recommendation has to answer more than “who has the highest score?” It needs to account for the referral, the available provider evidence, network alignment, proximity, and continuity of care. It also needs to make clear when the available evidence is too weak to support a recommendation.</p>
+<p>I architected Referral Intelligence at Snap eHealth around that problem. The current implementation produces ranked, explainable specialist assessments from synthetic scenarios. It exposes both the result and the ingredients behind it: scoring contributions, evidence coverage, missing signals, confidence labels, and the conditions that cause the service to abstain.</p>
+<p>The project combines decision-support design with a practical service-extraction problem. We needed the assessment logic to stand on its own while preserving the behavior of the original engine and keeping operational workflow decisions with the application that owns them.</p>
+
+<h2 id="boundary">Give the intelligence a clear boundary</h2>
+<p>The initial assessment engine lived inside Snap Workflows. We extracted its ranking and evidence logic into an independent Python service with an authenticated FastAPI interface. The domain contracts and scoring rules are separate from HTTP handling and concrete evidence adapters.</p>
+<p>That boundary gives the service a specific job: assess the referral and explain the candidates. Workflow state, queues, browser sessions, specialist selection, authorization, and EHR writes remain application responsibilities. An assessment does not itself select a provider or execute a referral.</p>
+<p>Extraction is only one half of that separation. The standalone API exists and has its own tests, but the documented Workflows integration still uses its embedded synthetic engine. The consumer cutover remains future work. Running both applications is not evidence that one is calling the other.</p>
+
+<figure class="case-diagram"><figcaption>Inside the assessment service</figcaption><ol class="system-flow"><li><span>01 · Evidence</span><strong>Normalize the inputs</strong><p>Keep patient context, provider signals, and missing evidence explicit.</p></li><li><span>02 · Ranking</span><strong>Compute contributions</strong><p>Apply deterministic scoring and stable candidate ordering.</p></li><li><span>03 · Eligibility</span><strong>Check the evidence</strong><p>Evaluate coverage, network confirmation, and recommendation criteria.</p></li><li><span>04 · Response</span><strong>Explain or abstain</strong><p>Return ranked candidates and the reason a recommendation is made or withheld.</p></li></ol></figure>
+
+<h2 id="ranking">Make the score inspectable</h2>
+<p>The current engine is deterministic. It normalizes signals to a common scale, calculates weighted contributions, and sorts candidates with a stable tie-break. Its factors cover provider quality, condition experience, relevant volume, outcomes and utilization, network, proximity, continuity, and evidence confidence.</p>
+<p>Each contribution is returned with an explanation. That makes it possible to distinguish two candidates who reach similar totals for different reasons. A nearby specialist with an existing patient relationship may compare differently from a specialist with stronger condition-specific evidence. The assessment should expose that tradeoff rather than flatten it into an unexplained recommendation.</p>
+<p>We kept the synthetic scoring method explicit because the weights are design assumptions that need scrutiny. Condition experience and total volume, for example, can be correlated. Treating both as separate contributions can double-count part of the same underlying evidence. Clinical validation, risk adjustment, and analysis of those relationships remain future work.</p>
+<p>Explainability here is a property of the calculation. The factors in the response come from the contributions the ranker actually used. We do not need a language model to invent a convincing explanation after the score has already been produced.</p>
+
+<h2 id="missing-evidence">Missing information should remain visible</h2>
+<p>Incomplete evidence is an ordinary input condition. A missing quality record, a mismatched condition, or an unconfirmed network relationship must not quietly turn into a favorable assumption. The adapters and ranking logic preserve those gaps in the assessment.</p>
+<p>In the synthetic implementation, unavailable signals receive no points, and their weights are not redistributed across the remaining signals. Evidence coverage is returned separately. This keeps a candidate with sparse evidence from looking complete simply because the few available inputs are strong.</p>
+<p>Confidence also needs careful interpretation. The current labels describe the size of the available outcomes sample. They are not statistical confidence intervals or calibrated probabilities that a recommendation will produce a better outcome. Keeping that meaning explicit prevents a familiar label from making a stronger claim than the calculation supports.</p>
+
+<h2 id="abstention">A ranked list can still have no recommendation</h2>
+<p>We separated ordering candidates from recommending one. The top-scoring candidate can fail the recommendation criteria because of missing signals, absent quality evidence, limited confidence, or unconfirmed network status. In that case, the engine can return the ranked assessment while withholding the recommended provider.</p>
+<p>That is a valid domain result. It is distinct from an authentication error, a malformed request, or an unavailable service. Consumers need that distinction so they can present “insufficient evidence” as a reviewable outcome rather than an application failure.</p>
+<p>The current demo does not silently replace an ineligible top-ranked candidate with the next person in the list. That behavior is intentional and testable. Whether a different selection policy is appropriate should be an explicit product and clinical decision, not an accidental consequence of looping over candidates until one passes.</p>
+
+<h2 id="verification">Preserve behavior while extracting the service</h2>
+<p>To check the extraction, we captured assessment responses for all six synthetic scenarios before moving the engine. Those fixtures provide a parity baseline for the standalone API: ordering, contributions, coverage, confidence, missing evidence, and abstention should retain their established behavior.</p>
+<p>The verification also exercises the installed package outside the checkout. That catches a different class of problem from a unit test: a service may work in its source directory while failing to include the fixtures or configuration needed after packaging.</p>
+<p>These checks establish behavioral and packaging properties. They do not establish clinical validity, production deployment, or Workflows adoption. Keeping those claims separate makes the tests more useful because each result answers a precise question.</p>
+
+<h2 id="prediction">The next question: referral completion</h2>
+<p>My broader work also explores supervised prediction of 30-day referral completion using Python and scikit-learn. That is a different problem from the deterministic specialist ranker described here. It requires a defined outcome, features available at the moment of prediction, and evaluation that prevents future information from leaking into training or testing.</p>
+<p>Discrimination and probability quality need separate attention. Precision, recall, and ROC-AUC help describe classification behavior; <a href="https://scikit-learn.org/stable/modules/calibration.html">calibration</a> addresses whether predicted probabilities agree with observed frequencies. A useful risk estimate also needs an appropriate workflow response. Predicting a lower chance of completion does not, by itself, explain which intervention would help.</p>
+<p>The standalone service currently runs only in local and test environments using synthetic evidence. Production data adapters, clinical validation, operational commissioning, and consumer integration remain ahead. The contribution so far is a clear, testable assessment boundary: deterministic calculations, visible uncertainty, and a first-class way to say that the evidence is insufficient.</p>
+
+    </article>
+    <aside class="related-essays" aria-labelledby="related-title"><h2 id="related-title">Explore the other projects</h2><ul><li><a href="../sally/">Sally <span aria-hidden="true">→</span></a><span>Conversational AI</span></li><li><a href="../symphony/">Symphony <span aria-hidden="true">→</span></a><span>Agent orchestration</span></li><li><a href="../ai-evaluation/">AI Evaluation <span aria-hidden="true">→</span></a><span>Quality &amp; evaluation</span></li></ul><a class="back-link" href="../../blog/">Browse all writing →</a></aside>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-intro"><a class="brand" href="../../" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a><p>Applied AI, conversational agents, and the architecture behind useful agentic systems.</p></div>
+        <div><h2 class="footer-title">// explore</h2><nav class="footer-links" aria-label="Footer navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/">Projects</a></nav></div>
+        <div><h2 class="footer-title">// connect</h2><div class="footer-links"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X ↗</a></div></div>
+      </div>
+      <div class="footer-bottom">© 2026 Thomas Howard</div>
+    </div>
+  </footer>
+</body>
+</html>
