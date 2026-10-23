@@ -18,7 +18,7 @@ Then open http://localhost:8000.
 
 - `index.html` — terminal introduction, featured work, and recent writing
 - `about/` — applied AI experience and approach to solutions architecture
-- `resume/` — readable résumé matching the Word document’s styling, with a green PDF download button
+- `resume/` — readable résumé in the site’s dark terminal theme, with green headings, section navigation, and a green PDF download button
 - `projects/` — project overview and five technical essays: `nfl-predictor/`, `sally/`, `symphony/`, `ai-evaluation/`, and `referral-intelligence/`
 - `blog/` — all writing, articles, and monthly archives
 - `styles.css` — shared theme, responsive layouts, and reading styles
@@ -34,3 +34,19 @@ Publish the repository as static files using the existing GitHub Pages configura
 Project essays use the shared reading styles, local tables of contents, role and stage summaries, and HTML architecture diagrams. They are also listed in Writing and the monthly archive. Keep project-stage descriptions grounded in source evidence: synthetic prototypes, local validation, prepared runtimes, and production deployments are different milestones.
 
 NFL Predictor documents an early predictive ML project: data exploration is implemented, with baseline evaluation and model training still ahead. Referral Intelligence distinguishes its deterministic ranking service from the separate synthetic referral-completion modeling project. Update model-performance claims only when supported by measured results.
+
+## NFL Forecast Lab concept
+
+`projects/nfl-predictor/lab/` is a responsive, framework-free interactive concept linked from the homepage, Projects, and the NFL essay. The Lions–Packers pairing is an example, not the current schedule. Clicking **Run demo forecast** reveals hand-authored 62% / 38% values; it performs no inference. The page labels those values as illustrative before and after the click. No forecasts or user actions are persisted, and repeated demos never alter the empty public scorecard. The reveal respects reduced motion and exposes state through native buttons and a live region. Without JavaScript, the page explains that the interaction is unavailable.
+
+Team-logo PNGs are vendored from ESPN's public team assets using URLs from nflverse's teams metadata: `https://github.com/nflverse/nflverse-data/releases/download/teams/teams_colors_logos.csv`. Original images: `https://a.espncdn.com/i/teamlogos/nfl/500/det.png` and `https://a.espncdn.com/i/teamlogos/nfl/500/gb.png`. These identify the teams; the project is independent of the NFL and the clubs.
+
+### Connecting the real model later
+
+- Finish baseline evaluation and out-of-time model validation before displaying live probabilities. Establish a tie policy; the initial experiment excludes tied games.
+- Start with one featured game per week, chosen before kickoff. A trained-model job can export versioned JSON to this static site; visitor clicks should reveal the same saved forecast, not retrain the model or mutate its record.
+- Each forecast needs a stable game ID, teams, season/week, kickoff timestamp, prediction timestamp, feature cutoff, model version, probabilities, and baseline probabilities. Preserve the pre-kickoff record; corrections or later forecasts need separate versions.
+- Ingest final results separately, distinguish pending/postponed/canceled/tied games, and settle only eligible completed games. Retain losses as well as wins. Show the denominator and evaluate the baseline on exactly the same featured games.
+- Keep historical holdout metrics separate from the prospective weekly record. Pick accuracy is one view; probability scores and, with sufficient observations, calibration provide another. The model output is authoritative; an eventual explanation agent should not invent new probabilities.
+
+No model service, schedule feed, results job, recurring automation, or public deployment is configured by this concept.

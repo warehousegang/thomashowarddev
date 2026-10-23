@@ -8,7 +8,7 @@
   <title>My Resume | Thomas Howard</title>
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../styles.css?v=project-essays-1">
-  <link rel="stylesheet" href="./resume.css?v=1">
+  <link rel="stylesheet" href="./resume.css?v=2">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -24,19 +24,25 @@
   </header>
   <main id="main" class="resume-main">
     <div class="resume-toolbar">
-      <p class="resume-page-label">My Resume</p>
+      <p class="resume-page-label"><span aria-hidden="true">//</span>my_resume</p>
       <a class="button button-primary" href="./Thomas_Howard_Resume.pdf" download="Thomas_Howard_Resume.pdf" type="application/pdf" aria-label="Download resume as PDF">Download</a>
     </div>
     <article class="resume-document" aria-label="Thomas Howard’s résumé">
-<header class="resume-identity"><h1><strong>THOMAS HOWARD</strong></h1>
+<header class="resume-identity"><h1>Thomas Howard</h1>
 <p class="resume-role"><strong>CTO &amp; HEAD OF APPLIED AI  |  </strong><strong>LLM SYSTEMS  |  AGENTIC AI  |  TECHNICAL LEADERSHIP</strong></p>
 <p class="resume-contact">New York, NY  |  929.505.6058  |  <a href="mailto:thomashoward206@gmail.com">thomashoward206@gmail.com</a></p>
 <p class="resume-contact"><a href="http://linkedin.com/in/thomashow">LinkedIn</a>  |  <a href="https://github.com/warehousegang">GitHub</a>  |  <a href="http://thomashoward.dev">thomashoward.dev</a></p>
 </header>
-<h2><strong>PROFESSIONAL SUMMARY</strong></h2>
+<div class="resume-layout">
+<nav class="resume-nav" aria-label="Résumé sections"><p>ON THIS PAGE</p><ul><li><a href="#summary"><span aria-hidden="true">01</span>Summary</a></li><li><a href="#experience"><span aria-hidden="true">02</span>Experience</a></li><li><a href="#earlier-experience"><span aria-hidden="true">03</span>Earlier work</a></li><li><a href="#selected-projects"><span aria-hidden="true">04</span>Projects</a></li><li><a href="#skills"><span aria-hidden="true">05</span>Skills</a></li></ul></nav>
+<div class="resume-content">
+<section class="resume-section" id="summary" aria-labelledby="summary-title"><h2 id="summary-title"><span class="resume-section-marker" aria-hidden="true">//</span>Professional summary</h2>
+
 <p>Applied AI engineering leader specializing in <strong>LLM applications, conversational agents, and governed autonomous systems</strong>. I architect agent orchestration, tool execution, context management, structured outputs, and evaluation, then build the verification and authorization controls around model-driven workflows. At Snap eHealth, I lead healthcare AI product engineering and autonomous software delivery, including <strong>Sally</strong> and <strong>Symphony-based agent orchestration</strong>. I bring more than a decade of engineering leadership and hands-on Python, Go, and TypeScript development across distributed software systems.</p>
-<h2>// EXPERIENCE</h2>
-<div class="resume-job"><h3><strong>Chief Technology Officer &amp; Head of Applied AI  |  Snap eHealth</strong></h3><p class="resume-date">Jun 2026 – Present</p></div>
+</section>
+<section class="resume-section" id="experience" aria-labelledby="experience-title"><h2 id="experience-title"><span class="resume-section-marker" aria-hidden="true">//</span>Experience</h2>
+
+<div class="resume-position"><div class="resume-job"><h3><strong>Chief Technology Officer &amp; Head of Applied AI  |  Snap eHealth</strong></h3><p class="resume-date">Jun 2026 – Present</p></div>
 <p>Own Applied AI strategy, product architecture, and engineering delivery for a healthcare SaaS company, combining technical leadership with hands-on development.</p>
 <ul>
 <li>Lead development of <strong>Sally, an LLM-powered healthcare voice agent</strong>, combining real-time conversation, tool execution, background analysis, and structured visit-brief extraction.</li>
@@ -47,8 +53,8 @@
 <li>Led delivery of <strong>four prod</strong><strong>uction </strong><strong>applications in four months</strong> across enterprise healthcare, workflow automation, and patient engagement.</li>
 <li>Lead senior engineers through architecture review and AI-assisted delivery; remain hands-on in <strong>Python, TypeScript, APIs, and healthcare integrations</strong>, including debugging and code review.</li>
 <li>Set the <strong>Applied AI roadmap and technical priorities</strong> with the CEO and Product, translating customer needs into agent capabilities, architecture decisions, and release criteria.</li>
-</ul>
-<div class="resume-job"><h3><strong>Head of AI Platform &amp; Infrastructure  |  Snap eHealth</strong></h3><p class="resume-date">Oct 2022 – Jun 2026</p></div>
+</ul></div>
+<div class="resume-position"><div class="resume-job"><h3><strong>Head of AI Platform &amp; Infrastructure  |  Snap eHealth</strong></h3><p class="resume-date">Oct 2022 – Jun 2026</p></div>
 <p>Led AI-assisted engineering, model evaluation, and healthcare application architecture, expanding technical ownership into company-wide Applied AI leadership.</p>
 <ul>
 <li>Led AI reliability initiatives using <strong>Amazon Bedrock</strong>, including <strong>LLM evaluation workflows, goldset reference datasets, and guardrails</strong>.</li>
@@ -60,8 +66,8 @@
 <li>Designed an explainable physician-ranking engine combining clinical quality, provider experience, outcomes, network compatibility, geographic proximity, and evidence confidence, with deterministic scoring, uncertainty handling, and abstention safeguards.</li>
 <li>Developing supervised machine learning workflows to predict 30-day referral completion, incorporating feature engineering, classification models, data-leakage prevention, and evaluation using precision, recall, ROC-AUC, and probability calibration.</li>
 <li>Integrated predictive analytics and decision-support architecture into healthcare referral workflows, emphasizing interpretable recommendations, data quality, and controlled clinical decision boundaries.</li>
-</ul>
-<div class="resume-job"><h3><strong>Director of Engineering – DevOps  |  FBS</strong></h3><p class="resume-date">Jan 2015 – Apr 2022</p></div>
+</ul></div>
+<div class="resume-position"><div class="resume-job"><h3><strong>Director of Engineering – DevOps  |  FBS</strong></h3><p class="resume-date">Jan 2015 – Apr 2022</p></div>
 <p>Led a <strong>12-person engineering organization</strong> supporting enterprise software delivery, cloud architecture, and production infrastructure across multiple product lines.</p>
 <ul>
 <li>Built and led the organization through an engineering manager, owning <strong>hiring, technical direction, mentoring, performance management, and leadership development</strong>.</li>
@@ -70,26 +76,36 @@
 <li>Architected <strong>Jenkins delivery pipelines</strong> for build automation, integration, artifact promotion, environment consistency, and deployment.</li>
 <li>Designed and operated <strong>AWS environments</strong> using VPC, EC2, RDS, IAM, Docker, and ECS to support scalable enterprise applications.</li>
 <li>Established <strong>production observability and operational practices</strong> with Grafana, CloudWatch, ELK, and New Relic, improving visibility into application health.</li>
-</ul>
-<h2><strong>EARLIER EXPERIENCE</strong></h2>
+</ul></div>
+</section>
+<section class="resume-section" id="earlier-experience" aria-labelledby="earlier-experience-title"><h2 id="earlier-experience-title"><span class="resume-section-marker" aria-hidden="true">//</span>Earlier experience</h2>
+
 <div class="resume-earlier-role"><p>Software Engineer, Automation Infrastructure  |  <strong>Google (Contract)</strong></p><p class="resume-date">Jun 2012 – Dec 2014</p></div>
 <div class="resume-earlier-role"><p>Software Engineer  |  <strong>Community Health Plan of Washington</strong></p><p class="resume-date">Aug 2011 – Jun 2012</p></div>
 <div class="resume-earlier-role"><p>Software Engineer  |  <strong>Xperience Communications</strong></p><p class="resume-date">Aug 2010 – Aug 2011</p></div>
-<h2>// SELECTED PROJECTS</h2>
-<h3>Sally — Conversational Healthcare Agent</h3>
-<p>LLM-powered voice workflows combining browser and phone interaction, interruption handling, background analysis, and structured visit briefs. Engineering includes <strong>scenario-based evaluation</strong>, consent and verification boundaries, and deterministic controls over authorized actions.</p>
-<h3>Symphony — Governed Autonomous Engineering</h3>
-<p>Agent orchestration for engineering tasks with <strong>isolated execution</strong>, repository-scoped context, signed leases, tool permissions, cancellation, cost accounting, and audit trails. Staged validation and verification gates retain human authority over review, merge, and deployment.</p>
-<h3>AI Engineering Control Plane &amp; Evaluation Harness</h3>
-<p>Reusable <strong>specialized-agent workflows</strong> for quality, security, reliability, and release readiness. Structured findings feed deterministic triage, bounded remediation, protected verification, and human escalation rather than unreviewed production changes.</p>
-<h3>Referral Intelligence — Predictive ML &amp; Physician Recommendation</h3>
-<p>Healthcare decision-support platform combining <strong>explainable physician ranking, clinical outcomes, provider quality, and referral intelligence</strong>. Leading the development of predictive ML capabilities to train models on historical referral outcomes, estimate referral success probabilities, and improve physician recommendations through measurable model evaluation and validation.</p>
-<h2>// SKILLS</h2>
-<p><strong>AI / Agentic:</strong> LLM application architecture, conversational AI, agent orchestration, tool use, context engineering, structured outputs, Codex, Symphony</p>
-<p><strong>Evaluation / Safety:</strong> Agent evaluations, regression harnesses, deterministic verification, tool authorization, execution isolation, provenance, bounded remediation, human approval</p>
-<p><strong>Engineering:</strong> Python, Go, TypeScript, React, Node.js/Express, REST APIs, PostgreSQL, Redis, Playwright, distributed systems</p>
-<p><strong>Cloud / Production:</strong> AWS, Kubernetes, EKS, Terraform, Helm, Argo CD, Argo Rollouts, CI/CD, observability, reliability engineering</p>
-<p><strong>Leadership:</strong> Applied AI strategy, product architecture, technical roadmaps, engineering leadership, mentoring, customer discovery, executive communication</p>
+</section>
+<section class="resume-section" id="selected-projects" aria-labelledby="selected-projects-title"><h2 id="selected-projects-title"><span class="resume-section-marker" aria-hidden="true">//</span>Selected projects</h2>
+<div class="resume-projects">
+<div class="resume-project"><h3>Sally — Conversational Healthcare Agent</h3>
+<p>LLM-powered voice workflows combining browser and phone interaction, interruption handling, background analysis, and structured visit briefs. Engineering includes <strong>scenario-based evaluation</strong>, consent and verification boundaries, and deterministic controls over authorized actions.</p></div>
+<div class="resume-project"><h3>Symphony — Governed Autonomous Engineering</h3>
+<p>Agent orchestration for engineering tasks with <strong>isolated execution</strong>, repository-scoped context, signed leases, tool permissions, cancellation, cost accounting, and audit trails. Staged validation and verification gates retain human authority over review, merge, and deployment.</p></div>
+<div class="resume-project"><h3>AI Engineering Control Plane &amp; Evaluation Harness</h3>
+<p>Reusable <strong>specialized-agent workflows</strong> for quality, security, reliability, and release readiness. Structured findings feed deterministic triage, bounded remediation, protected verification, and human escalation rather than unreviewed production changes.</p></div>
+<div class="resume-project"><h3>Referral Intelligence — Predictive ML &amp; Physician Recommendation</h3>
+<p>Healthcare decision-support platform combining <strong>explainable physician ranking, clinical outcomes, provider quality, and referral intelligence</strong>. Leading the development of predictive ML capabilities to train models on historical referral outcomes, estimate referral success probabilities, and improve physician recommendations through measurable model evaluation and validation.</p></div>
+</div>
+</section>
+<section class="resume-section" id="skills" aria-labelledby="skills-title"><h2 id="skills-title"><span class="resume-section-marker" aria-hidden="true">//</span>Skills</h2>
+
+<p class="resume-skill"><strong>AI / Agentic:</strong> <span>LLM application architecture, conversational AI, agent orchestration, tool use, context engineering, structured outputs, Codex, Symphony</span></p>
+<p class="resume-skill"><strong>Evaluation / Safety:</strong> <span>Agent evaluations, regression harnesses, deterministic verification, tool authorization, execution isolation, provenance, bounded remediation, human approval</span></p>
+<p class="resume-skill"><strong>Engineering:</strong> <span>Python, Go, TypeScript, React, Node.js/Express, REST APIs, PostgreSQL, Redis, Playwright, distributed systems</span></p>
+<p class="resume-skill"><strong>Cloud / Production:</strong> <span>AWS, Kubernetes, EKS, Terraform, Helm, Argo CD, Argo Rollouts, CI/CD, observability, reliability engineering</span></p>
+<p class="resume-skill"><strong>Leadership:</strong> <span>Applied AI strategy, product architecture, technical roadmaps, engineering leadership, mentoring, customer discovery, executive communication</span></p>
+</section>
+</div>
+</div>
     </article>
   </main>
   <footer class="site-footer">

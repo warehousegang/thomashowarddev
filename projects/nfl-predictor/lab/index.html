@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Try the interactive concept for Thomas Howard’s NFL Forecast Lab: a featured matchup, sample probability reveal, and a future public prediction record.">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>NFL Forecast Lab — Interactive Concept | Thomas Howard</title>
+  <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../../styles.css?v=project-essays-1">
+  <link rel="stylesheet" href="lab.css?v=1">
+  <script src="lab.js?v=1" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../../" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a>
+      <nav class="desktop-nav" aria-label="Main navigation"><a href="../../../">Home</a><a href="../../../about/">About</a><a href="../../../blog/">Writing</a><a href="../../../projects/" aria-current="page">Projects</a><span class="nav-github"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a></span><a href="../../../resume/">My Resume</a></nav>
+      <details class="mobile-nav">
+        <summary>Menu</summary>
+        <nav aria-label="Mobile navigation"><a href="../../../">Home</a><a href="../../../about/">About</a><a href="../../../blog/">Writing</a><a href="../../../projects/" aria-current="page">Projects</a><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a><a href="../../../resume/">My Resume</a></nav>
+      </details>
+    </div>
+  </header>
+  <main id="main" class="container forecast-lab">
+    <div class="lab-topline"><a href="../" class="lab-back">← NFL Predictor / the build log</a><span class="lab-badge"><span aria-hidden="true"></span> Interactive concept</span></div>
+    <header class="lab-heading">
+      <p class="lab-kicker">// NFL forecast lab</p>
+      <h1>Game on.<br><span>Let the model call it.</span></h1>
+      <p>One featured matchup. A probability before kickoff.<br class="desktop-break"> A scorecard that keeps us honest afterward.</p>
+    </header>
+
+    <section class="matchup" aria-labelledby="matchup-title">
+      <div class="matchup-topline"><h2 id="matchup-title">Featured matchup</h2><span>Demo pairing · not this week’s schedule</span></div>
+      <div class="matchup-field">
+        <div class="field-lines" aria-hidden="true"><span>20</span><span>30</span><span>40</span><span>50</span><span>40</span><span>30</span><span>20</span></div>
+        <div class="team team-det"><p class="team-location">Detroit</p><img src="assets/det.png" width="176" height="176" alt="Detroit Lions logo"><h3>Lions</h3><span class="team-abbr">DET</span></div>
+        <div class="matchup-divider" aria-hidden="true"><span>VS</span><span class="field-center-dot"></span></div>
+        <div class="team team-gb"><p class="team-location">Green Bay</p><img src="assets/gb.png" width="176" height="176" alt="Green Bay Packers logo"><h3>Packers</h3><span class="team-abbr">GB</span></div>
+      </div>
+
+      <div class="forecast-controls">
+        <div><p class="control-label">Who gets the win?</p><p class="control-help" id="demo-description">Try the reveal with an illustrative forecast.<br>Sample values only. The trained model is not connected.</p></div>
+        <button type="button" class="run-forecast" id="run-forecast" aria-describedby="demo-description" aria-controls="forecast-result" aria-expanded="false" disabled><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M8 5v14l11-7Z" fill="currentColor"/></svg><span id="run-label">Run demo forecast</span></button>
+      </div>
+      <p class="forecast-status" id="forecast-status" role="status" aria-live="polite"></p>
+      <noscript><p class="no-script">Enable JavaScript to try the sample forecast reveal. This page is a concept preview; no live predictions are available.</p></noscript>
+
+      <section class="forecast-result" id="forecast-result" aria-labelledby="result-title" hidden>
+        <div class="result-heading"><div><p class="lab-kicker">Example output · illustrative values</p><h3 id="result-title">The sample pick: <span>Lions</span></h3></div><span class="result-mark" aria-hidden="true">↗</span></div>
+        <div class="probability-labels"><div><span>Detroit Lions</span><strong>62<small>%</small></strong></div><div><span>Green Bay Packers</span><strong>38<small>%</small></strong></div></div>
+        <div class="probability-track" role="img" aria-label="Illustrative win probabilities: Detroit Lions 62 percent, Green Bay Packers 38 percent. These are sample values, not model predictions."><span class="probability-det"></span><span class="probability-gb"></span></div>
+        <div class="result-caption"><span>Sample win probability</span><span>A lean, not a guarantee.</span></div>
+        <p class="result-context">A 62% forecast still leaves 38% for the Packers. The real experience will pair the model’s probability with the information available when the forecast was saved.</p>
+        <details class="forecast-details"><summary>What will sit behind a real forecast?</summary><div><p>Pregame team-strength features, a validated model, and a forecast saved before kickoff. Each published pick will show its model version and prediction time.</p><p>This example uses a two-outcome display. The initial modeling experiment excludes ties; the live version will need an explicit tie policy before predictions are published. The values above are hand-authored to demonstrate the interface.</p><a href="../#model">Read the modeling plan →</a></div></details>
+        <p class="demo-record-note"><span aria-hidden="true">◇</span> Demo runs never count toward the public record.</p>
+      </section>
+    </section>
+
+    <section class="record-section" aria-labelledby="record-title">
+      <div class="section-label"><div><p class="lab-kicker">// after the final whistle</p><h2 id="record-title">The public record.</h2></div><span class="record-status">Awaiting the first live forecast</span></div>
+      <dl class="record-metrics"><div><dt>Correct / settled</dt><dd>0 <span>/ 0</span></dd><dd class="metric-note">Featured games only</dd></div><div><dt>Pick accuracy</dt><dd>—</dd><dd class="metric-note">No settled predictions yet</dd></div><div><dt>Probability quality</dt><dd>—</dd><dd class="metric-note">Brier score · lower is better</dd></div></dl>
+      <div class="forecast-ledger"><div class="ledger-columns" aria-hidden="true"><span>Matchup</span><span>Saved forecast</span><span>Final result</span><span>Verdict</span></div><div class="ledger-empty"><svg width="34" height="34" viewBox="0 0 32 32" aria-hidden="true"><path d="M6 5v22h22M11 21l5-7 5 3 6-9" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="27" cy="8" r="2" fill="currentColor"/></svg><div><h3>The first pick starts the story.</h3><p>Once live, every featured forecast stays here: the pick, its probability, the final score, and whether we got it right. Wins and misses.</p></div></div></div>
+      <p class="record-footnote">This record will cover the featured matchups, with comparisons against the same games’ baseline forecasts. Historical testing will be reported separately.</p>
+    </section>
+
+    <section class="lab-roadmap" aria-labelledby="roadmap-title"><div><p class="lab-kicker">// the next chapter</p><h2 id="roadmap-title">From experiment<br> to game day.</h2><a href="../">Follow the build →</a></div><ol><li><span class="step-number">01</span><div><h3>Choose the week’s matchup</h3><p>A weekly schedule, team identities, and one featured game selected before kickoff.</p></div></li><li><span class="step-number">02</span><div><h3>Save the model’s call</h3><p>Show the win probabilities and keep the original forecast, timestamp, and model version.</p></div></li><li><span class="step-number">03</span><div><h3>Let the result speak</h3><p>Settle the game, keep the misses, and update both pick accuracy and probability scores.</p></div></li></ol></section>
+    <p class="lab-provenance">A Thomas Howard project. Interface preview; live predictions are not available yet. Team logos via <a href="https://nflreadr.nflverse.com/reference/load_teams.html">nflverse team metadata</a> and ESPN. Independent of the NFL and its teams.</p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-intro"><a class="brand" href="../../../" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a><p>Applied AI, conversational agents, and the architecture behind useful agentic systems.</p></div>
+        <div><h2 class="footer-title">// explore</h2><nav class="footer-links" aria-label="Footer navigation"><a href="../../../">Home</a><a href="../../../about/">About</a><a href="../../../blog/">Writing</a><a href="../../../projects/">Projects</a></nav></div>
+        <div><h2 class="footer-title">// connect</h2><div class="footer-links"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="../../../resume/">My Resume</a><a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X ↗</a></div></div>
+      </div>
+      <div class="footer-bottom">© 2026 Thomas Howard</div>
+    </div>
+  </footer>
+</body>
+</html>
