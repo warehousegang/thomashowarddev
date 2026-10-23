@@ -27,7 +27,7 @@
       <p class="eyebrow">Project essay</p>
       <h1>Building AI evaluations that explain what changed</h1>
       <p class="deck">How we combine deterministic checks, independent judging, repeated sampling, and reproducible datasets to evaluate healthcare AI behavior.</p>
-      <p class="meta"><time datetime="2026-10-23">October 23, 2026</time> · Thomas Howard · 5 min read</p>
+      <p class="meta">Thomas Howard · 5 min read</p>
       <dl class="case-facts">
         <div><dt>My role</dt><dd>Evaluation architecture &amp; quality workflows</dd></div>
         <div><dt>Focus</dt><dd>Python · Amazon Bedrock · Model evaluation</dd></div>
@@ -58,7 +58,7 @@
 <h2 id="mock-and-real">Testing the evaluator and testing the model</h2>
 <p>The harness has mock and real-provider execution paths. Mock runs exercise the evaluation infrastructure without calling AWS: loading cases, applying checks, producing reports, and running CI. They are useful for finding defects in the machinery that measures the model.</p>
 <p>Real-model runs use Amazon Bedrock for candidate and judge inference. They answer a different question: how the selected models behave on the chosen cases under the recorded configuration. We use a separate judge model where practical, while recognizing that model-based judging still has limitations and can share blind spots with the candidate.</p>
-<p>The documented chatbot baseline from July 16, 2026 passed all 77 cases in that run. The suite also contains 34 HRA scenarios, but its documented real-model HRA baseline remains pending. Those are deliberately separate statements. A passing mock HRA run cannot establish HRA model quality, and one passing chatbot run cannot establish stability across future releases.</p>
+<p>The documented chatbot baseline passed all 77 cases in that run. The suite also contains 34 HRA scenarios, but its documented real-model HRA baseline remains pending. Those are deliberately separate statements. A passing mock HRA run cannot establish HRA model quality, and one passing chatbot run cannot establish stability across future releases.</p>
 <p>Public <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/evaluation.html">Amazon Bedrock evaluation documentation</a> describes automated, model-judged, and human evaluation options. Our project’s contribution is the application-specific datasets, rules, runners, and interpretation of their results.</p>
 
 <h2 id="debugging">Failures need diagnosis before a prompt change</h2>
