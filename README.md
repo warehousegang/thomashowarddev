@@ -1,6 +1,6 @@
 # thomashoward.dev
 
-Thomas Howard's personal website: projects and writing on applied AI, autonomous engineering, leadership, and production systems.
+Thomas Howard's personal website: applied AI, agentic solutions architecture, conversational agents, evaluation, and healthcare decision support.
 
 A framework-free static site with a terminal-inspired dark theme. No build step, remote fonts, or package dependencies are required. A small JavaScript enhancement types the homepage name and introduction on page load, updating one text node per line. A head-level loading state prevents the full text from flashing before typing starts. Without JavaScript, with reduced motion, or if the animation script fails to load, the full introduction remains readable. Mobile navigation uses native HTML disclosure controls.
 
@@ -17,8 +17,8 @@ Then open http://localhost:8000.
 ## Structure
 
 - `index.html` — terminal introduction, featured work, and recent writing
-- `about/` — biography and engineering interests
-- `projects/` — selected projects
+- `about/` — applied AI experience and approach to solutions architecture
+- `projects/` — Sally, Symphony, AI evaluation, and referral intelligence
 - `blog/` — all writing, articles, and monthly archives
 - `styles.css` — shared theme, responsive layouts, and reading styles
 - `terminal.js` — progressive typing animation for the homepage introduction
