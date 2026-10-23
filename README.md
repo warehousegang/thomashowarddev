@@ -1,6 +1,8 @@
 # thomashoward.dev
 
-A deliberately simple static site for Thomas Howard's writing on platform engineering, Kubernetes, AI, and production systems.
+Thomas Howard's personal website: projects and writing on applied AI, autonomous engineering, leadership, and production systems.
+
+A framework-free static site with a terminal-inspired dark theme. No build step, JavaScript, remote fonts, or package dependencies are required. Mobile navigation uses native HTML disclosure controls, and the cursor animation respects reduced-motion preferences.
 
 ## Local preview
 
@@ -10,16 +12,19 @@ From the repository root:
 python3 -m http.server 8000
 ```
 
-Then open http://localhost:8000
+Then open http://localhost:8000.
 
 ## Structure
 
-- `index.html` — homepage
-- `about/` — about page
-- `blog/` — writing index
-- `blog/why-im-building-an-engineering-os/` — first article
-- `styles.css` — site-wide styles
+- `index.html` — terminal introduction, featured work, and recent writing
+- `about/` — biography and engineering interests
+- `projects/` — selected projects
+- `blog/` — all writing, articles, and monthly archives
+- `styles.css` — shared theme, responsive layouts, and reading styles
+- `favicon.svg` — terminal icon
+
+All content is ordinary HTML. When publishing an article, add it to the writing index and its monthly archive; update the homepage's recent-writing cards as appropriate. Keep links relative to the current page and retain each article's existing URL.
 
 ## Deploy
 
-This site is intentionally framework-free and can be hosted on GitHub Pages, Cloudflare Pages, Netlify, or any static web host.
+Publish the repository as static files using the existing GitHub Pages configuration. `CNAME` preserves the `thomashoward.dev` custom domain. The site also works with any static host.

@@ -1,20 +1,14 @@
 <!doctype html>
-
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <meta
-    name="description"
-    content="Autonomous software delivery requires more than AI coding assistants. Explore the engineering control plane, orchestration, isolated execution, fencing tokens, failure recovery, policy enforcement, evaluations, and provenance needed to deliver software safely at AI speed."
-  >
-
+  <meta name="description" content="Autonomous software delivery requires more than AI coding assistants. Explore the engineering control plane, orchestration, isolated execution, fencing tokens, failure recovery, policy enforcement, evaluations, and provenance needed to deliver software safely at AI speed.">
+  <meta name="theme-color" content="#0a0a0f">
   <title>Beyond AI Coding Assistants: Engineering the Control Plane for Autonomous Software Delivery | Thomas Howard</title>
-
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../../styles.css">
-  <style>
+<style>
     /* Article components only. The site's header, navigation and typography
        continue to come from ../../styles.css. */
     article .article-table-wrap {
@@ -23,9 +17,9 @@
       margin: 1.65rem 0 2rem;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
-      border: 1px solid #dce2e2;
+      border: 1px solid var(--rule);
       border-radius: 10px;
-      background: #ffffff;
+      background: var(--surface);
       box-shadow: 0 2px 9px rgba(24, 34, 42, .035);
     }
     article .article-table-wrap .article-table {
@@ -40,15 +34,15 @@
       font-family: inherit;
       font-size: 15px;
       line-height: 1.55;
-      color: #283039;
-      background: #fff;
+      color: var(--text);
+      background: var(--surface);
     }
     article .article-table th,
     article .article-table td {
       box-sizing: border-box;
       padding: 15px 19px;
       border: 0;
-      border-bottom: 1px solid #e5e9e8;
+      border-bottom: 1px solid var(--rule);
       text-align: left;
       vertical-align: top;
       overflow-wrap: break-word;
@@ -58,20 +52,20 @@
       line-height: inherit;
     }
     article .article-table thead th {
-      background: #f3f5f4;
-      color: #33414a;
+      background: var(--surface-raised);
+      color: var(--text);
       font-size: 12.5px;
       font-weight: 700;
       letter-spacing: .025em;
       line-height: 1.4;
     }
-    article .article-table tbody tr:nth-child(even) td { background: #fafbfa; }
+    article .article-table tbody tr:nth-child(even) td { background: var(--bg); }
     article .article-table tbody tr:last-child td { border-bottom: 0; }
     article .article-table tbody td:first-child {
       font-weight: 600;
-      color: #26363e;
+      color: var(--text);
     }
-    article .article-table tbody tr:hover td { background: #f3f7f7; }
+    article .article-table tbody tr:hover td { background: var(--surface-raised); }
     article .article-table.table-stages th:nth-child(1),
     article .article-table.table-stages td:nth-child(1) { width: 29%; }
     article .article-table.table-stages th:nth-child(2),
@@ -95,7 +89,7 @@
     article .article-table.table-metrics th:nth-child(3),
     article .article-table.table-metrics td:nth-child(3) { width: 28%; }
     article .article-table.table-stages tr:nth-child(4) td:first-child {
-      box-shadow: inset 3px 0 0 #617e80;
+      box-shadow: inset 3px 0 0 var(--accent);
     }
 
     /* Code remains preformatted, with independently scrollable long lines. */
@@ -108,9 +102,9 @@
       padding: 22px 24px;
       overflow-x: auto;
       overflow-y: hidden;
-      border: 1px solid #263644;
+      border: 1px solid var(--rule);
       border-radius: 10px;
-      background: #1b2530;
+      background: var(--code-bg);
       color: #e7edf3;
       box-shadow: 0 3px 12px rgba(15, 23, 32, .07);
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
@@ -155,7 +149,7 @@
       font-weight: 700;
       letter-spacing: .05em;
       text-transform: uppercase;
-      color: #53636e;
+      color: var(--muted);
     }
 
     /* Accessible HTML diagram, not oversized ASCII art. */
@@ -165,22 +159,22 @@
       max-width: 100%;
       margin: 1.65rem 0 2rem;
       padding: 24px;
-      border: 1px solid #dce2e2;
+      border: 1px solid var(--rule);
       border-radius: 12px;
-      background: #f7f8f7;
+      background: var(--bg);
     }
     article .engineering-diagram .diagram-stage {
       padding: 20px 22px;
-      background: #fff;
-      border: 1px solid #d8dfdf;
-      border-left: 4px solid #5d777c;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-left: 4px solid var(--accent);
       border-radius: 8px;
     }
-    article .engineering-diagram .diagram-stage:nth-of-type(3) { border-left-color: #80918b; }
-    article .engineering-diagram .diagram-stage:nth-of-type(5) { border-left-color: #677487; }
+    article .engineering-diagram .diagram-stage:nth-of-type(3) { border-left-color: var(--link); }
+    article .engineering-diagram .diagram-stage:nth-of-type(5) { border-left-color: var(--accent-soft); }
     article .engineering-diagram .diagram-eyebrow {
       margin: 0 0 4px;
-      color: #6a7780;
+      color: var(--muted);
       font-size: 11px;
       font-weight: 700;
       letter-spacing: .12em;
@@ -188,7 +182,7 @@
     }
     article .engineering-diagram .diagram-title {
       margin: 0 0 13px;
-      color: #202d33;
+      color: var(--text);
       font-family: inherit;
       font-size: 19px;
       font-weight: 750;
@@ -206,7 +200,7 @@
     article .engineering-diagram .diagram-contents li {
       margin: 0;
       padding: 0;
-      color: #3f5059;
+      color: var(--muted);
       font-family: inherit;
       font-size: 13.5px;
       line-height: 1.45;
@@ -215,7 +209,7 @@
       content: "·";
       margin-right: 8px;
       font-weight: 700;
-      color: #657e84;
+      color: var(--accent-soft);
     }
     article .engineering-diagram .diagram-connector {
       display: flex;
@@ -224,7 +218,7 @@
       justify-content: center;
       min-height: 53px;
       padding: 4px;
-      color: #60717b;
+      color: var(--muted);
       font-family: inherit;
       font-size: 11.5px;
       font-weight: 600;
@@ -241,8 +235,8 @@
     article .engineering-diagram figcaption {
       margin: 17px 0 0;
       padding: 13px 15px 0;
-      border-top: 1px solid #dee4e4;
-      color: #4d5f67;
+      border-top: 1px solid var(--rule);
+      color: var(--muted);
       font-size: 12px;
       line-height: 1.55;
     }
@@ -256,27 +250,21 @@
       article .engineering-diagram .diagram-contents { grid-template-columns: 1fr; }
     }
   </style>
-
 </head>
-
 <body>
-  <main class="site">
-
-<header>
-  <p class="site-title">
-    <a href="../../">Thomas Howard</a>
-  </p>
-
-  <nav>
-    <a href="../">Writing</a>
-    <a href="../../about/">About</a>
-    <a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub</a>
-    <a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X</a>
-    <a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-  </nav>
-</header>
-
-<article>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a>
+      <nav class="desktop-nav" aria-label="Main navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/" aria-current="page">Writing</a><a href="../../projects/">Projects</a><span class="nav-github"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a></span></nav>
+      <details class="mobile-nav">
+        <summary>Menu</summary>
+        <nav aria-label="Mobile navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/" aria-current="page">Writing</a><a href="../../projects/">Projects</a><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a></nav>
+      </details>
+    </div>
+  </header>
+  <main id="main" class="site">
+<a class="back-link" href="../../blog/">← Back to writing</a><article class="reading">
 
   <h1>Beyond AI Coding Assistants: Engineering the Control Plane for Autonomous Software Delivery</h1>
 
@@ -620,11 +608,16 @@ Current worker accepted</code></pre>
         <li>GitHub: <a href="https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations" target="_blank" rel="noopener noreferrer">Artifact attestations and build provenance</a></li>
       </ol>
 </article>
-
-<footer>
-  © 2026 Thomas Howard
-</footer>
-
   </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-intro"><a class="brand" href="../../" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a><p>Building production software and the systems that make autonomous engineering trustworthy.</p></div>
+        <div><h2 class="footer-title">// explore</h2><nav class="footer-links" aria-label="Footer navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/">Projects</a></nav></div>
+        <div><h2 class="footer-title">// connect</h2><div class="footer-links"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X ↗</a><a href="https://busynow.app/" target="_blank" rel="noopener noreferrer">BusyNow ↗</a></div></div>
+      </div>
+      <div class="footer-bottom">© 2026 Thomas Howard</div>
+    </div>
+  </footer>
 </body>
 </html>

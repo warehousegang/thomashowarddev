@@ -3,71 +3,89 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta
-    name="description"
-    content="Thomas Howard writes about engineering systems, AI, infrastructure, leadership, and building production software."
-  >
-  <title>Thomas Howard | CTO, Software Engineer, Builder</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="description" content="Thomas Howard, CTO at Snap eHealth and founder of BusyNow. Writing and projects on applied AI, autonomous engineering, leadership, and production systems.">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>Thomas Howard | CTO, Applied AI Engineer &amp; Builder</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
 </head>
-
 <body>
-  <main class="site">
-
-    <header>
-      <h1 class="site-title">Thomas Howard</h1>
-
-      <p class="tagline">
-        CTO @ Snap eHealth | Engineering organizations as systems: software, infrastructure, AI, and people.
-      </p>
-
-      <nav>
-        <a href="blog/">Writing</a>
-        <a href="about/">About</a>
-        <a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X</a>
-        <a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-      </nav>
-    </header>
-
-    <section>
-      <h2 class="section-title">Top Articles</h2>
-
-      <ul class="post-list">
-        <!------------------- ARTICLES GO HERE ONLY------------->
-        <li>
-          <a href="blog/beyond-ai-coding-assistants/">
-            Beyond AI Coding Assistants: Engineering the Control Plane for Autonomous Software Delivery
-          </a>
-          <span class="post-date">October 2026</span>
-        </li>
-        <li>
-          <a href="blog/the-ethics-of-engineering-at-speed/">
-            The Ethics of Engineering at Speed
-          </a>
-          <span class="post-date">October 2026</span>
-        </li>
-        <li>
-          <a href="blog/the-invisible-ethics-of-healthcare-automation/">
-            The Invisible Ethics of Healthcare Automation
-          </a>
-          <span class="post-date">October 2026</span>
-        </li>
-
-        <li>
-          <a href="blog/building-an-ai-first-engineering-organization/">
-            Building an AI-First Engineering Organization
-          </a>
-          <span class="post-date">October 2026</span>
-        </li>
-
-      </ul>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="./" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a>
+      <nav class="desktop-nav" aria-label="Main navigation"><a href="./" aria-current="page">Home</a><a href="./about/">About</a><a href="./blog/">Writing</a><a href="./projects/">Projects</a><span class="nav-github"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a></span></nav>
+      <details class="mobile-nav">
+        <summary>Menu</summary>
+        <nav aria-label="Mobile navigation"><a href="./" aria-current="page">Home</a><a href="./about/">About</a><a href="./blog/">Writing</a><a href="./projects/">Projects</a><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a></nav>
+      </details>
+    </div>
+  </header>
+  <main id="main" class="container">
+    <section class="hero" aria-labelledby="intro-title">
+      <div class="terminal">
+        <div class="terminal-bar"><span class="terminal-dot" aria-hidden="true"></span><span class="terminal-dot" aria-hidden="true"></span><span class="terminal-dot" aria-hidden="true"></span><span class="terminal-label">thomas@howard: ~</span></div>
+        <div class="terminal-body">
+          <p class="command"><span class="prompt" aria-hidden="true">$</span>whoami</p>
+          <h1 id="intro-title">Thomas Howard</h1>
+          <p class="terminal-role">CTO · Applied AI Engineer · Product Builder</p>
+          <p class="command"><span class="prompt" aria-hidden="true">$</span>cat intro.txt</p>
+          <p class="terminal-intro">I'm CTO at Snap eHealth and founder of BusyNow. I build production software and the systems that make autonomous engineering trustworthy. I write about AI, engineering leadership, and what I learn along the way.<span class="cursor" aria-hidden="true"></span></p>
+          <div class="button-row"><a class="button button-primary" href="projects/">View Projects <span class="arrow" aria-hidden="true">→</span></a><a class="button button-secondary" href="blog/">Read Writing</a></div>
+        </div>
+      </div>
     </section>
-
-    <footer>
-      © 2026 Thomas Howard
-    </footer>
-
+    <section class="home-section" aria-labelledby="projects-title">
+      <div class="section-heading"><h2 id="projects-title"><span class="comment" aria-hidden="true">// </span>featured_work</h2><p>Products and systems I'm building.</p></div>
+      <div class="card-grid"><article class="card project-card">
+        <div class="card-topline"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h6l2 2h10v11H3z"/><path d="M3 7V4h6l2 3h8v2"/></svg><span class="card-kind">// product</span></div>
+        <h3>BusyNow</h3><p>A production SaaS I conceived, built, and operate—from the product and APIs to cloud infrastructure, delivery, and reliability.</p><ul class="tags" aria-label="Topics"><li>Go</li><li>PostgreSQL</li><li>AWS / EKS</li></ul>
+        <a class="card-link" href="https://busynow.app/" target="_blank" rel="noopener noreferrer">Visit BusyNow <span aria-hidden="true">↗</span></a>
+      </article>
+<article class="card project-card">
+        <div class="card-topline"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 8-4 4 4 4m8-8 4 4-4 4M14 4l-4 16"/></svg><span class="card-kind">// systems</span></div>
+        <h3>Engineering OS</h3><p>Governed infrastructure for autonomous engineering: isolated agents, deterministic verification, bounded execution, and human authority.</p><ul class="tags" aria-label="Topics"><li>Agents</li><li>Orchestration</li><li>Governance</li></ul>
+        <a class="card-link" href="./blog/beyond-ai-coding-assistants/">Read the architecture <span aria-hidden="true">→</span></a>
+      </article>
+<article class="card project-card">
+        <div class="card-topline"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 1v4m6-4v4M9 19v4m6-4v4M1 9h4m-4 6h4m14-6h4m-4 6h4"/><path d="M9 9h6v6H9z"/></svg><span class="card-kind">// applied AI</span></div>
+        <h3>Applied AI at Snap</h3><p>AI-enabled healthcare products built from real operational needs: referral intelligence, workflow automation, and patient engagement.</p><ul class="tags" aria-label="Topics"><li>Python</li><li>TypeScript</li><li>Healthcare</li></ul>
+        <a class="card-link" href="./about/">More about my work <span aria-hidden="true">→</span></a>
+      </article></div>
+      <div class="section-action"><a class="button button-secondary" href="projects/">All Projects <span aria-hidden="true">→</span></a></div>
+    </section>
+    <section class="home-section" aria-labelledby="writing-title">
+      <div class="section-heading"><h2 id="writing-title"><span class="comment" aria-hidden="true">// </span>latest_writing</h2><p>Notes from building and operating real systems.</p></div>
+      <div class="card-grid "><article class="card post-card">
+        <ul class="tags" aria-label="Topics"><li>AI</li><li>Agentic systems</li></ul>
+        <h3><a href="./blog/beyond-ai-coding-assistants/">Beyond AI Coding Assistants: Engineering the Control Plane for Autonomous Software Delivery</a></h3>
+        <p>The orchestration, isolated execution, policy, and evidence that let autonomous agents deliver software safely.</p>
+        <div class="post-meta"><time datetime="2026-10">Oct 2026</time><span aria-hidden="true">·</span><span>16 min read</span><span class="arrow" aria-hidden="true">↗</span></div>
+      </article>
+<article class="card post-card">
+        <ul class="tags" aria-label="Topics"><li>Engineering</li><li>Leadership</li></ul>
+        <h3><a href="./blog/the-ethics-of-engineering-at-speed/">The Ethics of Engineering at Speed</a></h3>
+        <p>When AI produces code faster than we can inspect it, how do we prove that what we ship deserves to be trusted?</p>
+        <div class="post-meta"><time datetime="2026-10">Oct 2026</time><span aria-hidden="true">·</span><span>9 min read</span><span class="arrow" aria-hidden="true">↗</span></div>
+      </article>
+<article class="card post-card">
+        <ul class="tags" aria-label="Topics"><li>AI</li><li>Healthcare</li></ul>
+        <h3><a href="./blog/the-invisible-ethics-of-healthcare-automation/">The Invisible Ethics of Healthcare Automation</a></h3>
+        <p>The most consequential decisions AI makes in healthcare may be the ones nobody realizes it is making.</p>
+        <div class="post-meta"><time datetime="2026-10">Oct 2026</time><span aria-hidden="true">·</span><span>8 min read</span><span class="arrow" aria-hidden="true">↗</span></div>
+      </article></div>
+      <div class="section-action"><a class="button button-secondary" href="blog/">All Writing <span aria-hidden="true">→</span></a></div>
+    </section>
   </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-intro"><a class="brand" href="./" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a><p>Building production software and the systems that make autonomous engineering trustworthy.</p></div>
+        <div><h2 class="footer-title">// explore</h2><nav class="footer-links" aria-label="Footer navigation"><a href="./">Home</a><a href="./about/">About</a><a href="./blog/">Writing</a><a href="./projects/">Projects</a></nav></div>
+        <div><h2 class="footer-title">// connect</h2><div class="footer-links"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X ↗</a><a href="https://busynow.app/" target="_blank" rel="noopener noreferrer">BusyNow ↗</a></div></div>
+      </div>
+      <div class="footer-bottom">© 2026 Thomas Howard</div>
+    </div>
+  </footer>
 </body>
 </html>
