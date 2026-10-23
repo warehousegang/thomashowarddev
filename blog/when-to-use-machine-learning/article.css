@@ -1,0 +1,22 @@
+.decision-math { margin: 26px 0; padding: 22px 25px; border-left: 3px solid var(--accent); background: var(--surface); font-family: var(--mono); }
+.decision-math span { display: block; color: var(--muted); font-size: .8rem; line-height: 1.8; }
+.decision-math strong { display: block; color: var(--accent-soft); font-size: clamp(1.05rem, 3vw, 1.5rem); line-height: 1.6; margin: 8px 0; }
+.decision-chart { margin: 36px 0; padding: 0; border: 1px solid var(--rule); border-radius: 10px; background: var(--surface); overflow: hidden; }
+.decision-chart figcaption { padding: 22px 24px 0; }
+.decision-chart figcaption span { display: block; color: var(--accent-soft); font-family: var(--mono); font-size: .7rem; margin-bottom: 9px; }
+.decision-chart figcaption strong { display: block; color: var(--text); font-family: var(--mono); font-size: 1rem; line-height: 1.5; }
+.decision-chart picture, .decision-chart img { display: block; width: 100%; }
+.decision-chart img { height: auto; aspect-ratio: 790/445; }
+.reading .chart-note { color: var(--muted); font-size: .8rem; line-height: 1.7; padding: 0 24px; margin: 0 0 20px; }
+.chart-data { border-top: 1px solid var(--rule); padding: 0 24px; }
+.chart-data summary { cursor: pointer; color: var(--accent-soft); font-family: var(--mono); font-size: .75rem; padding: 15px 0; }
+.reading .chart-data p { font-size: .8rem; line-height: 1.75; color: var(--muted); margin-bottom: 20px; }
+@media (max-width: 520px) {
+  .decision-chart img { aspect-ratio: 360/425; }
+  .decision-chart figcaption { padding: 20px 18px 0; }
+  .decision-chart figcaption strong { font-size: .95rem; }
+  .reading .chart-note { padding-inline: 18px; }
+  .chart-data { padding-inline: 18px; }
+  .decision-math { padding: 18px; }
+  .decision-math span { font-size: .72rem; }
+}

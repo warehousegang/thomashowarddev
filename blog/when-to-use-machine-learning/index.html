@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A banquet for 180 guests and a sub shop’s weekly turkey order reveal when to calculate, when to forecast, and how to combine the two.">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>When to Use Machine Learning—and When a Calculator Is Enough | Thomas Howard</title>
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../styles.css?v=project-essays-1">
+  <link rel="stylesheet" href="article.css?v=1">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a>
+      <nav class="desktop-nav" aria-label="Main navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/" aria-current="page">Writing</a><a href="../../projects/">Projects</a><span class="nav-github"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a></span><a href="../../resume/">My Resume</a></nav>
+      <details class="mobile-nav">
+        <summary>Menu</summary>
+        <nav aria-label="Mobile navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/" aria-current="page">Writing</a><a href="../../projects/">Projects</a><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a><a href="../../resume/">My Resume</a></nav>
+      </details>
+    </div>
+  </header>
+  <main id="main" class="site">
+    <a class="back-link" href="../">← All writing</a>
+    <article class="reading">
+      <p class="eyebrow">Applied AI · Predictive modeling · Software design</p>
+      <h1>When to Use Machine Learning—and When a Calculator Is Enough</h1>
+      <p class="deck">A banquet for 180 guests and a sub shop’s weekly turkey order reveal when to calculate, when to forecast, and how to combine the two.</p>
+      <p class="meta">Thomas Howard · 11 min read</p>
+      <nav class="essay-nav" aria-label="In this essay"><p>In this essay</p><ul><li><a href="#banquet">The banquet</a></li><li><a href="#distinction">The distinction</a></li><li><a href="#demand">Demand forecasting</a></li><li><a href="#decision">The order decision</a></li><li><a href="#data">Data quality</a></li><li><a href="#baseline">Simple baselines</a></li><li><a href="#evaluation">Evaluation</a></li><li><a href="#architecture">The architecture</a></li></ul></nav>
+<p>You have a banquet for 180 people next Saturday. How many servers do you need?</p>
+<p>You run an independent sub shop. How many pounds of turkey should you have available next week?</p>
+<p>Both questions ask for a number. Both affect staffing, purchasing, and customer experience. They invite very different kinds of reasoning, though. In the banquet example, much of the workload is already specified. In the sub shop, a major input—what people will buy—has not happened yet.</p>
+<p>Before choosing a model, I want to separate three jobs: <strong>calculate a requirement, predict an unknown quantity, and decide what action to take</strong>. A useful system may do all three. Giving each job the right implementation is more valuable than making the entire workflow “AI-powered.”</p>
+
+<h2 id="banquet">Start with the banquet: a rule you can inspect</h2>
+<p>Suppose the operator has chosen a planning rule of one serving staff member per 20 guests for this particular service format. That is an illustrative assumption, not a universal hospitality standard. With 180 guests, the calculation is straightforward:</p>
+<div class="decision-math" aria-label="180 guests divided by 20 guests per server, rounded up, equals 9 servers"><span>Serving staff = round up(guests ÷ guests per server)</span><strong>180 ÷ 20 = 9 servers</strong></div>
+<p>If the event also requires a dedicated captain who does not count toward serving capacity, add that separate role: nine servers plus one captain. Bartenders, kitchen staff, setup crews, and other responsibilities need their own rules. The calculator should make those boundaries visible.</p>
+<p>The rounding matters. At this assumed ratio, 180 guests require nine servers; 181 require ten. A formula handles that boundary consistently. It can reject negative guest counts, require a service format, and show exactly which policy produced the answer.</p>
+
+<figure class="decision-chart" id="staffing-chart"><figcaption><span>01 / Calculate the known workload</span><strong>A staffing rule produces steps, not guesses.</strong></figcaption><picture><source media="(max-width: 520px)" srcset="figures/banquet-staffing-mobile.svg"><img src="figures/banquet-staffing.svg" width="790" height="445" alt="Step chart of serving staff against guests under an illustrative one-server-per-20-guests rule. The highlighted point is 180 guests and nine servers; 181 guests require ten." loading="lazy"></picture><p class="chart-note">Illustrative planning rule. The graph calculates serving staff only; it does not establish the correct ratio for a real event.</p><details class="chart-data"><summary>Inspect the calculation</summary><p>For each guest count from 20 to 260, serving staff equals the guest count divided by 20, rounded upward. <a href="figures/staffing.csv" download>Download the example values</a>.</p></details></figure>
+
+<p>There is still judgment inside this simple system. Plated dinner and buffet service may need different policies. Table layout, service timing, staff experience, and the operator’s service expectations can change the ratio. A deterministic calculator can accept those inputs without becoming a machine learning system.</p>
+<p>The rule’s implementation can be correct while its assumptions are wrong. I would keep the policy explicit, version it, and compare planned staffing with actual service outcomes. If a chosen ratio repeatedly produces slow service, the first response is to investigate the ratio and the missing conditions.</p>
+<p>Assigning specific people to shifts is another problem. Availability, skills, breaks, and required coverage can lead to a constraint solver or optimization model. Complex scheduling does not, by itself, require machine learning.</p>
+
+<h2 id="distinction">Deterministic execution and uncertain outcomes are different things</h2>
+<p>A deterministic program returns the same result for the same inputs and configuration. A trained regression model can do that too. “Uses machine learning” does not necessarily mean “returns something different every time.”</p>
+<p>A probabilistic forecast represents uncertainty about an outcome: perhaps a distribution over daily demand or a range intended to cover future sales. A model that returns only one demand estimate is providing a point forecast, even if it was trained with machine learning.</p>
+<p>The more useful architecture questions are: <strong>Do we already know the relationship we need to apply? Do we need to estimate that relationship from examples? And does the decision require an explicit representation of uncertainty?</strong> Those questions avoid treating deterministic software and statistical modeling as mutually exclusive categories.</p>
+
+<h2 id="demand">The sub shop has an unknown input</h2>
+<p>For the sub shop, a recipe might specify four ounces of usable turkey per sandwich. Converting a sandwich count into pounds is arithmetic. The difficult input is how many turkey sandwiches customers will want on each day.</p>
+<p>A busy Saturday, a quiet Monday, a promotion, and a nearby event can create different demand. The forecast should match the decision: demand by day and by product over the period the order needs to cover. A weekly total alone can hide a stockout on the busiest day.</p>
+<p>Here is a fictional demand pattern with a busier weekend. The blue line shows four weeks of synthetic observations. The green line shows the next week’s assumed daily averages, with an illustrative prediction band. These figures come from a toy data-generating process; they are not a trained model’s results or a restaurant’s sales history.</p>
+
+<figure class="decision-chart" id="demand-chart"><figcaption><span>02 / Forecast the unknown demand</span><strong>Expect a pattern. Allow for a range.</strong></figcaption><picture><source media="(max-width: 520px)" srcset="figures/turkey-demand-mobile.svg"><img src="figures/turkey-demand.svg" width="790" height="445" alt="Four weeks of synthetic daily turkey sandwich sales fluctuate around a weekday pattern. The next week has assumed means of 40, 45, 50, 55, 80, 95, and 55 sandwiches, with a shaded illustrative 80 percent prediction interval." loading="lazy"></picture><p class="chart-note">All values are simulated. The band describes individual days under the toy assumptions; it is not a validated interval for a real shop or a weekly-total interval.</p><details class="chart-data"><summary>Inspect the example data</summary><p>The daily means, Monday through Sunday, are 40, 45, 50, 55, 80, 95, and 55 sandwiches. Counts are generated from a negative-binomial distribution with dispersion parameter 25 and random seed 180. The band uses the 10th and 90th percentiles of 100,000 simulated draws per day. <a href="figures/turkey-demand.csv" download>Download the values</a> or <a href="figures/generate_figures.py">inspect the chart source</a>.</p></details></figure>
+
+<p>The seven illustrative daily means add up to 420 turkey subs. At four ounces each, that is <strong>105 pounds of usable turkey</strong>: 420 × 4 ÷ 16. That conversion is deterministic. Its output inherits the uncertainty in the forecast supplied to it.</p>
+<p>A prediction interval describes a range for a future observation. Over many comparable forecasts, a well-calibrated 80% interval should cover roughly 80% of outcomes. It is different from uncertainty about an estimated average. <a href="https://otexts.com/fpp3/toolbox.html#distributional-forecasts-and-prediction-intervals">Forecasting: Principles and Practice</a> explains that distinction between a point forecast and a distributional forecast.</p>
+<p>Daily intervals also cannot simply be added to obtain a weekly interval with the same coverage. Errors across days may move together: an unexpectedly busy week can lift several days at once. The forecast needs to represent uncertainty at the horizon used for ordering.</p>
+
+<h2 id="decision">The average forecast is not automatically the right stock target</h2>
+<p>Suppose the weekly average is 105 pounds. Should the shop stock exactly 105 pounds? That depends on what happens when demand is higher or lower.</p>
+<p>Running short might lose sales or force an expensive emergency purchase. Ordering too much might leave product that cannot be used. Those consequences need explicit values or service targets. The demand forecast alone cannot decide which tradeoff the operator prefers.</p>
+<p>The <a href="https://ocw.mit.edu/courses/15-772j-d-lab-supply-chains-fall-2014/6952be57b43aa185119c6f114908bcc5_MIT15_772JF14_Newsboy.pdf">newsvendor model</a> gives a useful starting point: choose a quantity before uncertain demand arrives, balancing the cost of having too little against the cost of having too much. Its simple, single-period assumptions need revisiting when inventory carries over, replenishment is possible, or multiple products share ingredients.</p>
+<p>For a separate, deliberately small example, imagine five possible weekly demands: 75, 90, 105, 120, and 135 usable pounds, with probabilities of 10%, 20%, 40%, 20%, and 10%. The mean is 105 pounds. Assign an illustrative penalty of $6 per pound of unmet demand and $2 per pound left over. These are invented decision costs, not turkey prices.</p>
+
+<figure class="decision-chart" id="cost-chart"><figcaption><span>03 / Choose the action</span><strong>The best stock target can exceed the mean.</strong></figcaption><picture><source media="(max-width: 520px)" srcset="figures/inventory-tradeoff-mobile.svg"><img src="figures/inventory-tradeoff.svg" width="790" height="445" alt="Expected weekly shortage penalty falls as usable stock increases, while surplus penalty rises. With the article’s five hypothetical demand scenarios, the combined penalty is lowest at 120 pounds and 42 dollars, versus 48 dollars at the 105-pound mean." loading="lazy"></picture><p class="chart-note">Hypothetical single-period decision. The lowest combined penalty is $42 at 120 usable pounds. This graph is calculated from the stated scenarios, not fitted to sales data.</p><details class="chart-data"><summary>Inspect the assumptions and arithmetic</summary><p>For each stock target Q and demand scenario D, shortage costs 6 × max(D − Q, 0); surplus costs 2 × max(Q − D, 0). Each scenario’s cost is weighted by its probability, then summed. This simplified example assumes surplus has no later use and ignores other costs. <a href="figures/inventory-scenarios.csv" download>Demand scenarios</a> · <a href="figures/inventory-cost.csv" download>Calculated cost curves</a>.</p></details></figure>
+
+<p>In this example, 120 usable pounds has the lowest expected penalty. The demand distribution has not changed. The action differs from the mean because shortage and surplus have different consequences. Changing those costs can change the decision without retraining a demand model.</p>
+<p>Now convert the stock target into an order. Assume 18 usable pounds are on hand, another 12 usable pounds will arrive in time, and newly purchased turkey has a 90% usable yield. With ten-pound cases:</p>
+<div class="decision-math"><span>New usable turkey needed: 120 − 18 − 12 = 90 lb</span><strong>90 ÷ 0.90 = 100 lb purchased</strong><span>100 lb ÷ 10 lb per case = 10 cases</span></div>
+<p>Every input here is hypothetical. Existing stock and incoming deliveries must be usable during the relevant demand window; product that expires beforehand cannot count. Case sizes, delivery timing, storage capacity, and purchasing permissions belong in the decision logic. A seven-day demand forecast does not imply buying or storing all seven days’ supply at once.</p>
+<p>This is a useful division of responsibility: estimate demand, choose a stock target under an explicit policy, then calculate a feasible order. Adding an unexplained safety percentage after a risk-adjusted target can double-count the buffer.</p>
+
+<h2 id="data">Before learning from history, ask what the history measures</h2>
+<p>Historical sales are valuable, but they are not always historical demand. If the shop runs out of turkey at two in the afternoon, the register records what it sold before the stockout. It does not record every sandwich customers would have bought afterward.</p>
+<p>A model trained naively on those sales can learn that a busy day has modest demand. The purchasing decision then keeps supply low, which keeps observed sales low. Record stockouts, closures, substitutions, promotions, operating hours, and recipe changes alongside transactions so the team can understand those gaps.</p>
+<p>Feature timing matters too. A forecast made when an order is placed can use the weather forecast available then. It cannot use the weather that was eventually observed as though it were already known. The same distinction applies to late catering bookings, future sales, and revised event schedules.</p>
+<p>The banquet has uncertainty of its own. Expected attendance, no-shows, service duration, or staff absence might deserve forecasts when they materially affect planning. But a confirmed guest count and an agreed staffing policy remain a calculation. I would add a learned component for the uncertain quantity that needs one, rather than replacing the entire staffing workflow.</p>
+
+<h2 id="baseline">A forecasting problem does not automatically need advanced ML</h2>
+<p>For a small shop, I would start by plotting demand and comparing simple baselines: the same weekday last week, an average of recent comparable weekdays, or a basic seasonal forecasting model. These methods establish what the data already makes easy. The <a href="https://otexts.com/fpp3/toolbox.html#some-simple-forecasting-methods">simple forecasting methods</a> in Forecasting: Principles and Practice are useful reference points.</p>
+<p>Then investigate the remaining error. Does demand change systematically with promotions, local events, price, or other information available in advance? Are there enough representative observations to estimate those relationships? Is the improvement likely to affect the order, or would every candidate still round to the same number of cases?</p>
+<p>Regression, gradient-boosted trees, or other learned approaches become useful experiments when they can capture patterns the baseline misses. “We have historical data” is a reason to examine it. It is not evidence that a more complex model will outperform a well-chosen simple forecast.</p>
+<p>Google’s <a href="https://developers.google.com/machine-learning/problem-framing/problem">ML problem-framing guidance</a> recommends defining the product goal and comparing against a non-ML approach. For the shop, the goal could be fewer avoidable stockouts at an acceptable waste level. That gives the team a better target than deploying a model for its own sake.</p>
+
+<h2 id="evaluation">Make the more complex option earn its place</h2>
+<p>Evaluate forecasts in the order the business would have used them. Train on earlier observations, predict the next ordering window, and repeat as time advances. The <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html">time-series splitting approach</a> helps preserve that ordering. The evaluation also needs the real lead time, forecast horizon, and feature availability; chronological rows alone do not prevent leakage.</p>
+<p>For the shop, I would examine errors in sandwich counts or pounds, persistent over- or underprediction, performance by weekday, and failures around unusual events. For intervals, I would check both coverage and width. A very wide interval can cover many outcomes while offering little operational guidance.</p>
+<p>Then compare decisions under the same inventory policy. Does the candidate reduce the simulated cost of shortages and surplus? Does it change how often emergency purchasing is needed? A replay on historical sales needs care where stockouts hid unmet demand. Offline results should lead to a controlled operational trial, with assumptions and overrides recorded.</p>
+<p>Any improvement also has to justify data collection, monitoring, retraining, support, and failure recovery. If those costs exceed the value of better decisions, the simpler approach is a successful engineering choice.</p>
+
+<h2 id="architecture">Build the system around the boundary</h2>
+<p>A practical architecture can keep uncertain estimation in one component and explicit policy in another. That lets the forecasting method improve while the surrounding business rules remain inspectable.</p>
+<figure class="case-diagram"><figcaption>One workflow, with distinct responsibilities</figcaption><ol class="system-flow"><li><span>Observe</span><strong>Validate the inputs</strong><p>Sales, availability, recipes, event details, and what was known at decision time.</p></li><li><span>Estimate</span><strong>Forecast the unknown</strong><p>Use a simple baseline or a learned model; represent uncertainty when it changes the decision.</p></li><li><span>Decide</span><strong>Apply an explicit policy</strong><p>Translate demand into staffing or stock targets, with costs, constraints, and units checked.</p></li><li><span>Act and learn</span><strong>Execute within authority</strong><p>Approve the schedule or order, retain the evidence, and compare the outcome with the plan.</p></li></ol></figure>
+<p>An LLM could provide a conversational interface: collect missing details, call the calculator or forecast service, and explain the returned result. The arithmetic should come from the calculator. Forecast values should come from the forecasting component. Purchasing should respect the workflow’s approval rules. Fluent language does not supply the missing evidence for any of those jobs.</p>
+<p>The same separation appears in my <a href="../../projects/referral-intelligence/">Referral Intelligence work</a>, where ranking rules and predictive modeling have different responsibilities, and in <a href="../../projects/nfl-predictor/">NFL Predictor</a>, where a future analyst should explain a model’s forecast rather than invent probabilities.</p>
+<p>When choosing an approach, I would ask five questions:</p>
+<ol class="question-list"><li><strong>What is known?</strong> Identify inputs, units, and policies that can be calculated or checked directly.</li><li><strong>What is unknown?</strong> Name the quantity to predict and when the decision must be made.</li><li><strong>What evidence exists?</strong> Look for representative history, reliable labels, and information actually available at that time.</li><li><strong>What does an error cost?</strong> Separate the forecast from the policy that turns it into an action.</li><li><strong>Does added complexity improve the outcome?</strong> Compare against a baseline and include the cost of operating the system.</li></ol>
+<p>For a 180-person banquet, the answer may be a small, transparent calculator. For an independent sub shop, it may be a demand forecast connected to equally transparent ordering rules. The engineering judgment is in recognizing where uncertainty lives—and building only as much machinery as the decision requires.</p>
+
+    </article>
+    <aside class="related-essays" aria-labelledby="related-title"><h2 id="related-title">Continue reading</h2><ul><li><a href="../scaling-ai-from-seed-to-series-a/">Scaling AI from Seed to Series A <span aria-hidden="true">→</span></a><span>Models, evaluation, and engineering practice</span></li><li><a href="../../projects/nfl-predictor/">Building NFL Predictor <span aria-hidden="true">→</span></a><span>Predictive modeling in practice</span></li></ul></aside>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-intro"><a class="brand" href="../../" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a><p>Applied AI, conversational agents, and the architecture behind useful agentic systems.</p></div>
+        <div><h2 class="footer-title">// explore</h2><nav class="footer-links" aria-label="Footer navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/">Projects</a></nav></div>
+        <div><h2 class="footer-title">// connect</h2><div class="footer-links"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="../../resume/">My Resume</a><a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X ↗</a></div></div>
+      </div>
+      <div class="footer-bottom">© 2026 Thomas Howard</div>
+    </div>
+  </footer>
+</body>
+</html>
