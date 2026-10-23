@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="A banquet for 180 guests and a sub shop’s weekly turkey order reveal when to calculate, when to forecast, and how to combine the two.">
   <meta name="theme-color" content="#0a0a0f">
-  <title>When to Use Machine Learning—and When a Calculator Is Enough | Thomas Howard</title>
+  <title>Machine Learning or a Calculator? | Thomas Howard</title>
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../../styles.css?v=project-essays-1">
   <link rel="stylesheet" href="article.css?v=1">
@@ -14,7 +14,7 @@
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="../../" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a>
+      <a class="brand" href="../../" aria-label="Thomas Howard, home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a>
       <nav class="desktop-nav" aria-label="Main navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/" aria-current="page">Writing</a><a href="../../projects/">Projects</a><span class="nav-github"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a></span><a href="../../resume/">My Resume</a></nav>
       <details class="mobile-nav">
         <summary>Menu</summary>
@@ -26,13 +26,13 @@
     <a class="back-link" href="../">← All writing</a>
     <article class="reading">
       <p class="eyebrow">Applied AI · Predictive modeling · Software design</p>
-      <h1>When to Use Machine Learning—and When a Calculator Is Enough</h1>
+      <h1>Machine Learning or a Calculator?</h1>
       <p class="deck">A banquet for 180 guests and a sub shop’s weekly turkey order reveal when to calculate, when to forecast, and how to combine the two.</p>
       <p class="meta">Thomas Howard · 11 min read</p>
       <nav class="essay-nav" aria-label="In this essay"><p>In this essay</p><ul><li><a href="#banquet">The banquet</a></li><li><a href="#distinction">The distinction</a></li><li><a href="#demand">Demand forecasting</a></li><li><a href="#decision">The order decision</a></li><li><a href="#data">Data quality</a></li><li><a href="#baseline">Simple baselines</a></li><li><a href="#evaluation">Evaluation</a></li><li><a href="#architecture">The architecture</a></li></ul></nav>
 <p>You have a banquet for 180 people next Saturday. How many servers do you need?</p>
 <p>You run an independent sub shop. How many pounds of turkey should you have available next week?</p>
-<p>Both questions ask for a number. Both affect staffing, purchasing, and customer experience. They invite very different kinds of reasoning, though. In the banquet example, much of the workload is already specified. In the sub shop, a major input—what people will buy—has not happened yet.</p>
+<p>Both questions ask for a number. Both affect staffing, purchasing, and customer experience. They invite very different kinds of reasoning, though. In the banquet example, much of the workload is already specified. In the sub shop, the major unknown is what people will buy.</p>
 <p>Before choosing a model, I want to separate three jobs: <strong>calculate a requirement, predict an unknown quantity, and decide what action to take</strong>. A useful system may do all three. Giving each job the right implementation is more valuable than making the entire workflow “AI-powered.”</p>
 
 <h2 id="banquet">Start with the banquet: a rule you can inspect</h2>
@@ -102,7 +102,7 @@
 <p>The same separation appears in my <a href="../../projects/referral-intelligence/">Referral Intelligence work</a>, where ranking rules and predictive modeling have different responsibilities, and in <a href="../../projects/nfl-predictor/">NFL Predictor</a>, where a future analyst should explain a model’s forecast rather than invent probabilities.</p>
 <p>When choosing an approach, I would ask five questions:</p>
 <ol class="question-list"><li><strong>What is known?</strong> Identify inputs, units, and policies that can be calculated or checked directly.</li><li><strong>What is unknown?</strong> Name the quantity to predict and when the decision must be made.</li><li><strong>What evidence exists?</strong> Look for representative history, reliable labels, and information actually available at that time.</li><li><strong>What does an error cost?</strong> Separate the forecast from the policy that turns it into an action.</li><li><strong>Does added complexity improve the outcome?</strong> Compare against a baseline and include the cost of operating the system.</li></ol>
-<p>For a 180-person banquet, the answer may be a small, transparent calculator. For an independent sub shop, it may be a demand forecast connected to equally transparent ordering rules. The engineering judgment is in recognizing where uncertainty lives—and building only as much machinery as the decision requires.</p>
+<p>For a 180-person banquet, the answer may be a small, transparent calculator. For an independent sub shop, it may be a demand forecast connected to equally transparent ordering rules. Engineering judgment means recognizing where uncertainty lives and building only as much machinery as the decision requires.</p>
 
     </article>
     <aside class="related-essays" aria-labelledby="related-title"><h2 id="related-title">Continue reading</h2><ul><li><a href="../scaling-ai-from-seed-to-series-a/">Scaling AI from Seed to Series A <span aria-hidden="true">→</span></a><span>Models, evaluation, and engineering practice</span></li><li><a href="../../projects/nfl-predictor/">Building NFL Predictor <span aria-hidden="true">→</span></a><span>Predictive modeling in practice</span></li></ul></aside>
@@ -110,7 +110,7 @@
   <footer class="site-footer">
     <div class="container">
       <div class="footer-grid">
-        <div class="footer-intro"><a class="brand" href="../../" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a><p>Applied AI, conversational agents, and the architecture behind useful agentic systems.</p></div>
+        <div class="footer-intro"><a class="brand" href="../../" aria-label="Thomas Howard, home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a><p>Applied AI, conversational agents, and the architecture behind useful agentic systems.</p></div>
         <div><h2 class="footer-title">// explore</h2><nav class="footer-links" aria-label="Footer navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/">Projects</a></nav></div>
         <div><h2 class="footer-title">// connect</h2><div class="footer-links"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="../../resume/">My Resume</a><a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X ↗</a></div></div>
       </div>

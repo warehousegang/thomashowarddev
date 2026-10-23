@@ -51,6 +51,6 @@ Team-logo PNGs are vendored from ESPN's public team assets using URLs from nflve
 
 No model service, schedule feed, results job, recurring automation, or public deployment is configured by this concept.
 
-Article pages and writing cards omit publication dates. Keep writing organized in the main Writing index for now; do not add date-based archive navigation. The former monthly archive URL redirects to Writing so existing links continue to work.
+Article titles, summaries, and prose use natural punctuation without em dashes. Article pages and writing cards omit publication dates. Keep writing organized in the main Writing index for now; do not add date-based archive navigation. The former monthly archive URL redirects to Writing so existing links continue to work.
 
 The essay `blog/when-to-use-machine-learning/` compares rules, forecasts, and decision policies using fictional banquet and sub-shop examples. Its three charts have desktop and mobile SVG variants, CSV data, and a reproducible Matplotlib source in `figures/`. All values are illustrative; the demand chart uses a known synthetic generating process, not a fitted model. The inventory chart evaluates explicitly stated demand scenarios and penalties. To regenerate the figures, use Python with matplotlib 3.10.7 and numpy 2.5.4 and run `python3 blog/when-to-use-machine-learning/figures/generate_figures.py`. The website itself has no new runtime dependencies.
