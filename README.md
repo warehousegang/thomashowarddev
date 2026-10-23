@@ -2,7 +2,7 @@
 
 Thomas Howard's personal website: projects and writing on applied AI, autonomous engineering, leadership, and production systems.
 
-A framework-free static site with a terminal-inspired dark theme. No build step, JavaScript, remote fonts, or package dependencies are required. Mobile navigation uses native HTML disclosure controls, and the cursor animation respects reduced-motion preferences.
+A framework-free static site with a terminal-inspired dark theme. No build step, remote fonts, or package dependencies are required. A small JavaScript enhancement types the homepage name and introduction on page load; the full text is available to screen readers and when JavaScript is disabled. Reduced-motion preferences skip typing. Mobile navigation uses native HTML disclosure controls.
 
 ## Local preview
 
@@ -21,6 +21,7 @@ Then open http://localhost:8000.
 - `projects/` — selected projects
 - `blog/` — all writing, articles, and monthly archives
 - `styles.css` — shared theme, responsive layouts, and reading styles
+- `terminal.js` — progressive typing animation for the homepage introduction
 - `favicon.svg` — terminal icon
 
 All content is ordinary HTML. When publishing an article, add it to the writing index and its monthly archive; update the homepage's recent-writing cards as appropriate. Keep links relative to the current page and retain each article's existing URL.

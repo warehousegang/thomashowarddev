@@ -47,7 +47,7 @@ svg { vertical-align: middle; }
 .nav-github { border-left: 1px solid var(--rule); padding-left: 26px; }
 .mobile-nav { display: none; }
 
-/* Terminal introduction. Content is present immediately, with no typing delay. */
+/* Terminal introduction. Full text remains available without JavaScript. */
 .hero { padding: 64px 0 0; }
 .terminal { max-width: 800px; margin-inline: auto; border: 1px solid #454557; border-radius: 12px; overflow: hidden; background: var(--surface); box-shadow: 0 20px 80px #0003; }
 .terminal-bar { display: flex; align-items: center; gap: 8px; padding: 13px 18px; border-bottom: 1px solid var(--rule); background: var(--surface-raised); color: var(--muted); font-family: var(--mono); font-size: .8rem; }
@@ -61,7 +61,15 @@ svg { vertical-align: middle; }
 .terminal h1 { margin: 0 0 7px; color: var(--accent); font-size: clamp(2rem, 4.5vw, 2.75rem); letter-spacing: -.04em; text-shadow: 0 0 24px #00ed642a; }
 .terminal-role { color: var(--accent-soft); font-size: .8rem; margin-bottom: 25px; }
 .terminal-intro { color: var(--muted); font-size: 1rem; line-height: 1.8; max-width: 65ch; margin-bottom: 28px; }
-.cursor { display: inline-block; width: .5em; height: 1em; margin-left: .25em; background: var(--accent); vertical-align: -.12em; animation: blink 1.2s steps(1) 5; }
+.typewriter { position: relative; }
+/* Reserve the full paragraph's responsive height throughout the animation. */
+.typewriter-source { display: block; opacity: 0; }
+.typewriter-visual { position: absolute; inset: 0; }
+.terminal-intro .typewriter-source::after,
+.typewriter.is-typing .typewriter-visual::after,
+.terminal-intro:not(.typewriter)::after { content: ""; display: inline-block; width: .5em; height: 1em; margin-left: .25em; background: var(--accent); vertical-align: -.12em; }
+.typewriter.is-typing .typewriter-visual::after,
+.terminal-intro:not(.typewriter)::after { animation: blink 1.2s steps(1) 5; }
 @keyframes blink { 50% { opacity: 0; } }
 .button-row { display: flex; flex-wrap: wrap; gap: 14px; }
 .button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 48px; padding: 10px 21px; border: 1px solid var(--accent); border-radius: 6px; font-family: var(--mono); font-weight: 700; font-size: .9rem; text-decoration: none; transition: background .18s, border-color .18s; }
