@@ -2,7 +2,7 @@
 
 Thomas Howard's personal website: projects and writing on applied AI, autonomous engineering, leadership, and production systems.
 
-A framework-free static site with a terminal-inspired dark theme. No build step, remote fonts, or package dependencies are required. A small JavaScript enhancement types the homepage name and introduction on page load; the full text is available to screen readers and when JavaScript is disabled. Reduced-motion preferences skip typing. Mobile navigation uses native HTML disclosure controls.
+A framework-free static site with a terminal-inspired dark theme. No build step, remote fonts, or package dependencies are required. A small JavaScript enhancement types the homepage name and introduction on page load, updating one text node per line. A head-level loading state prevents the full text from flashing before typing starts. Without JavaScript, with reduced motion, or if the animation script fails to load, the full introduction remains readable. Mobile navigation uses native HTML disclosure controls.
 
 ## Local preview
 

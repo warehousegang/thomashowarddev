@@ -61,15 +61,8 @@ svg { vertical-align: middle; }
 .terminal h1 { margin: 0 0 7px; color: var(--accent); font-size: clamp(2rem, 4.5vw, 2.75rem); letter-spacing: -.04em; text-shadow: 0 0 24px #00ed642a; }
 .terminal-role { color: var(--accent-soft); font-size: .8rem; margin-bottom: 25px; }
 .terminal-intro { color: var(--muted); font-size: 1rem; line-height: 1.8; max-width: 65ch; margin-bottom: 28px; }
-.typewriter { position: relative; }
-/* Reserve the full paragraph's responsive height throughout the animation. */
-.typewriter-source { display: block; opacity: 0; }
-.typewriter-visual { position: absolute; inset: 0; }
-.terminal-intro .typewriter-source::after,
-.typewriter.is-typing .typewriter-visual::after,
-.terminal-intro:not(.typewriter)::after { content: ""; display: inline-block; width: .5em; height: 1em; margin-left: .25em; background: var(--accent); vertical-align: -.12em; }
-.typewriter.is-typing .typewriter-visual::after,
-.terminal-intro:not(.typewriter)::after { animation: blink 1.2s steps(1) 5; }
+[data-typewriter].is-typing::after,
+.terminal-intro:not(.typewriter-waiting)::after { content: ""; display: inline-block; width: .5em; height: 1em; margin-left: .25em; margin-right: -.75em; background: var(--accent); vertical-align: -.12em; animation: blink 1.2s steps(1) 5; }
 @keyframes blink { 50% { opacity: 0; } }
 .button-row { display: flex; flex-wrap: wrap; gap: 14px; }
 .button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 48px; padding: 10px 21px; border: 1px solid var(--accent); border-radius: 6px; font-family: var(--mono); font-weight: 700; font-size: .9rem; text-decoration: none; transition: background .18s, border-color .18s; }
@@ -110,7 +103,7 @@ svg { vertical-align: middle; }
 .page-heading h1 { font-size: clamp(1.85rem, 4vw, 2.5rem); margin-bottom: 14px; }
 .page-heading .command { margin-bottom: 22px; color: var(--subtle); font-size: .8rem; }
 .page-intro { margin-bottom: 0; font-size: 1.05rem; }
-.writing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.project-grid, .writing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .archive { margin-top: 48px; border-top: 1px solid var(--rule); padding-top: 28px; }
 .archive h2 { font-size: 1.1rem; margin: 0 0 14px; }
 .archive a, .back-link { font-family: var(--mono); font-size: .85rem; text-decoration: none; }
