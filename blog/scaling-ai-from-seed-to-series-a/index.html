@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A practical guide to scaling AI from seed to Series A: model selection, evaluation, workflow economics, data quality, serving reliability, and engineering ownership.">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>Scaling AI from Seed to Series A | Thomas Howard</title>
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../styles.css?v=project-essays-1">
+  <style>
+    .growth-table-wrap { margin: 28px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 10px; background: var(--surface); }
+    .growth-table { width: 100%; min-width: 420px; border-collapse: collapse; font-size: .88rem; line-height: 1.6; }
+    .growth-table caption { padding: 18px 20px; color: var(--accent-soft); font-family: var(--mono); font-size: .8rem; text-align: left; }
+    .growth-table th, .growth-table td { padding: 13px 18px; border-top: 1px solid var(--rule); text-align: left; vertical-align: top; }
+    .growth-table thead { background: var(--surface-raised); }
+    .growth-table tbody th { color: var(--muted); font-weight: 400; width: 50%; }
+    .growth-table tbody tr:last-child { background: var(--accent-bg); }
+    .growth-table tbody tr:last-child th { color: var(--text); }
+    .growth-table tbody tr:last-child strong { color: var(--accent-soft); }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a>
+      <nav class="desktop-nav" aria-label="Main navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/" aria-current="page">Writing</a><a href="../../projects/">Projects</a><span class="nav-github"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a></span><a href="../../resume/Thomas_Howard_Resume.pdf" download="Thomas_Howard_Resume.pdf" type="application/pdf" aria-label="My Resume (PDF download)">My Resume</a></nav>
+      <details class="mobile-nav">
+        <summary>Menu</summary>
+        <nav aria-label="Mobile navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/" aria-current="page">Writing</a><a href="../../projects/">Projects</a><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a><a href="../../resume/Thomas_Howard_Resume.pdf" download="Thomas_Howard_Resume.pdf" type="application/pdf" aria-label="My Resume (PDF download)">My Resume</a></nav>
+      </details>
+    </div>
+  </header>
+  <main id="main" class="site">
+    <a class="back-link" href="../">← All writing</a>
+    <article class="reading">
+      <p class="eyebrow">Applied AI · Startups · Engineering</p>
+      <h1>Scaling AI from Seed to Series A</h1>
+      <p class="deck">How to evolve your models, evaluations, data, and engineering team while preserving the speed and customer focus of an early startup.</p>
+      <p class="meta"><time datetime="2026-10-23">October 23, 2026</time> · Thomas Howard · 12 min read</p>
+      <nav class="essay-nav" aria-label="In this essay"><p>In this essay</p><ul><li><a href="#seed">Seed-stage focus</a></li><li><a href="#evaluation">Evaluation</a></li><li><a href="#models">Model choices</a></li><li><a href="#economics">Workflow economics</a></li><li><a href="#data">Data and feedback</a></li><li><a href="#reliability">Reliability</a></li><li><a href="#team">Team ownership</a></li><li><a href="#agents">Coding agents</a></li><li><a href="#series-a">Series A readiness</a></li></ul></nav>
+<p>At seed, the people building an AI product can often explain every surprising result. They know which customer supplied the unusual document, why a prompt contains a particular instruction, and which output needs a quick correction before anyone sees it. That closeness is useful. It helps a small team learn quickly.</p>
+<p>As the company grows, more of the product runs without those people watching. Customers bring unfamiliar inputs. New engineers change behavior they did not originally design. Sales commits to workflows with different latency and quality expectations. A model update reaches customers whose use cases never appeared in the original demo.</p>
+<p>That is the scaling problem I care about: preserving the ability to learn and improve as the number of customers, decisions, and contributors increases.</p>
+<p>For a startup using external foundation models, much of this work concerns the application around the model: context, tools, evaluation, serving, and feedback. For a team training its own predictive models, it also includes reproducible data preparation, training, and validation. In both cases, the company needs a repeatable way to decide whether a change improves the customer’s outcome.</p>
+<p>Seed and Series A are useful shorthand here, not universal engineering milestones. A small healthcare company may need stricter controls than a much larger creative tool. I would pace the work according to customer dependence, failure consequences, and the team’s ability to operate the system.</p>
+
+<h2 id="seed">At seed, make one workflow worth repeating</h2>
+<p>The first job is to find a narrow task where the product creates value. Name the user, the input, the expected result, and what happens when the system cannot produce it. “An AI assistant for operations” leaves too much unresolved. “Prepare a reviewable summary from these documents, with support for each material claim” gives the team something it can build and assess.</p>
+<p>Start with a capable baseline and inspect actual failures. A strong model can be useful early because it helps establish whether the task is feasible before the team spends weeks optimizing it. A simple classifier or deterministic rule may be a better baseline for a well-defined prediction or decision. The baseline’s job is to make subsequent choices measurable.</p>
+<p>Human review can be part of this phase. Make that work visible: how often someone intervenes, how long the correction takes, and why it was necessary. Those observations reveal product requirements and future evaluation cases. They also prevent manual effort from disappearing inside an apparently automated workflow.</p>
+<p>Even at this stage, I want prompts and configuration in version control, a small representative test set, basic cost and timing measurements, and a way to disable or revert a change. These are inexpensive foundations for learning. A bespoke model-serving platform can wait until a demonstrated problem justifies it.</p>
+
+<figure class="case-diagram"><figcaption>Change the operating practice as customer dependence grows</figcaption><ol class="system-flow"><li><span>Seed · Discover</span><strong>Prove a useful workflow</strong><p>Work closely with users, inspect failures, and establish a measurable baseline.</p></li><li><span>Growing adoption · Repeat</span><strong>Make quality reproducible</strong><p>Version the complete configuration, evaluate by customer segment, and expose review cost.</p></li><li><span>Approaching Series A · Delegate</span><strong>Make ownership durable</strong><p>Give teams clear release criteria, operational responsibilities, and a reliable feedback loop.</p></li></ol></figure>
+
+<h2 id="evaluation">Build the evaluation system before optimizing the model</h2>
+<p>When a team cannot reliably detect a regression, every model or prompt change becomes a negotiation based on examples. The engineer with a compelling demo can win even when the candidate performs worse on a customer segment nobody examined.</p>
+<p>I would separate a development set from a held-out evaluation set, then maintain a growing regression set for known failures. Development examples help the team improve the system. The held-out set provides a less contaminated estimate of performance. Regression cases preserve hard-earned lessons. Once people repeatedly tune against a held-out set, it needs to be treated accordingly and supplemented with fresh evaluation data.</p>
+<p>Measure the workflow at several levels. Structured output can be valid while its contents are wrong. An answer can be accurate while relying on information the user was not authorized to access. A tool call can be well formed while selecting the wrong record. Task completion, evidence quality, authorization, latency, and failure handling deserve separate checks.</p>
+<p>Use deterministic assertions where the requirement can be checked directly. Use expert review and model-assisted judging for qualities that need interpretation, and compare judge decisions with human assessments. Sample repeated generations when variability matters. Break results down by task, customer segment, language, document type, or other relevant conditions so an average does not hide a concentrated failure.</p>
+<p>My <a href="../../projects/ai-evaluation/">AI evaluation work</a> follows this layered approach. The practical benefit is that a team can investigate a particular behavior instead of arguing about whether a model is “better.” As adoption grows, review a representative sample of ordinary production outcomes as well as reported failures. Users do not report every mistake.</p>
+
+<h2 id="models">Choose model complexity from the failure you observe</h2>
+<p>A growing startup will encounter several problems that look similar from the outside. The model may lack relevant information. It may misunderstand instructions. A tool may return incomplete data. The product may ask for a decision that the available evidence cannot support. Each calls for a different intervention.</p>
+<p>If the problem is missing or changing knowledge, investigate the context supplied to the model. Retrieval may help, but it creates a pipeline that needs its own tests: whether the right material was found, whether it is current, and whether the requesting user can access it. If the evidence is wrong, a more fluent answer can make the failure harder to notice.</p>
+<p>If the task is stable and the remaining failures concern behavior, style, or a recurring transformation, fine-tuning becomes a candidate experiment. It needs representative examples, clear data rights, and a comparison against the existing baseline. Keep the evaluation data independent. Adopt the tuned model when its measured improvement justifies the added training, release, and maintenance work.</p>
+<p>Model routing is another experiment. A smaller model might handle a defined class of straightforward tasks while a stronger model handles more demanding work. The router becomes part of the product and needs evaluation too. Decide how it identifies a difficult case, how escalation changes latency and cost, and what happens when it confidently chooses the wrong path. A model’s own confidence statement is insufficient validation.</p>
+<p>For supervised prediction, put the same discipline into features and labels. Reproduce the information available at prediction time, and choose time-based or grouped splits when the deployment setting requires them. Fit learned preprocessing on training data only. The <a href="https://scikit-learn.org/stable/common_pitfalls.html">scikit-learn guidance on leakage and preprocessing</a> explains why these boundaries matter. If the output is a probability used for decisions, examine <a href="https://scikit-learn.org/stable/modules/calibration.html">calibration</a> as well as discrimination.</p>
+<p>Self-hosting or distilling a model should answer an equally concrete requirement: sustained workload economics, deployment constraints, latency, or control. Compare full operating costs and the capability you can actually staff. A financing milestone alone does not make owning inference infrastructure or training a foundation model a sensible next step.</p>
+
+<h2 id="economics">Measure cost per accepted outcome</h2>
+<p>Token prices are visible, but the customer buys a completed task. A useful operating measure is the total variable cost of a workflow divided by the number of outcomes that meet its acceptance criteria. Include model calls, tools, serving, retries, and human review. Count the costs of unsuccessful attempts too.</p>
+<p>Consider two hypothetical candidates evaluated on the same 1,000 tasks. Assume each reviewed task takes three minutes, with review labor costed at $40 per hour. The acceptance rate is measured after the complete workflow, including any review. These figures illustrate the calculation; they are not vendor prices or results from my projects.</p>
+<div class="growth-table-wrap" role="region" aria-label="Illustrative workflow cost comparison" tabindex="0"><table class="growth-table"><caption>Illustrative cost across 1,000 attempted tasks</caption><thead><tr><th scope="col">Measure</th><th scope="col">Candidate A</th><th scope="col">Candidate B</th></tr></thead><tbody><tr><th scope="row">Model cost per attempt</th><td>$0.12</td><td>$0.04</td></tr><tr><th scope="row">Total model cost</th><td>$120</td><td>$40</td></tr><tr><th scope="row">Other variable service costs</th><td>$50</td><td>$50</td></tr><tr><th scope="row">Tasks requiring review</th><td>150</td><td>350</td></tr><tr><th scope="row">Review labor</th><td>$300</td><td>$700</td></tr><tr><th scope="row">Total variable cost</th><td>$470</td><td>$790</td></tr><tr><th scope="row">Accepted outcomes</th><td>900</td><td>800</td></tr><tr><th scope="row">Cost per accepted outcome</th><td><strong>$0.52</strong></td><td><strong>$0.99</strong></td></tr></tbody></table></div>
+<p>Candidate B has a lower model bill and a higher cost per accepted result. The example does not establish that expensive models are preferable. It shows why the evaluation has to include the workflow they create.</p>
+<p>Once that baseline exists, optimization becomes more focused. Remove unnecessary calls, reduce irrelevant context, bound output length, and move work that can wait into asynchronous processing. Cache only when the result remains valid for the relevant input, permissions, model configuration, and freshness requirements. Test each change against both quality and cost.</p>
+<p>Track these economics by workload and customer cohort. A growing enterprise account may bring much longer documents or more tool interactions than the customers used in the original forecast. Also track total spending, review capacity, and retention: unit efficiency alone does not establish a sustainable business, and this variable-cost measure is not a complete profit calculation.</p>
+
+<h2 id="data">Turn customer learning into a maintained data asset</h2>
+<p>The first useful dataset often begins as a collection of examples that surprised the team. Growth calls for more structure around that collection: where each example came from, what it may be used for, who reviewed the expected result, and which product behavior it represents.</p>
+<p>Store a correction with the reason for it. “The user edited this response” is ambiguous. They may have corrected an error, expressed a preference, or adapted the output for a different purpose. Training indiscriminately on those edits can teach the system the wrong lesson.</p>
+<p>Customer data also needs boundaries across retrieval, logging, evaluation, and training. Access to a document for one workflow does not automatically establish permission to retain it indefinitely or use it for another purpose. Make retention, deletion, tenant separation, and permitted use explicit in the design, with the appropriate product and legal owners involved.</p>
+<p>For learned systems, watch how product behavior changes the data you observe. A ranking system influences which candidates users inspect; labels collected only from selected candidates describe that selected population. Preserve enough context to recognize these feedback effects. Otherwise, the team can mistake changes in its own collection process for improvements in the model.</p>
+
+<h2 id="reliability">Scale the workload with explicit limits</h2>
+<p>As traffic grows, measure the shape of the work. Request count alone can hide long contexts, large outputs, concurrent tool calls, and retry loops. Track latency distributions, queue time, token consumption, tool duration, and completion rates for the end-to-end workflow.</p>
+<p>Give each request a time budget and each agent run a bounded allowance for work. Queue background jobs, constrain concurrency, and avoid retrying an entire workflow when only one safe step needs another attempt. Retry limits and backoff help contain overload; externally visible actions also need idempotency or reconciliation so a timeout does not produce a duplicate action.</p>
+<p>Define what the customer experiences when a dependency fails. That might be a delayed result, a saved draft, a request for review, or a clearly unavailable capability. A fallback model is useful only if it meets the task’s requirements and data constraints. A response with a lower quality bar should not silently inherit the product’s normal guarantees.</p>
+<p>Google’s <a href="https://sre.google/workbook/implementing-slos/">SLO guidance</a> provides a useful way to connect reliability targets to engineering priorities. For an AI workflow, I would pair service availability and latency objectives with separately measured task quality. An HTTP success rate cannot reveal whether the result was useful. Serious authorization or safety violations also need their own handling rather than being traded against an ordinary availability budget.</p>
+<p>Roll out meaningful model and prompt changes gradually. A shadow run can compare outputs without allowing the candidate to perform external actions; a limited live rollout can reveal workflow effects that offline evaluation missed. Keep the tested configuration identifiable, define rollback conditions in advance, and remember that reverting software cannot undo an action already completed in another system.</p>
+
+<h2 id="team">Grow ownership before adding organizational layers</h2>
+<p>A founding engineer may initially own the prompt, the application, the dataset, and the release. As the team grows, that arrangement becomes difficult to maintain. The answer begins with assigning responsibilities clearly, even while several still belong to the same person.</p>
+<p>Someone owns the customer outcome and acceptance criteria. Someone owns model behavior and the evaluation evidence. Someone owns the data contracts and permitted use. Someone owns release and operational recovery. These responsibilities need to meet in the same delivery process so a model change is assessed against the product it will affect.</p>
+<p>Hire against the constraint the team can demonstrate. If the bottleneck is integrating models into a useful workflow, an applied AI engineer with strong software skills may add more value than a research function. If reliable labels and evaluation are missing, invest in domain expertise and data quality. If a trained model is central to the product and repeated experiments are producing gains, dedicated ML expertise may be justified.</p>
+<p>Shared tooling should follow repeated needs. When multiple teams independently build the same evaluation reporting or inference instrumentation, consolidate that capability with a clear owner. Keep product-specific acceptance criteria close to the teams that understand the users. A shared service should make a recurring task easier without making every experiment wait for another team.</p>
+<p>A practical weekly review can stay small: inspect a few consequential failures, examine quality and cost by workload, and decide which experiment comes next. Record the decision and its evidence. The purpose is to make learning cumulative as more people join.</p>
+
+<h2 id="agents">Scale AI-assisted engineering with the same discipline</h2>
+<p>There are two AI systems growing at once: the product customers use and the engineering workflow producing it. Coding agents can increase the rate of changes faster than a team’s capacity to evaluate those changes. That makes clear requirements, reproducible environments, focused tests, and reviewable patches increasingly valuable.</p>
+<p>Start with bounded tasks and explicit repository guidance. Give agents the context and tools required for their assignment, along with a way to report uncertainty and stop. Expand autonomy when the team has evidence that the workflow handles failure and produces reviewable results.</p>
+<p>Anthropic’s <a href="https://www.anthropic.com/research/building-effective-agents">Building effective agents</a> distinguishes predefined workflows from agents that choose their own next steps, and recommends adding complexity when it improves the task. That is a useful design test for a startup. A fixed sequence of checks may need ordinary orchestration; an open-ended investigation may benefit from an agent. More independent actors also create more handoffs to evaluate.</p>
+<p>My <a href="../../projects/symphony/">Symphony work</a> explores those handoffs between scoped execution, evidence, and review. I would measure engineering improvements through accepted changes, escaped defects, rework, and review time. Generated code volume provides little information about whether the organization can maintain what it is producing.</p>
+
+<h2 id="series-a">What I would want to see approaching Series A</h2>
+<p>I would expect the team to explain why customers depend on the AI workflow, where it still fails, and what it costs to deliver an acceptable result. A new engineer should be able to reproduce a baseline, make a bounded change, and understand the evidence required to release it. A customer incident should have an owner and a recovery path.</p>
+<p>The next investment should follow from those facts. A costly review queue may justify a targeted model experiment. Repeated retrieval failures may justify better data preparation. A slow release process may need stronger tests and clearer ownership. Each is a specific constraint with a way to measure progress.</p>
+<p>The advantage of an early team is its closeness to the customer and its ability to change direction quickly. Good AI engineering preserves those qualities as the company grows. Evaluations preserve what the team has learned. Data practices make future learning usable. Clear ownership lets more people act without losing accountability. Measured model choices keep the product improving for reasons the whole team can explain.</p>
+
+    </article>
+    <aside class="related-essays" aria-labelledby="related-title">
+      <h2 id="related-title">Related project essays</h2>
+      <ul>
+        <li><a href="../../projects/ai-evaluation/">AI Evaluation <span aria-hidden="true">→</span></a><span>Making behavior measurable</span></li>
+        <li><a href="../../projects/symphony/">Symphony <span aria-hidden="true">→</span></a><span>Agentic engineering workflows</span></li>
+        <li><a href="../../projects/sally/">Sally <span aria-hidden="true">→</span></a><span>Model roles and conversation latency</span></li>
+      </ul>
+      <a class="back-link" href="../">Browse all writing →</a>
+    </aside>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-intro"><a class="brand" href="../../" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a><p>Applied AI, conversational agents, and the architecture behind useful agentic systems.</p></div>
+        <div><h2 class="footer-title">// explore</h2><nav class="footer-links" aria-label="Footer navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/">Projects</a></nav></div>
+        <div><h2 class="footer-title">// connect</h2><div class="footer-links"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="../../resume/Thomas_Howard_Resume.pdf" download="Thomas_Howard_Resume.pdf" type="application/pdf" aria-label="My Resume (PDF download)">My Resume</a><a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X ↗</a></div></div>
+      </div>
+      <div class="footer-bottom">© 2026 Thomas Howard</div>
+    </div>
+  </footer>
+</body>
+</html>
