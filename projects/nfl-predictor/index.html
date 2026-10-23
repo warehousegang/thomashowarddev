@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="How I’m approaching predictive modeling with historical NFL data, pregame features, simple baselines, and evaluation across later seasons.">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>NFL Predictor | Predictive Machine Learning | Thomas Howard</title>
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../styles.css?v=project-essays-1">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a>
+      <nav class="desktop-nav" aria-label="Main navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/" aria-current="page">Projects</a><span class="nav-github"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a></span><a href="../../resume/">My Resume</a></nav>
+      <details class="mobile-nav">
+        <summary>Menu</summary>
+        <nav aria-label="Mobile navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/" aria-current="page">Projects</a><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a><a href="../../resume/">My Resume</a></nav>
+      </details>
+    </div>
+  </header>
+  <main id="main" class="site">
+    <a class="back-link" href="../">← All projects</a>
+    <article class="reading case-study">
+      <p class="eyebrow">Project essay · Predictive machine learning</p>
+      <h1>Building NFL Predictor: from historical games to win probabilities</h1>
+      <p class="deck">How I’m approaching predictive modeling with historical NFL data, pregame features, simple baselines, and evaluation across later seasons.</p>
+      <p class="meta"><time datetime="2026-10-23">October 23, 2026</time> · Thomas Howard · 6 min read</p>
+      <dl class="case-facts">
+        <div><dt>My role</dt><dd>Independent project · Predictive ML development</dd></div>
+        <div><dt>Focus</dt><dd>Python · nflreadpy · pandas · Model evaluation</dd></div>
+        <div><dt>Project stage</dt><dd>Data exploration implemented · Baseline development</dd></div>
+      </dl>
+      <nav class="essay-nav" aria-label="In this essay"><p>In this essay</p><ul><li><a href="#data">Historical data</a></li><li><a href="#baseline">Baseline forecasts</a></li><li><a href="#leakage">Data leakage</a></li><li><a href="#model">Model choices</a></li><li><a href="#evaluation">Probability evaluation</a></li><li><a href="#agent">The future analyst</a></li><li><a href="#related-ml">Related ML work</a></li></ul></nav>
+<p>I'm building NFL Predictor as an independent predictive machine learning project. The first question is specific: using information available before kickoff, how can we estimate the probability that the designated home team wins? Football gives me a domain I enjoy and a concrete way to examine how data preparation, model choices, and evaluation affect a forecast.</p>
+<p>The project starts with historical game data and simple benchmarks. The longer-term design adds richer team features, a prediction service, and an agent that can investigate a forecast. The current implementation is the data-exploration script; baseline evaluation and model training are the next milestones.</p>
+
+<h2 id="data">Start with real games and a precise target</h2>
+<p>The exploration script uses <a href="https://nflreadpy.nflverse.com/api/load_functions/">nflreadpy</a> to request nflverse schedules and results for the 2010–2025 seasons, then converts the returned data into a pandas DataFrame. It keeps completed regular-season games, requires both scores, and creates a binary home-win label. It also prints the game count, season count, overall home-win rate, and a small sample for inspection.</p>
+<p>For the initial binary experiment, tied games are excluded. That choice defines the population the model will learn from: completed regular-season games with a decisive result. A future live forecast needs an explicit policy for ties, and playoff games need their own evaluation before the results can be generalized to them. Those boundaries belong in the experiment record.</p>
+<p>The scores establish what happened. They cannot become inputs for predicting the same game. Similarly, the home-win rate printed across the exploration dataset is descriptive; the probability used by the benchmark must be estimated from training seasons alone.</p>
+
+<h2 id="baseline">Give the model a benchmark to beat</h2>
+<p>The first baseline makes the same classification for every game: the home team wins. Its accuracy provides a reference for winner selection. A second baseline assigns every matchup the home-win frequency observed in the training data. That gives us a probability forecast we can score against later outcomes.</p>
+<p>These baselines answer different questions. A fixed winner choice does not say how likely that outcome is. A fixed probability can be evaluated for probability quality even though it never distinguishes one matchup from another. Keeping both makes it easier to see what a trained model actually contributes.</p>
+<p>The initial evaluation plan uses 2010–2022 for training, 2023 for validation, and 2024–2025 for the final historical comparison. Model selection belongs in the validation period. The final test period is reserved for evaluating the selected approach, rather than repeatedly choosing features based on those results.</p>
+
+<figure class="case-diagram"><figcaption>The modeling path, from the implemented exploration script to planned evaluation</figcaption><ol class="system-flow"><li><span>Implemented · Data exploration</span><strong>Define the observations</strong><p>Load historical schedules, filter completed games, and construct the outcome label.</p></li><li><span>Next · Baselines</span><strong>Establish reference forecasts</strong><p>Compare a home-team choice and a training-only home-win probability.</p></li><li><span>Planned · Model training</span><strong>Learn from pregame features</strong><p>Start with logistic regression and inspect the contribution of team-strength differences.</p></li><li><span>Planned · Evaluation</span><strong>Test on later seasons</strong><p>Compare accuracy, probability scores, and calibration using the same eligible games.</p></li></ol></figure>
+
+<h2 id="leakage">Reconstruct what was known before kickoff</h2>
+<p>A historical table is assembled after the games have happened. It can contain information that would have been unavailable when a forecast was needed. That makes the prediction timestamp a central design decision.</p>
+<p>For a Week 8 matchup, a team's scoring average from completed Weeks 1–7 can be a candidate feature. Its average across the entire season includes the game being predicted and subsequent games. Using that value would let future outcomes influence the forecast. Sorting the train and test sets chronologically would not repair the contaminated feature.</p>
+<p>The planned feature pipeline therefore calculates team history strictly from earlier completed games. Rolling statistics must be shifted so the current game cannot contribute to its own inputs. Season openers and teams with little recent history also need explicit defaults or prior-season information, with those choices recorded and evaluated.</p>
+<p>Learned preprocessing needs the same separation. Any imputation, scaling, or feature selection fitted from data must learn from the training portion and then be applied to validation and test data. The <a href="https://scikit-learn.org/stable/common_pitfalls.html">scikit-learn guidance on leakage</a> is useful here: wrapping transformations in a pipeline helps maintain that boundary, but the engineering still has to enforce when each raw feature became available.</p>
+
+<h2 id="model">Use logistic regression to make the first experiment understandable</h2>
+<p>The planned first trained model is logistic regression in scikit-learn. The initial features focus on differences between the two teams' pregame win percentages and scoring margins. Starting with a small feature set makes it possible to trace a result back through the calculation and investigate whether an apparent improvement comes from useful information or a mistake in the data.</p>
+<p>Because each row is already expressed from the home team's perspective, a constant “is home” flag would not distinguish games. The intercept can capture a baseline tendency, while differences in team history provide matchup-specific information. Neutral-site handling is another condition to examine before interpreting that tendency as ordinary home-field advantage.</p>
+<p>Later experiments may add rolling statistics, Elo ratings, rest days, and opponent strength, then compare gradient boosting with the simpler model. Each addition needs an out-of-time comparison against the same baselines. A coefficient or feature importance can describe a model's behavior; it does not by itself establish why a team wins.</p>
+
+<h2 id="evaluation">Evaluate the probability as well as the pick</h2>
+<p>Accuracy measures winner selection at a chosen threshold. For probability forecasts, the plan also includes <a href="https://scikit-learn.org/stable/modules/model_evaluation.html#brier-score-loss">Brier score</a>, the average squared difference between forecast probabilities and binary outcomes, and log loss, which strongly penalizes confident errors. Those measures make it possible to distinguish models that select similar winners but assign very different probabilities.</p>
+<p>I also want <a href="https://scikit-learn.org/stable/modules/calibration.html">calibration curves</a> with the number of games supporting each probability range. Across enough comparable forecasts near 70%, roughly seven in ten should be wins if those probabilities are well calibrated. A lower aggregate Brier score alone does not prove better calibration, and small groups can produce noisy estimates.</p>
+<p>The evaluation should report results by season as well as across the full holdout. It should retain the data snapshot, filtering rules, feature definitions, and model configuration needed to reproduce the comparison. The project does not yet have measured model-performance results; publishing those results belongs after the baseline and training milestones have actually run.</p>
+
+<h2 id="agent">Let an agent investigate a forecast</h2>
+<p>The longer-term product design includes an NFL analyst that can retrieve supporting information, call the prediction model, and explain a result. The trained model would supply the probability. The agent would identify the model version, summarize the available evidence, and make the assumptions visible.</p>
+<p>Scenario analysis needs that boundary too. If a later model supports a player-availability input, a tool could change that input and rerun inference. Until the feature exists and has been evaluated, an agent should not invent a revised probability because an injury sounds consequential. A plausible football explanation is not a substitute for a measured predictive calculation.</p>
+<p>The API, dashboard, and research agent remain later milestones. My immediate focus is the foundation: a defensible target, historical information available at prediction time, simple benchmarks, and an evaluation that tells me whether the next modeling decision helped.</p>
+
+<h2 id="related-ml">The connection to referral prediction</h2>
+<p>This project complements my separate work on <a href="../referral-intelligence/#prediction">30-day referral-completion modeling</a>. That project starts with a reproducible synthetic data generator and tests for when prior outcomes become observable. NFL Predictor uses historical sports records. Both require a clear distinction between an outcome we know today and information that was available when the prediction would have been made.</p>
+<p>That is the predictive modeling experience I want to develop and document: framing the question, constructing the dataset, engineering valid features, comparing models, and examining uncertainty before putting a forecast into a larger AI workflow.</p>
+
+    </article>
+    <aside class="related-essays" aria-labelledby="related-title"><h2 id="related-title">Explore the other projects</h2><ul><li><a href="../referral-intelligence/#prediction">Referral-completion modeling <span aria-hidden="true">→</span></a><span>Synthetic data &amp; temporal integrity</span></li><li><a href="../ai-evaluation/">AI Evaluation <span aria-hidden="true">→</span></a><span>Reproducible evaluation</span></li><li><a href="../symphony/">Symphony <span aria-hidden="true">→</span></a><span>Agent orchestration</span></li></ul><a class="back-link" href="../../blog/">Browse all writing →</a></aside>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-intro"><a class="brand" href="../../" aria-label="Thomas Howard — home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a><p>Applied AI, conversational agents, and the architecture behind useful agentic systems.</p></div>
+        <div><h2 class="footer-title">// explore</h2><nav class="footer-links" aria-label="Footer navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/">Projects</a></nav></div>
+        <div><h2 class="footer-title">// connect</h2><div class="footer-links"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="../../resume/">My Resume</a><a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X ↗</a></div></div>
+      </div>
+      <div class="footer-bottom">© 2026 Thomas Howard</div>
+    </div>
+  </footer>
+</body>
+</html>
