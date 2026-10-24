@@ -1,9 +1,8 @@
 name: Refresh Fourth Down
 on:
   workflow_dispatch:
-  # Enable only after approval of the two manual verification runs:
-  # schedule:
-  #   - cron: '17 * * * *'
+  schedule:
+    - cron: '17 * * * *'
 permissions:
   contents: read
 concurrency:
