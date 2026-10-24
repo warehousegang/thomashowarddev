@@ -1,0 +1,8 @@
+/* Scoped additions; the portfolio's shared theme and layout stay unchanged. */
+.case-study .evidence-scroll { overflow-x: auto; margin: 1.5rem 0; border: 1px solid var(--rule); border-radius: 8px; }
+.case-study .evidence-table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: .9rem; line-height: 1.6; }
+.case-study .evidence-table caption { text-align: left; padding: 1rem; font-weight: 600; }
+.case-study .evidence-table th, .case-study .evidence-table td { padding: .8rem 1rem; border-top: 1px solid var(--rule); text-align: right; font-variant-numeric: tabular-nums; }
+.case-study .evidence-table th:first-child { text-align: left; }
+.case-study .evidence-table thead { background: var(--surface); }
+.case-study code { overflow-wrap: anywhere; }
