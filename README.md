@@ -33,7 +33,11 @@ Publish the repository as static files using the existing GitHub Pages configura
 
 Project essays use the shared reading styles, local tables of contents, role and stage summaries, and HTML architecture diagrams. They are also listed in Writing. Keep project-stage descriptions grounded in source evidence: synthetic prototypes, local validation, prepared runtimes, and production deployments are different milestones.
 
-NFL Predictor documents an early predictive ML project: data exploration is implemented, with baseline evaluation and model training still ahead. Referral Intelligence distinguishes its deterministic ranking service from the separate synthetic referral-completion modeling project. Update model-performance claims only when supported by measured results.
+The NFL Predictor essay preserves the early project background. The featured card now links to Fourth Down at `/fourth-down/`: a separately developed frozen-model application with upcoming forecasts, evaluation and research demonstrations. Referral Intelligence distinguishes its deterministic ranking service from the separate synthetic referral-completion modeling project. Update model-performance claims only when supported by measured results.
+
+## Fourth Down static application
+
+`fourth-down/` contains only the compiled application and its checksummed `release.json` receipt. Source, tests, model training and forecast generation stay in the separate Fourth Down repository. Its artifact installer replaces only this directory; the existing `main`/root Pages deployment and `CNAME` stay unchanged. Import a verified build, review the diff, then publish through the normal approved main-branch merge. Reverting that integration commit restores the prior website. There is no cross-repository token or automatic publication job.
 
 ## NFL Forecast Lab concept
 
