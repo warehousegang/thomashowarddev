@@ -12,12 +12,14 @@
     "data/context/latest.json": "d4de3e9339334a30a63b4b2bca40470fb40291418f929ddb5ba782fa8e440f04",
     "data/current/forecast-2026-11d4518833ef149e9a4e6b239094468dbc90f516be058bce02d40d4141618445.json": "11d4518833ef149e9a4e6b239094468dbc90f516be058bce02d40d4141618445",
     "data/current/forecast-2026-3449f56cda00dca8e4f4c253458d471b8924cc3ec9a25fd4a5821d356d7737cb.json": "3449f56cda00dca8e4f4c253458d471b8924cc3ec9a25fd4a5821d356d7737cb",
+    "data/current/forecast-2026-4439c15d52f3d354c891ed9ec836c5dc5d4852f98eb92f0133d58eac19e83e88.json": "4439c15d52f3d354c891ed9ec836c5dc5d4852f98eb92f0133d58eac19e83e88",
     "data/current/forecast-2026-66342f068c048d28b96b456b61d0e51d4cb981a72fce1519d53df24c383aef77.json": "66342f068c048d28b96b456b61d0e51d4cb981a72fce1519d53df24c383aef77",
-    "data/current/latest.json": "73f18987480490f1a936f28ae14f2651ba41a033619471a644454846d7c52a74",
+    "data/current/latest.json": "bde3e036210bcc85f7a3d1ea76281c359ea3b7bb4a228f62bd5e0d3910af26f1",
     "data/demo.json": "41c3ad0d8d2997238b464f196b700ce328f38eb6e93831a18d504c7ef6aa24a9",
-    "data/operations/latest.json": "12e85a61446ba4f8cbea75055f44eb53270430816e3d40bc03221f1ec8ecd9a1",
+    "data/operations/latest.json": "aa3bb8f3b0174807cf4857bd8b45b6d27d8cc76bd1a1ea1ece1594c0b4bc3c92",
     "data/operations/operations-0a21283c5bfd13265e43ac345507d6cf1a986bd4fdda279e7ce6c04716f1c95f.json": "0a21283c5bfd13265e43ac345507d6cf1a986bd4fdda279e7ce6c04716f1c95f",
     "data/operations/operations-4f1de7bd0fbbdba2e8fde376f785e2a29c64c051660a607f9ec2cf58cfc9d4eb.json": "4f1de7bd0fbbdba2e8fde376f785e2a29c64c051660a607f9ec2cf58cfc9d4eb",
+    "data/operations/operations-acb075e2b1bbe89e74a4bf93810f2d19e17a3540bfc8f0d0ca4368c799623217.json": "acb075e2b1bbe89e74a4bf93810f2d19e17a3540bfc8f0d0ca4368c799623217",
     "data/operations/operations-c46b707e33c8b57ba068e14ae2bd3283fe225c2b57c85a3e66fe12a3aae800b2.json": "c46b707e33c8b57ba068e14ae2bd3283fe225c2b57c85a3e66fe12a3aae800b2",
     "data/research/challenger-2b90c2f946ef4bac8a2841ae2d4abd8ad8b279449fc38cc1dea1dac32f8b3e68.json": "2b90c2f946ef4bac8a2841ae2d4abd8ad8b279449fc38cc1dea1dac32f8b3e68",
     "data/research/challenger-b6b02ee1084420cc65e5877683fc7602cdb3f2ac0a1b6b7980130b81dd42c68a.json": "b6b02ee1084420cc65e5877683fc7602cdb3f2ac0a1b6b7980130b81dd42c68a",
@@ -26,5 +28,5 @@
     "index.html": "2ee4e2a444825aa627a32cb8c6c9d7a6f44345991731788655bc8446509a480e"
   },
   "schema_version": 1,
-  "source_commit": "228dc651514f80b41d947ad7ea597ee94365e1e0"
+  "source_commit": "39b42a1bab4b72a87ea30d253b32e0528d944b04"
 }
