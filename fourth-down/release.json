@@ -2,7 +2,7 @@
   "application": "fourth-down",
   "base_path": "/fourth-down/",
   "files": {
-    "CURRENT_DATA_NOTICE.txt": "6c66cb1fbcf86185dbf14748e7e6257ae954b803355fe0f47253222c7aca78ef",
+    "CURRENT_DATA_NOTICE.txt": "0dccc04f3f094a2a9c8e8fce055393f624f53bf5a9a8047bc6410c4849e17175",
     "THIRD_PARTY_NOTICES.txt": "f6daec4cdeeadeb95ecf930b8f1ea9b704574d5ad5bfe64a6806d45287dad54c",
     "assets/NOTICE-BNRu1vzw.txt": "893fed0d53468392eb8b6664f8068894d1124fb86b100f93f660295f0cc4f386",
     "assets/ari-D6PhzyFq.png": "0253b24f72a40f22380662aa46c5e7658037f91cc2f03c0c55c62bcb46677d60",
@@ -19,8 +19,8 @@
     "assets/gb-DyrXP-kx.png": "1e74f210bb03f003d603a675ff439e286a94c771f8b859584d6c9dcae2c7c9d3",
     "assets/hou-CzZMVtIr.png": "c9b5cbc5c98724c1d8d983d7447730c200d30301c5119ff57e22d2c58b1621b8",
     "assets/ind-DhdmbElv.png": "e3a83fde93106536dfbccef4827147a62d44e40235dd074bf6087c40312f2c4a",
-    "assets/index-BBDilKYx.js": "f9b893d924fe549c5d17564f16bc1c46b2ac28b206946325d8d36371e387e3aa",
-    "assets/index-DLgBcMJr.css": "af6c0a4aeb47fcdb1cd9b2b4f07d5c3cf26bf01c3b06a2e7aeab32c6cd2f3ba3",
+    "assets/index-BL2JNfOL.css": "c7f50727bc557841f954e68042d1134376981a49b2ae785a8c6c318d9b6df75a",
+    "assets/index-eal_ZvFv.js": "165982113a25af0480ec5ee9949057cf5935824b3c84aa4ac4d1f086bbb92b64",
     "assets/jax-B-gpb8BA.png": "ed8e182aa241b68708621e016ca407d645abb059f37bbc3f16a11ec67f1b254e",
     "assets/kc-D84lf45z.png": "292b38b94509842059c8d680383c8b7d3eeed2c00c8d52cea9e150d6cc13b51c",
     "assets/la-BW7izKU4.png": "acbaaf6e782f67d5f18f5563e0fb8c211bd1cca79276d89caf29ec8f1d2e6a94",
@@ -65,6 +65,7 @@
     "data/current/forecast-2026-e757a29d2433662ffb03150d540542f5b4d5eb910ddd27df5a3ceac1288063b8.json": "e757a29d2433662ffb03150d540542f5b4d5eb910ddd27df5a3ceac1288063b8",
     "data/current/latest.json": "f97dd80d2ab1e8bb2edea63cb4e9e72b0b6fb14ff959815cf03f31de8932bd7a",
     "data/demo.json": "41c3ad0d8d2997238b464f196b700ce328f38eb6e93831a18d504c7ef6aa24a9",
+    "data/game-day.json": "41ed930cfbc44100f29ed81a506d8e0262b60907e969b1afbdfb097a4993c09b",
     "data/operations/latest.json": "190e5eb21524be9eefad4d7fb4f7b7b81a2e1d5e0bcc85e3fc9751c2a465a140",
     "data/operations/operations-0a21283c5bfd13265e43ac345507d6cf1a986bd4fdda279e7ce6c04716f1c95f.json": "0a21283c5bfd13265e43ac345507d6cf1a986bd4fdda279e7ce6c04716f1c95f",
     "data/operations/operations-14d4507fc99b72d0025583fd860743d37d1ad38560e722f3f953f1ee38049756.json": "14d4507fc99b72d0025583fd860743d37d1ad38560e722f3f953f1ee38049756",
@@ -82,8 +83,8 @@
     "data/research/challenger-b6b02ee1084420cc65e5877683fc7602cdb3f2ac0a1b6b7980130b81dd42c68a.json": "b6b02ee1084420cc65e5877683fc7602cdb3f2ac0a1b6b7980130b81dd42c68a",
     "data/research/challenger-dce5b9bc802f459e153324dea42fb3080e61a4b6eaf367aa4a8dc27fafda0791.json": "dce5b9bc802f459e153324dea42fb3080e61a4b6eaf367aa4a8dc27fafda0791",
     "data/research/latest.json": "543fd4c1c2af0baa15278fca5b20835cbb289ac28774ea6eba0cf20fd9a498a4",
-    "index.html": "1ff5744e99b929c513dfd222a72088d73d4adb47cac69947c1e818665cfeebf9"
+    "index.html": "979723aba583f23173be0ee11e98ce9aedb36af9ba167a2efdf74170519a7fcf"
   },
   "schema_version": 1,
-  "source_commit": "15e956e73150ec04b1ee26abdc937553e81dbba4"
+  "source_commit": "87b468a535c94a64072df4c7f4f0a8abe13c3887"
 }
