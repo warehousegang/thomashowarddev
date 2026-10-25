@@ -75,10 +75,11 @@
     "data/current/forecast-2026-e757a29d2433662ffb03150d540542f5b4d5eb910ddd27df5a3ceac1288063b8.json": "e757a29d2433662ffb03150d540542f5b4d5eb910ddd27df5a3ceac1288063b8",
     "data/current/latest.json": "3cab3cd82d6b902298f81c56bbdab4de7206046e766306aa930d213609f6a633",
     "data/demo.json": "41c3ad0d8d2997238b464f196b700ce328f38eb6e93831a18d504c7ef6aa24a9",
-    "data/game-day.json": "79241ea66b1343c597d4547d7d40db4d127ca6317e2c798347d316a3527df4ca",
-    "data/operations/latest.json": "cafd39198b307c2ff5a11f2a2234220fe423ce921070acee1d7165ded39c8fab",
+    "data/game-day.json": "65d6b326a2a750bc847d860e193acf4695ead322b70c997a15228f1c20053512",
+    "data/operations/latest.json": "3197cd97d3a84e8b0cd4992e5bdd770a78ee8e5f068ae3b05f47a9392e056eef",
     "data/operations/operations-0a21283c5bfd13265e43ac345507d6cf1a986bd4fdda279e7ce6c04716f1c95f.json": "0a21283c5bfd13265e43ac345507d6cf1a986bd4fdda279e7ce6c04716f1c95f",
     "data/operations/operations-14d4507fc99b72d0025583fd860743d37d1ad38560e722f3f953f1ee38049756.json": "14d4507fc99b72d0025583fd860743d37d1ad38560e722f3f953f1ee38049756",
+    "data/operations/operations-1bd77cb73ee923ab70bd0c514d6a5b8f6e8b161d3cf6dd2cb1d72a067fce84ff.json": "1bd77cb73ee923ab70bd0c514d6a5b8f6e8b161d3cf6dd2cb1d72a067fce84ff",
     "data/operations/operations-23753a5f95b610beadf1513bfdc16f546f35d381b6d68153c2738147c6d0e141.json": "23753a5f95b610beadf1513bfdc16f546f35d381b6d68153c2738147c6d0e141",
     "data/operations/operations-27ebec0b8201d88888a9f211f567fcef29d9ad6d41aba66c036b9e1dbd825631.json": "27ebec0b8201d88888a9f211f567fcef29d9ad6d41aba66c036b9e1dbd825631",
     "data/operations/operations-2c2a092303b1deb805ccc90ac0d70a00146de1c2a57a7b579361d1daf9f68c13.json": "2c2a092303b1deb805ccc90ac0d70a00146de1c2a57a7b579361d1daf9f68c13",
@@ -108,5 +109,5 @@
     "index.html": "a2f4b0d98267b8b76c264ae01b43e62fab991de2a548f0d0c4dbbc24432642a1"
   },
   "schema_version": 1,
-  "source_commit": "c984550e8df414d9852b4549dd295a2754822c08"
+  "source_commit": "65a281e49e2ee4000695a53068a2adf184a1569d"
 }
