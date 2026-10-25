@@ -1,0 +1,107 @@
+/* Sally's architecture figure uses the shared reading theme and native HTML. */
+.sally-architecture { line-height: 1.6; }
+.sally-architecture__main {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sally-architecture__main li {
+  position: relative;
+  min-width: 0;
+  margin: 0;
+  padding: 14px;
+  border: 1px solid var(--rule);
+  border-top: 2px solid var(--accent-soft);
+  border-radius: 4px;
+}
+.sally-architecture strong {
+  display: block;
+  font-size: .95rem;
+  line-height: 1.45;
+}
+.sally-architecture__label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .7rem;
+}
+.sally-architecture .sally-architecture__main p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: .87rem;
+}
+.sally-architecture__connector {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: -1.65rem;
+  color: var(--accent-soft);
+  font-size: 1.2rem;
+  line-height: 1;
+  transform: translateY(-50%);
+}
+.sally-architecture .sally-architecture__branch-label {
+  margin: 24px 0 16px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .78rem;
+}
+.sally-architecture__branches {
+  margin: 0 0 0 8px;
+  padding: 0 0 0 20px;
+  border-left: 1px solid var(--accent-soft);
+  list-style: none;
+}
+.sally-architecture__branches li {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 16px;
+  margin: 0;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.sally-architecture__branches li:first-child { padding-top: 0; }
+.sally-architecture__branches li:last-child { border-bottom: 0; padding-bottom: 0; }
+.sally-architecture__branches li::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 27px;
+  inset-inline-start: -20px;
+  width: 12px;
+  border-top: 1px solid var(--accent-soft);
+}
+.sally-architecture__branches li:first-child::before { inset-block-start: 11px; }
+.sally-architecture__branches span {
+  display: block;
+  margin-top: 6px;
+  color: var(--accent-soft);
+  font-family: var(--mono);
+  font-size: .72rem;
+}
+.sally-architecture .sally-architecture__branches p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .87rem;
+}
+.sally-architecture .sally-architecture__note {
+  margin: 24px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+  color: var(--muted);
+  font-size: .82rem;
+}
+@media (max-width: 600px) {
+  .sally-architecture__main { grid-template-columns: 1fr; }
+  .sally-architecture__connector {
+    inset-block-start: auto;
+    inset-block-end: -1.6rem;
+    inset-inline-start: 50%;
+    inset-inline-end: auto;
+    transform: translateX(-50%) rotate(90deg);
+  }
+  .sally-architecture__branches li { grid-template-columns: 1fr; gap: 8px; }
+}
