@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Adapting OpenAI Symphony at Snap eHealth: task intake, scoped agent context, isolated execution, independent verification, and the path from a local harness to a shared service.">
+  <meta name="description" content="Architecting governed engineering at Snap eHealth with Symphony: authorized tasks, scoped agents, durable execution, independent verification, and human-controlled release.">
   <meta name="theme-color" content="#0a0a0f">
   <title>Building with Symphony: from a task to a reviewable change | Thomas Howard</title>
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
@@ -32,38 +32,38 @@
       <dl class="case-facts">
         <div><dt>My role</dt><dd>Architecture &amp; development at Snap eHealth</dd></div>
         <div><dt>Focus</dt><dd>Codex · Symphony · Agent orchestration</dd></div>
-        <div><dt>Project stage</dt><dd>Validated local runtime · Shared service planned</dd></div>
+        <div><dt>Project stage</dt><dd>Production engineering · Governed execution</dd></div>
       </dl>
       <nav class="essay-nav" aria-label="In this essay"><p>In this essay</p><ul><li><a href="#contract">Task &amp; lifecycle</a></li><li><a href="#roles">Specialized roles</a></li><li><a href="#execution">Execution boundaries</a></li><li><a href="#validation">Verification</a></li><li><a href="#lessons">Debugging lessons</a></li><li><a href="#status">Current status</a></li></ul></nav>
-      <p>At Snap eHealth, I architect and develop autonomous engineering infrastructure around Codex and Symphony. The central problem is converting an authorized engineering task into a change that someone else can verify, without giving the agent unrestricted authority over the repository, credentials, or release process.</p>
+      <p>I architect and develop Symphony-based autonomous engineering infrastructure for Snap eHealth’s production engineering workflows. The central problem is converting an authorized engineering task into a change that someone else can verify, without giving the agent unrestricted authority over the repository, credentials, or release process.</p>
       <p><a href="https://github.com/openai/symphony/blob/main/SPEC.md">OpenAI’s upstream Symphony specification</a> provides the scheduler and runner foundation: issue intake, per-issue workspaces, agent sessions, retries, and reconciliation. My work is the Snap-specific architecture around that foundation: admission policy, repository context, specialized work, execution boundaries, durable state, and evidence for review. I did not create the upstream specification.</p>
-      <p><strong>Current maturity:</strong> a bounded synthetic execution milestone has passed. A newer local orchestration implementation supports persistent sessions and test-repair loops and remains under review. Shared, always-on dispatch and the complete autonomous delivery handoff are still separate acceptance milestones.</p>
+      <p>The operating model is plan-approved execution: authorize the objective and boundaries, let agents implement, test, and repair within them, then independently verify the candidate before a human release decision. The source includes a signed broker and a newer persistent Codex controller. Their implementation evidence and rollout status are distinct from whether a particular shared dispatcher or delivery connector is enabled.</p>
 
       <h2 id="contract">An executable task needs an authorization contract</h2>
       <p>A useful task identifies one repository, a source revision, allowed changes, acceptance criteria, test commands, and a human reviewer. Repository guidance and relevant architecture explain how to work within that scope. Neither a ticket’s prose nor an agent’s own plan can grant new permissions. A Linear candidate label requests consideration; it is not execution approval.</p>
       <p>The newer controller accepts a plan bound to its recorded human decision. The plan defines task dependencies, permitted write paths, tests, and finite execution limits. Ordinary test failures can trigger repairs within that approval and remaining budget. A changed scope, revoked decision, or exhausted limit is a different event and must stop execution.</p>
 
       <figure class="case-diagram symphony-architecture" aria-labelledby="symphony-architecture-title">
-        <figcaption id="symphony-architecture-title">Intended execution lifecycle, with current implementation boundaries</figcaption>
+        <figcaption id="symphony-architecture-title">Engineering task lifecycle and authority boundaries</figcaption>
         <ol class="symphony-lifecycle" role="list">
           <li>
-            <div><strong>Linear task</strong><span>Shared intake planned</span></div>
+            <div><strong>Linear task</strong><span>Shared automatic dispatch: rollout unverified</span></div>
             <p>One repository, acceptance criteria, allowed scope, and a named reviewer.</p>
           </li>
           <li>
-            <div><strong>Admission &amp; policy checks</strong><span>Local controls implemented</span></div>
+            <div><strong>Admission &amp; policy checks</strong><span>Approval &amp; budget checks implemented</span></div>
             <p>Bind human approval to source and scope; check permissions, budgets, expiry, and stop state.</p>
           </li>
           <li>
-            <div><strong>Orchestrator</strong><span>Local implementation in review</span></div>
+            <div><strong>Orchestrator</strong><span>Persistent controller in review</span></div>
             <p>Order dependencies; persist sessions, attempts, usage reservations, and recovery state.</p>
           </li>
           <li>
-            <div><strong>Isolated Codex worker</strong><span>Local execution validated</span></div>
+            <div><strong>Isolated Codex worker</strong><span>Native isolation; separate test container</span></div>
             <p>Use scoped native permissions for coding and a separate restricted container for tests.</p>
           </li>
           <li>
-            <div><strong>Candidate change</strong><span>Local execution validated</span></div>
+            <div><strong>Candidate change</strong><span>Scope &amp; artifact checks implemented</span></div>
             <p>Capture the scoped diff, artifact identity, test results, usage, and unresolved findings.</p>
           </li>
           <li>
@@ -79,11 +79,11 @@
             <p>Review evidence and remaining risk. Task completion grants no merge or deployment authority.</p>
           </li>
         </ol>
-        <p class="symphony-architecture__note"><strong>Controls across the lifecycle:</strong> finite time, turn, token, and resource limits; cancellation; scope checks; retained audit evidence. Expired authority, uncertain usage, or unverifiable results stop progress. This diagram is not a claim that the shared service is commissioned.</p>
+        <p class="symphony-architecture__note"><strong>Controls across the lifecycle:</strong> finite time, turn, token, and resource limits; cancellation; scope checks; retained audit evidence. Expired authority, uncertain usage, or unverifiable results stop progress. Shared dispatch and connected publication require their own release evidence.</p>
       </figure>
 
       <h2 id="roles">Specialized agents need explicit handoffs</h2>
-      <p>I use specialization to separate questions that an implementation session can otherwise conflate: does the code satisfy the task, do the tests challenge it, and is the change safe to accept? These role contracts describe the workflow I am developing, not a continuously operating fleet of ten production agents.</p>
+      <p>I use specialization to separate questions that an implementation session can otherwise conflate: does the code satisfy the task, do the tests challenge it, and is the change safe to accept? These role contracts organize the engineering workflow. Agent count alone says little about which roles are invoked, what authority they have, or whether their results are independently checked.</p>
       <dl class="symphony-roles">
         <div><dt>Implementation</dt><dd>Receives the approved task, repository context, and write scope. Produces a candidate diff and developer checks; cannot change its authority or declare independent acceptance.</dd></div>
         <div><dt>Testing / QA</dt><dd>Receives acceptance criteria and the candidate. Adds or runs permitted tests, exercises failure cases, and returns reproducible results and coverage gaps.</dd></div>
@@ -96,12 +96,12 @@
 
       <h2 id="execution">Runtime boundaries must survive model mistakes</h2>
       <h3>Scope the worker, then isolate validation</h3>
-      <p>The newer local runtime uses native Codex filesystem and network permissions, disables external apps, plugins, and MCP servers, and checks that the returned session matches the requested workspace and permission profile. Authentication stays managed by Codex. This is a different execution path from the earlier container worker with a host-only model relay; I do not treat their security properties as interchangeable.</p>
+      <p>The newer controller uses native Codex filesystem and network permissions, disables external apps, plugins, and MCP servers, and checks that the returned session matches the requested workspace and permission profile. Authentication stays managed by Codex. This is a different execution path from the earlier container worker with a host-only model relay; I do not treat their security properties as interchangeable.</p>
       <p>Validation runs separately in a pinned, nonroot container with no network, bounded resources, and a read-only source export. Git metadata, approval records, the journal, and host credentials are excluded. Repository context helps the agent choose the right implementation; operating-system permissions and host checks determine what it can actually do. A prompt asking for restraint is not an isolation boundary.</p>
 
       <h3>Make authority expire and stale work fail</h3>
       <p>The earlier broker implementation includes signed execution leases. A host verifies a separately signed approval, binds the lease to its task and worker, and checks an expiry and persisted generation. Revocation or supersession advances that generation, so an old signed lease no longer authorizes a request. This is fencing: a valid old signature cannot override the current authority record.</p>
-      <p>The newer local controller instead binds its journal to the approved plan, checks cancellation and expiry, and reconciles worker identity before resuming interrupted work. Out-of-scope changes quarantine the run for inspection. These are implemented controls on their respective paths; they are not evidence that a shared Linear dispatcher already coordinates distributed leases. The <a href="../../blog/beyond-ai-coding-assistants/">control-plane essay</a> develops that broader design.</p>
+      <p>The newer controller instead binds its journal to the approved plan, checks cancellation and expiry, and reconciles worker identity before resuming interrupted work. Out-of-scope changes quarantine the run for inspection. These are implemented controls on their respective paths; they are not evidence that a shared Linear dispatcher already coordinates distributed leases. The <a href="../../blog/beyond-ai-coding-assistants/">control-plane essay</a> develops that broader design.</p>
 
       <h3>Budget uncertainty is state, not spare capacity</h3>
       <p>Time, turn, token, process, and memory limits constrain different failure modes. Durable reservations prevent a restart from making uncertain work look free. In the broker path, requests reserve against configured cost bounds before forwarding; missing terminal usage leaves a hold for reconciliation. In the newer subscription-backed path, observed usage thresholds can stop further work, but an in-flight request can overshoot them.</p>
@@ -109,18 +109,20 @@
 
       <h2 id="validation">Verify the change, not the agent’s confidence</h2>
       <p>Task acceptance starts with explicit expected behavior. Developer tests and a successful model turn are useful evidence, but neither alone establishes delivery. The candidate must stay within scope, pass deterministic checks, and retain an identity that downstream CI and reviewers can match to the actual diff.</p>
-      <p>The local controller checks the workspace before and after validation and re-runs the combined test suite before requesting delivery. If a final check fails, it returns the responsible task to a bounded repair loop. Changed artifacts invalidate earlier validation. A role’s “passed” message cannot replace the test process result or become an authoritative CI check.</p>
+      <p>The controller checks the workspace before and after validation and re-runs the combined test suite before requesting delivery. If a final check fails, it returns the responsible task to a bounded repair loop. Changed artifacts invalidate earlier validation. A role’s “passed” message cannot replace the test process result or become an authoritative CI check.</p>
       <p>The reviewed orchestration module has <strong>57 offline regression tests</strong>, independently rerun for this essay. They cover persisted cancellation, interrupted-work recovery, retained unknown usage, scope quarantine, stale test evidence, final-suite repair, and ambiguous publication outcomes. These tests use controlled fixtures and local processes; they are not 57 successful autonomous production tasks.</p>
       <p>Publication is also a protocol. The implementation under review records delivery intent before an external mutation and requires a separate readback of remote identity, parent revision, and artifact contents before acknowledging success. If the result is uncertain, it reconciles instead of blindly repeating the write. The current adapter targets an existing open draft PR; complete live connector delivery remains unproven. An acknowledged delivery request still leaves independent checks and human review pending.</p>
+
+      <p>Independent verification also has a concrete host in the consuming engineering workflow. Snap Workflows defines canonical CI followed by a GitHub-native architecture review. The reviewer receives the candidate and evidence through read-only mounts, runs without host credentials, and uses a constrained inference proxy. Its result must match the candidate revision and successful verification; stale, malformed, or incomplete evidence cannot supply approval. That review path is separate from the implementation agent and still leaves the merge decision with a human.</p>
 
       <h2 id="lessons">Debugging changed the acceptance standard</h2>
       <p>An early package check built the runtime and initialized Codex while its inner command sandbox still reported a missing capability. That was evidence of startup, not useful task execution. Later offline tests exercised the real pinned process against a synthetic provider, including file creation, command execution, and matching completion events. The acceptance standard became an observable task outcome under the intended restrictions.</p>
       <p>A failed live attempt also exposed a diagnostic weakness: the worker returned a generic error, discarded stderr, and was removed before useful failure evidence survived. Offline reproduction found request-policy incompatibilities, but could not recover the exact historical exception. The correction preserves bounded, sanitized failure categories and container state before cleanup. Evidence retention became part of the runtime contract, without exporting raw prompts, credentials, or arbitrary tool output.</p>
       <p>The newer local path encountered a different boundary: its strict native filesystem profile denied the host’s Python framework. The solution was to keep editing scoped and move tests to the isolated host validator. Broadening worker access simply to make the first test command succeed would have changed the security contract instead of resolving the integration.</p>
 
-      <h2 id="status">Validated local execution; shared operation still ahead</h2>
+      <h2 id="status">Production engineering with explicit rollout boundaries</h2>
       <p>The first bounded synthetic acceptance completed a real model turn, produced the expected code, and passed tests rerun in a fresh isolated container. Its recorded approval was operator self-authorization for that experiment, not independent human security attestation. Later local acceptance exercised managed Codex sessions, generated regression tests, validated them in Docker, and resumed persisted state. That run retained delivery requests; it did not publish a task PR.</p>
-      <p>The signed broker controls are in the canonical repository. The newer persistent orchestration and connected-delivery implementation remains in an open review branch. Automatic shared intake is disabled; unattended connector operation, full QA integration, shared-host commissioning, and live recovery during an in-flight model turn still need acceptance evidence. Human-controlled merge and deployment remain required.</p>
+      <p>This infrastructure supports Snap’s internal engineering work. The signed broker controls are on the canonical branch; the newer persistent orchestration and delivery implementation remains in an open review branch. The inspected shared-dispatch configuration is disabled, and the reviewed records do not establish unattended connector operation or live recovery during an in-flight model turn. I track those as separate rollout and acceptance boundaries. Human-controlled merge and deployment remain required.</p>
       <p>My architectural focus is the chain between those milestones: authorized work, bounded execution, inspectable evidence, and an explicit acceptance decision. The useful unit of progress is a change another engineer can verify, with its limits still visible.</p>
 
     </article>
