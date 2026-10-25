@@ -3,11 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A technical case study of Sally: shared phone and browser conversation logic, fast and slow AI loops, tool-result validation, and structured visit briefs.">
+  <meta name="description" content="Leading Sally’s Applied AI architecture at Snap eHealth: real-time LLM orchestration, persistent conversation state, deterministic controls, and AI evaluations.">
   <meta name="theme-color" content="#0a0a0f">
-  <title>Building Sally: conversation, context, and a trustworthy visit brief | Thomas Howard</title>
+  <title>Sally: Applied AI architecture and evaluation | Thomas Howard</title>
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../../styles.css?v=project-essays-1">
+  <link rel="stylesheet" href="sally.css?v=architecture-1">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -26,43 +27,102 @@
     <article class="reading case-study">
       <p class="eyebrow">Project essay</p>
       <h1>Building Sally: conversation, context, and a trustworthy visit brief</h1>
-      <p class="deck">How we separated real-time conversation, background analysis, and evidence-backed extraction in a healthcare voice agent.</p>
-      <p class="meta">Thomas Howard · 5 min read</p>
+      <p class="deck">Leading Applied AI architecture and development at Snap eHealth: real-time conversation, evidence-checked visit briefs, and the evaluations behind them.</p>
+      <p class="meta">Thomas Howard · 8 min read</p>
       <dl class="case-facts">
-        <div><dt>My role</dt><dd>Applied AI architecture &amp; development</dd></div>
+        <div><dt>My role</dt><dd>Lead, Applied AI architecture &amp; development</dd></div>
         <div><dt>Focus</dt><dd>TypeScript · Voice · Structured outputs</dd></div>
         <div><dt>Project stage</dt><dd>Restricted synthetic prototype</dd></div>
       </dl>
-      <nav class="essay-nav" aria-label="In this essay"><p>In this essay</p><ul><li><a href="#workloads">Three workloads</a></li><li><a href="#context">Background context</a></li><li><a href="#actions">Action evidence</a></li><li><a href="#evaluation">Evaluation lessons</a></li><li><a href="#status">Current status</a></li></ul></nav>
-<p>A voice agent has very little room to hide a poor architectural decision. The caller experiences a slow model as silence, a stale response as an interruption, and an unsupported claim as a broken promise. Sally brought those problems together in one product: a healthcare voice agent that can hold a conversation, use tools, and turn what it learns into a structured visit brief.</p>
-<p>I lead Sally’s applied AI architecture and development at Snap eHealth. The work spans the conversation itself, the tools available to it, the background analysis, and the evidence used to check the resulting brief. The central design problem has been deciding which work belongs in the caller’s immediate experience and which work can happen alongside it.</p>
+      <nav class="essay-nav" aria-label="In this essay"><p>In this essay</p><ul><li><a href="#workloads">LLM orchestration</a></li><li><a href="#context">Background context</a></li><li><a href="#actions">Tools &amp; safety</a></li><li><a href="#evaluation">AI reliability</a></li><li><a href="#value">Healthcare value</a></li><li><a href="#status">Current status</a></li></ul></nav>
+      <p>Sally is a healthcare voice agent designed to hold a patient conversation, use bounded tools, and produce a structured visit brief. I lead its Applied AI architecture and development at Snap eHealth. My work connects real-time LLM orchestration and conversational state management with background analysis, structured extraction, deterministic verification, and AI evaluations.</p>
+      <p>The engineering problem is deciding what the model may say, what the application may do, and what evidence can support the resulting record. A caller experiences a slow response as silence, stale context as a repeated question, and an unsupported action claim as a broken promise. Healthcare adds consent and authorization boundaries that fluent conversation cannot replace.</p>
+      <p><strong>Current scope:</strong> Sally includes implemented conversation and validation components and a restricted synthetic demonstration. Synthetic scheduling is not live EHR scheduling. This essay describes architecture, implementation, and prototype evaluation, not measured production outcomes.</p>
 
-<h2 id="workloads">Three workloads with different deadlines</h2>
-<p>We separated Sally into a fast conversation loop, a slower analysis loop, and a final extraction step. Each has a different output and a different tolerance for waiting. The conversation loop needs to respond to the person. Background analysis needs to retain useful context. Final extraction needs to produce an accurate account of the completed conversation.</p>
-<figure class="case-diagram"><figcaption>Three workloads, different deadlines</figcaption><ol class="system-flow"><li><span>During the conversation</span><strong>Respond and use tools</strong><p>Handle the current turn and return a response that reflects confirmed tool results.</p></li><li><span>Alongside the conversation</span><strong>Update context</strong><p>Build a narrative and useful follow-up questions without blocking ordinary speech.</p></li><li><span>After the conversation</span><strong>Produce the visit brief</strong><p>Extract structured information and check it against the transcript and action evidence.</p></li></ol></figure>
-<p>That separation lets us make different choices for each workload. A model that produces a thoughtful analysis may still be a poor choice for the speaking role if callers wait too long between turns. Conversely, the fastest speaker is not automatically the best model for extracting a careful record. We evaluate those responsibilities separately.</p>
-<p>The implementation uses TypeScript, with shared conversation logic behind browser and phone transports. Retell handles the live audio session and Twilio supplies the telephone route. Our application owns the conversation and its state. Keeping that ownership clear gives us one place to evolve prompts, tools, and extraction behavior instead of maintaining a separate agent for every channel.</p>
+      <h2 id="workloads">Real-time orchestration: three workloads, different deadlines</h2>
+      <p>The architectural decision at the center of my work is to separate the fast conversation loop, slower background analysis, and final extraction. The speaker handles the current turn. Analysis maintains useful context alongside the conversation. Extraction works from the completed transcript and action evidence to produce the visit brief.</p>
 
-<h2 id="context">Keeping analysis off the conversation path</h2>
-<p>Moving analysis into the background sounds straightforward until a person corrects themselves while that analysis is running. A result can be valid for an earlier transcript and already be stale when it returns. Applying it blindly would let old context overwrite newer information.</p>
-<p>We built and tested the separation around those timing problems. Background work can be coalesced, and stale revisions are rejected. A regression test holds the slow provider response open while the conversation completes its speech path, then checks how the later update is handled. That proves an architectural property: routine background work does not have to finish before Sally responds.</p>
-<p>It does not prove how quickly a caller hears audio over a real phone connection. Provider inference, transport, synthesis, and playback contribute their own delay. Keeping those measurements separate helps us improve the part of the system responsible for a problem.</p>
+      <figure class="case-diagram sally-architecture" aria-labelledby="architecture-title">
+        <figcaption id="architecture-title">Sally’s conversation and evidence paths</figcaption>
+        <ul class="sally-architecture__main" role="list">
+          <li>
+            <span class="sally-architecture__label">Turn input</span>
+            <strong>Voice / browser</strong>
+            <p>Shared conversation logic behind both transports.</p>
+            <span class="sally-architecture__connector" aria-hidden="true">→</span>
+          </li>
+          <li>
+            <span class="sally-architecture__label">Application control</span>
+            <strong>Conversation runtime</strong>
+            <p>Session state, current turn, and authorization gates.</p>
+            <span class="sally-architecture__connector" aria-hidden="true">↔</span>
+          </li>
+          <li>
+            <span class="sally-architecture__label">Immediate response</span>
+            <strong>Fast LLM loop</strong>
+            <p>Reads accepted context; returns speech or tool requests.</p>
+          </li>
+        </ul>
+        <p class="sally-architecture__branch-label">The runtime coordinates separate paths:</p>
+        <ul class="sally-architecture__branches" role="list">
+          <li>
+            <div><strong>Background analysis</strong><span>Runtime → analysis → context</span></div>
+            <p>Analyze a transcript snapshot; validate updates before making context available to later turns.</p>
+          </li>
+          <li>
+            <div><strong>Tool execution &amp; verification</strong><span>LLM request → runtime → result</span></div>
+            <p>Check authority and turn identity, execute a permitted tool, persist its result, then return it to the fast loop.</p>
+          </li>
+          <li>
+            <div><strong>Final structured extraction</strong><span>Completed session → checked brief</span></div>
+            <p>Extract from transcript and action evidence; validate the schema, references, and quotations.</p>
+          </li>
+          <li>
+            <div><strong>Persistent conversation state</strong><span>Runtime ↔ stored state</span></div>
+            <p>Retain the transcript, accepted context, tool log, and session lifecycle across runtime operations.</p>
+          </li>
+        </ul>
+        <p class="sally-architecture__note">Application flow, not a deployment claim. Background analysis stays off the routine speech path; tool results and evidence checks govern what the application can record.</p>
+      </figure>
 
-<h2 id="actions">A spoken promise needs an actual result</h2>
-<p>Tool use introduces another kind of timing problem. A model can generate a sentence that assumes an action succeeded before the tool has confirmed it. In an appointment scenario, “you’re booked” is a consequential claim. A fluent sentence is insufficient evidence that anything was booked.</p>
-<p>We treat tool results as a separate source of truth. The final brief is checked against action evidence as well as the conversation. A booking claim in a transcript cannot substitute for a successful function result. Patient statements also need evidence: extraction validation checks references and quotations, and it rejects unsupported claims of chart verification when no chart integration exists.</p>
-<p>The same principle applies when a response is interrupted or a session closes. An earlier model response must not continue causing tool effects simply because its request eventually completes. Tests cover response identity, closed-session state, and disabled-call gates so delayed work does not inherit authority from an obsolete turn.</p>
+      <p>The TypeScript runtime shares conversation logic across phone and browser transports. Retell handles the live audio session; Twilio supplies the telephone route. Sally owns conversation state, prompts, tool execution, and extraction. The Node runtime includes PostgreSQL persistence; the older workerd harness remains useful for deterministic regression tests. Implemented persistence is not evidence of seamless live-call failover.</p>
+      <p>Separating the workloads also separates model choices. A model that produces careful analysis may be unsuitable for the speaking role if callers wait too long. The fastest speaker is not automatically the best extractor. Each role needs evidence appropriate to its deadline and output.</p>
 
-<h2 id="evaluation">What the evaluations taught us</h2>
-<p>We use deterministic tests to check state transitions and evidence handling, then separate provider screens to examine behavior with actual models. One useful technique is replaying a fixed caller turn against multiple candidates. The conversation history stays fixed up to that point, and each candidate supplies the next response.</p>
-<p>This avoids a misleading comparison. Once a different model says something different, the caller might answer differently too. Replaying the original caller’s later words as if nothing changed would no longer be the same conversation. A fixed-turn comparison answers a narrower, more defensible question.</p>
-<p>Some of the most useful findings were defects in the surrounding instructions and evaluator. An unavailable-slot scenario exposed a missing statement that the offered slots represented the complete availability. Correcting that context was more appropriate than rewriting the speaking model’s personality. Another screen progressed through a synthetic conversation so quickly that background analysis could not arrive in time; its result partly rewarded a slower speech path. Making turn pacing explicit helped separate a test artifact from a product regression.</p>
-<p>These investigations changed how I approach model selection. I want to know which behavior failed, what information the model actually received, and whether the test represents the workload. A larger model or a longer prompt is only useful if it addresses the demonstrated cause.</p>
+      <h2 id="context">Background context without stale overwrites</h2>
+      <p>A person can correct themselves while analysis is still running. The returned result may describe a valid earlier transcript but no longer fit the current conversation. Moving the request off the speech path only solves half the problem; accepting its result needs a state-management policy.</p>
+      <p>The implementation coalesces background work and validates a result against the transcript snapshot it actually read. New turns can extend an unchanged source prefix without invalidating that work. Rewritten or removed source turns, or a result that would rewind already-processed progress, cause rejection. Accepted context is committed for later turns instead of forcing the speaker to wait for every analysis pass.</p>
+      <p>A provider-stubbed regression test deliberately holds the analysis response open while the speech path completes. That checks a concrete architectural property: routine speech does not depend on completion of the slow request. It does not measure the full delay a caller hears. Provider inference, transport, synthesis, and playback need separate evidence.</p>
 
-<h2 id="status">What is implemented, and what comes next</h2>
-<p>Sally has implemented conversation, analysis, extraction, transport, and validation components, alongside a synthetic scheduling demonstration. The scheduling presentation uses prerecorded dialogue; it does not book appointments. The interactive application is also restricted to approved synthetic demonstrations.</p>
-<p>The current source requires AI disclosure and recipient verification before protected context, model conversation, or actions. With no production verification adapter installed, that gate permits only a neutral introduction and safe termination. Live EHR connectivity and production scheduling remain separate integration work. Earlier prototype and provider-test results establish specific capabilities; they do not establish a production healthcare deployment.</p>
-<p>The work has given me a concrete way to reason about conversational AI: separate the workloads by their deadlines, preserve the distinction between statements and completed actions, and evaluate each boundary with evidence that actually exercises it. That is how an engaging conversation becomes part of a dependable application.</p>
+      <h2 id="actions">Tool results and deterministic action boundaries</h2>
+      <p>“You’re booked” is a consequential claim. The model’s sentence cannot establish that an action succeeded. For booking and availability tools, the fast loop withholds the draft text, executes the tool through the runtime, and requests a response informed by the committed result. This trades an additional model round for control over the order of action and speech; it does not guarantee the semantic truth of every generated sentence.</p>
+      <p>The executor rechecks the active socket, response identity, session state, calling gate, and recipient authorization before applying a tool effect. A delayed response from an interrupted turn cannot inherit authority from the current one. Synthetic booking also rejects a slot that was not offered. These are application controls, separate from the model’s judgment about what the caller intended.</p>
+      <p>Final extraction has its own evidence boundary. A confirmed booking in the brief comes from a successful tool result, even if the transcript sounds confident. Structured output must pass schema checks; transcript references must resolve, and quoted concerns must match their cited turns. Supplied chart context remains unverified input. Evidence pointers establish provenance, while clinical meaning and conversational appropriateness still require evaluation.</p>
+      <p>Consent is part of that evaluation: scenarios check that Sally does not substitute an unchosen appointment, treat an instruction override as permission to book, or claim an action that never occurred. Recipient identity and authority are distinct requirements, enforced outside the LLM. The current source requires AI disclosure and verification before protected context, model conversation, or actions. Without a production verification adapter, the gate permits only a neutral introduction and safe termination.</p>
+
+      <h2 id="evaluation">Engineering AI Reliability: Evaluations, Regression Testing, and Model Selection</h2>
+      <p>I approach reliability as a set of testable boundaries. A deterministic test can establish that stale work is rejected. It cannot establish that a live model will ask an appropriate follow-up question. The evaluation strategy needs both, with a clear account of what each result proves.</p>
+
+      <h3>Deterministic tests for state and evidence</h3>
+      <p>Provider-stubbed tests control timing and outputs so failures are reproducible. They cover speech completing while analysis is pending, rejected stale context, delayed tool requests after interruption or reconnect, closed sessions, and disabled calling. Extraction tests deliberately supply bad references, drifting quotations, and a transcript that claims a booking without a successful tool result.</p>
+      <p>These tests protect implementation contracts. Their passing result says nothing by itself about live-model quality, telephone latency, clinical outcomes, or production reliability.</p>
+
+      <h3>Scenario regressions and fixed-turn model comparisons</h3>
+      <p>Separate live-model evaluations use defined scenarios and expected behavior: an unavailable appointment, a caller-selected slot, an attempted instruction override, or a question about whether Sally is human. Tool assertions and behavioral rubrics make regressions inspectable as prompts, adapters, and models change. The synthetic continuity screen also records when accepted background context became available and whether later turns used it.</p>
+      <p>For speaking-model comparisons, a fixed-turn replay freezes the conversation up to one caller turn and asks each candidate for the next response. This makes the input comparable without pretending the rest of the conversation would remain unchanged. Once a candidate says something different, the caller might answer differently too. Replaying the original caller’s later words would test an artificial continuation.</p>
+
+      <h3>Debugging the evaluator before changing the model</h3>
+      <p>An unavailable-slot scenario failed because the injected context did not say that the offered slots were the complete availability for that call. The documented fix clarified the mutable booking context and left the frozen speaking prompt unchanged. The finding pointed to missing information, not a need to rewrite the model’s personality.</p>
+      <p>Another screen ran a synthetic conversation so quickly that background analysis arrived after the scored turns. Its gate partly rewarded a slower speaker. The revised harness makes turn pacing explicit, reports when memory arrives, and checks that a started analysis produces an accepted update. Adding a blocking analysis step to every turn would have addressed a test artifact at the expense of the architecture.</p>
+      <p>Evaluation artifacts make those distinctions reviewable. The continuity screen retains scenario and source identifiers, fixture and prompt hashes, provider rounds, speech, tool activity, timing spans, and mechanical failures. It marks semantic review as pending rather than treating a mechanically clean run as a quality verdict. Failures, incomplete runs, and configuration belong alongside favorable results.</p>
+      <p>Those investigations shape my model-selection decisions: identify the failed behavior, inspect the context the model received, and check whether the evaluator represents the workload. A larger model or longer prompt is useful only when it addresses the demonstrated cause. I keep speaking, analysis, and extraction evidence separate instead of declaring one model the winner for the whole system.</p>
+
+      <h2 id="value">Why these boundaries matter in healthcare</h2>
+      <p>The intended value is a patient conversation that stays responsive while preserving a useful record for the care team. Background context can support continuity; transcript-grounded extraction can make visit briefs easier to inspect; tool evidence can reduce unsupported claims about completed actions. Deterministic authorization limits when the application may act at all.</p>
+      <p>These are engineering mechanisms toward reliable conversations and accurate briefs, not measured clinical or operational improvements. Future integration with clinical workflows must preserve the same separation between patient statements, verified records, consent, and completed actions.</p>
+
+      <h2 id="status">Implemented components and remaining integration work</h2>
+      <p>Sally includes conversation orchestration, background analysis, structured extraction, transport adapters, persistence, and validation components. Its scheduling presentation uses prerecorded dialogue and does not place calls or book appointments. The interactive application is restricted to approved synthetic demonstrations; a successful synthetic tool result is not an appointment in an EHR.</p>
+      <p>Production recipient verification, live EHR connectivity, and production scheduling remain separate integration work. Earlier prototype and provider-test results establish specific capabilities under their tested conditions. They do not establish production adoption, clinical outcomes, or a fully deployed healthcare scheduling agent.</p>
 
     </article>
     <aside class="related-essays" aria-labelledby="related-title"><h2 id="related-title">Explore the other projects</h2><ul><li><a href="../symphony/">Symphony <span aria-hidden="true">→</span></a><span>Agent orchestration</span></li><li><a href="../ai-evaluation/">AI Evaluation <span aria-hidden="true">→</span></a><span>Quality &amp; evaluation</span></li><li><a href="../referral-intelligence/">Referral Intelligence <span aria-hidden="true">→</span></a><span>Decision support</span></li></ul><a class="back-link" href="../../blog/">Browse all writing →</a></aside>
