@@ -20,7 +20,7 @@
     "assets/hou-CzZMVtIr.png": "c9b5cbc5c98724c1d8d983d7447730c200d30301c5119ff57e22d2c58b1621b8",
     "assets/ind-DhdmbElv.png": "e3a83fde93106536dfbccef4827147a62d44e40235dd074bf6087c40312f2c4a",
     "assets/index-BL2JNfOL.css": "c7f50727bc557841f954e68042d1134376981a49b2ae785a8c6c318d9b6df75a",
-    "assets/index-eal_ZvFv.js": "165982113a25af0480ec5ee9949057cf5935824b3c84aa4ac4d1f086bbb92b64",
+    "assets/index-DdujwgIY.js": "97d3c591240c1442528f25a0986afbf717c98344dcbe1e97dd39f7801464791e",
     "assets/jax-B-gpb8BA.png": "ed8e182aa241b68708621e016ca407d645abb059f37bbc3f16a11ec67f1b254e",
     "assets/kc-D84lf45z.png": "292b38b94509842059c8d680383c8b7d3eeed2c00c8d52cea9e150d6cc13b51c",
     "assets/la-BW7izKU4.png": "acbaaf6e782f67d5f18f5563e0fb8c211bd1cca79276d89caf29ec8f1d2e6a94",
@@ -88,8 +88,8 @@
     "data/research/challenger-b6b02ee1084420cc65e5877683fc7602cdb3f2ac0a1b6b7980130b81dd42c68a.json": "b6b02ee1084420cc65e5877683fc7602cdb3f2ac0a1b6b7980130b81dd42c68a",
     "data/research/challenger-dce5b9bc802f459e153324dea42fb3080e61a4b6eaf367aa4a8dc27fafda0791.json": "dce5b9bc802f459e153324dea42fb3080e61a4b6eaf367aa4a8dc27fafda0791",
     "data/research/latest.json": "543fd4c1c2af0baa15278fca5b20835cbb289ac28774ea6eba0cf20fd9a498a4",
-    "index.html": "979723aba583f23173be0ee11e98ce9aedb36af9ba167a2efdf74170519a7fcf"
+    "index.html": "a2f4b0d98267b8b76c264ae01b43e62fab991de2a548f0d0c4dbbc24432642a1"
   },
   "schema_version": 1,
-  "source_commit": "87b468a535c94a64072df4c7f4f0a8abe13c3887"
+  "source_commit": "c984550e8df414d9852b4549dd295a2754822c08"
 }
