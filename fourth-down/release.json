@@ -79,8 +79,8 @@
     "data/current/forecast-2026-e757a29d2433662ffb03150d540542f5b4d5eb910ddd27df5a3ceac1288063b8.json": "e757a29d2433662ffb03150d540542f5b4d5eb910ddd27df5a3ceac1288063b8",
     "data/current/latest.json": "c278eebe815e97ff1bd71a3ccab9cccd52dba43967631d6cd0a90ac439161319",
     "data/demo.json": "41c3ad0d8d2997238b464f196b700ce328f38eb6e93831a18d504c7ef6aa24a9",
-    "data/game-day.json": "1e771e25906a6bfdae13880248c88bd45d74d2376f9fabefdb13899d66c1c8b4",
-    "data/operations/latest.json": "9abc56f959c1c015c338d6d82cc6529c02fa6de9249ba24b182a026820c18379",
+    "data/game-day.json": "c1bb8dfa698e30ff60ac860d7105f8d5166c012dd4b42b93e8e7cf81dbac3bab",
+    "data/operations/latest.json": "4b368703b08ce63b1d7101be1a4e8097c5c660322d4e186bd6628b7461ce5463",
     "data/operations/operations-0a21283c5bfd13265e43ac345507d6cf1a986bd4fdda279e7ce6c04716f1c95f.json": "0a21283c5bfd13265e43ac345507d6cf1a986bd4fdda279e7ce6c04716f1c95f",
     "data/operations/operations-14d4507fc99b72d0025583fd860743d37d1ad38560e722f3f953f1ee38049756.json": "14d4507fc99b72d0025583fd860743d37d1ad38560e722f3f953f1ee38049756",
     "data/operations/operations-1bd77cb73ee923ab70bd0c514d6a5b8f6e8b161d3cf6dd2cb1d72a067fce84ff.json": "1bd77cb73ee923ab70bd0c514d6a5b8f6e8b161d3cf6dd2cb1d72a067fce84ff",
@@ -102,6 +102,7 @@
     "data/operations/operations-7e533f6ce272ce7b617c8e26ffc0b3ad6d5fabc855e20445521322f658dbafac.json": "7e533f6ce272ce7b617c8e26ffc0b3ad6d5fabc855e20445521322f658dbafac",
     "data/operations/operations-880aae2b4fbe813c6ceca5fdd077d985c6eb9019b83687179c57629be5b7795a.json": "880aae2b4fbe813c6ceca5fdd077d985c6eb9019b83687179c57629be5b7795a",
     "data/operations/operations-9289353cb10411dfaa8e1a715a6cefd111c774cdeb0ee40470b772304688129b.json": "9289353cb10411dfaa8e1a715a6cefd111c774cdeb0ee40470b772304688129b",
+    "data/operations/operations-99385a2198bd3e4155537d050c5ccb8de3480fd803720a98cdd8e0dba6c66dc7.json": "99385a2198bd3e4155537d050c5ccb8de3480fd803720a98cdd8e0dba6c66dc7",
     "data/operations/operations-acb075e2b1bbe89e74a4bf93810f2d19e17a3540bfc8f0d0ca4368c799623217.json": "acb075e2b1bbe89e74a4bf93810f2d19e17a3540bfc8f0d0ca4368c799623217",
     "data/operations/operations-b14a00ce22c11a61def92c5384970c9166f3afb04f1b3fc87442be849006ec10.json": "b14a00ce22c11a61def92c5384970c9166f3afb04f1b3fc87442be849006ec10",
     "data/operations/operations-b5062b4565e6a2d10b1c621d6d3224fd8b491a8a2d7a64f79dd12d5ba48038e7.json": "b5062b4565e6a2d10b1c621d6d3224fd8b491a8a2d7a64f79dd12d5ba48038e7",
@@ -118,5 +119,5 @@
     "index.html": "a2f4b0d98267b8b76c264ae01b43e62fab991de2a548f0d0c4dbbc24432642a1"
   },
   "schema_version": 1,
-  "source_commit": "65a281e49e2ee4000695a53068a2adf184a1569d"
+  "source_commit": "8851443dda24fca353f1e41522920d79bcde5c47"
 }
