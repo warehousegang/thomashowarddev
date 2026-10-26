@@ -19,8 +19,8 @@
     "assets/gb-DyrXP-kx.png": "1e74f210bb03f003d603a675ff439e286a94c771f8b859584d6c9dcae2c7c9d3",
     "assets/hou-CzZMVtIr.png": "c9b5cbc5c98724c1d8d983d7447730c200d30301c5119ff57e22d2c58b1621b8",
     "assets/ind-DhdmbElv.png": "e3a83fde93106536dfbccef4827147a62d44e40235dd074bf6087c40312f2c4a",
-    "assets/index-BL2JNfOL.css": "c7f50727bc557841f954e68042d1134376981a49b2ae785a8c6c318d9b6df75a",
-    "assets/index-DdujwgIY.js": "97d3c591240c1442528f25a0986afbf717c98344dcbe1e97dd39f7801464791e",
+    "assets/index-C5pNS7K1.js": "9aa1617708f8ad063d10066be7672b66e876ca5016b224932051e39031650687",
+    "assets/index-VXH1PcXe.css": "db1ef5f1bcf2a0b722131644787f4a77c93fd9840d94d154103bdc121232f08b",
     "assets/jax-B-gpb8BA.png": "ed8e182aa241b68708621e016ca407d645abb059f37bbc3f16a11ec67f1b254e",
     "assets/kc-D84lf45z.png": "292b38b94509842059c8d680383c8b7d3eeed2c00c8d52cea9e150d6cc13b51c",
     "assets/la-BW7izKU4.png": "acbaaf6e782f67d5f18f5563e0fb8c211bd1cca79276d89caf29ec8f1d2e6a94",
@@ -117,8 +117,8 @@
     "data/research/challenger-b6b02ee1084420cc65e5877683fc7602cdb3f2ac0a1b6b7980130b81dd42c68a.json": "b6b02ee1084420cc65e5877683fc7602cdb3f2ac0a1b6b7980130b81dd42c68a",
     "data/research/challenger-dce5b9bc802f459e153324dea42fb3080e61a4b6eaf367aa4a8dc27fafda0791.json": "dce5b9bc802f459e153324dea42fb3080e61a4b6eaf367aa4a8dc27fafda0791",
     "data/research/latest.json": "543fd4c1c2af0baa15278fca5b20835cbb289ac28774ea6eba0cf20fd9a498a4",
-    "index.html": "a2f4b0d98267b8b76c264ae01b43e62fab991de2a548f0d0c4dbbc24432642a1"
+    "index.html": "351e03e01dc925d34648635ec06568f150a2014fd3af9eed28888c985ff0d7a8"
   },
   "schema_version": 1,
-  "source_commit": "8851443dda24fca353f1e41522920d79bcde5c47"
+  "source_commit": "0c0fb075ef87aab3208270a56f5aab6a847e4ae6"
 }
