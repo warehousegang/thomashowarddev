@@ -57,7 +57,7 @@ The essay `blog/when-to-use-machine-learning/` compares rules, forecasts, and de
 
 ## BusyNow public description
 
-Founder of BusyNow, a software product that helps people choose nearby coffee shops, restaurants, and bars by comparing crowd information, opening hours, and distance.
+Founder of BusyNow, helping people see what’s busy nearby before heading out.
 
 It helps reduce the guesswork of choosing a place, while clearly showing when crowd information is recent, historical, or unavailable.
 
