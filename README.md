@@ -59,6 +59,6 @@ The essay `blog/when-to-use-machine-learning/` compares rules, forecasts, and de
 
 Founder of BusyNow, a live software product running on AWS ECS.
 
-I founded and built BusyNow and use it as a real-world environment for exploring cloud infrastructure, platform engineering, automation, and autonomous engineering systems.
+BusyNow helps people decide where to go by comparing nearby coffee shops, restaurants, and bars using crowd information, opening hours, and distance. It helps reduce the guesswork of choosing a place, while clearly showing when crowd information is recent, historical, or unavailable.
 
 BusyNow currently runs on AWS ECS. Keep Kubernetes and Go as separate areas of engineering expertise and interest. The homepage, About, and Projects pages use `assets/busynow-logo.png`, the official PNG supplied by Thomas, unchanged. A light CSS background keeps its dark wordmark readable. This content update does not change BusyNow infrastructure or deployment.
