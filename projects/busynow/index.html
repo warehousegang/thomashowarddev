@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="BusyNow: the consumer problem, product experience, and engineering behind choosing nearby coffee shops, restaurants, and bars. Founded and built by Thomas Howard; live on AWS ECS.">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>BusyNow: the product and engineering | Thomas Howard</title>
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../styles.css?v=busynow-ecs-1">
+  <link rel="canonical" href="https://thomashoward.dev/projects/busynow/">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../" aria-label="Thomas Howard, home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a>
+      <nav class="desktop-nav" aria-label="Main navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/" aria-current="page">Projects</a><span class="nav-github"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a></span><a href="../../resume/">My Resume</a></nav>
+      <details class="mobile-nav">
+        <summary>Menu</summary>
+        <nav aria-label="Mobile navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/" aria-current="page">Projects</a><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a><a href="../../resume/">My Resume</a></nav>
+      </details>
+    </div>
+  </header>
+  <main id="main" class="site">
+    <a class="back-link" href="../">← All projects</a>
+    <article class="reading case-study">
+      <p class="eyebrow">Product &amp; engineering</p>
+      <a class="busynow-logo" href="https://busynow.app/" aria-label="Visit BusyNow"><img src="../../assets/busynow-logo.png" alt="BusyNow" width="2172" height="724"></a>
+      <h1>BusyNow: helping people decide where to go next</h1>
+      <p class="deck">A consumer product for comparing nearby places, understanding crowd information, and making a choice before heading out.</p>
+      <p class="meta">Thomas Howard · 8 min read</p>
+      <dl class="case-facts">
+        <div><dt>My role</dt><dd>Founder &amp; Software Engineer</dd></div>
+        <div><dt>Product</dt><dd>Coffee, restaurants, and bars</dd></div>
+        <div><dt>Current runtime</dt><dd>Live product · AWS ECS</dd></div>
+      </dl>
+      <nav class="essay-nav" aria-label="In this writeup"><p>In this writeup</p><ul><li><a href="#problem">The consumer problem</a></li><li><a href="#experience">How it works</a></li><li><a href="#evidence">Crowd information</a></li><li><a href="#architecture">Architecture</a></li><li><a href="#reports">Reliable reports</a></li><li><a href="#operations">Cost &amp; reliability</a></li><li><a href="#ownership">Building the product</a></li></ul></nav>
+      <p><strong>Founder of BusyNow, a live software product running on AWS ECS.</strong> I founded and built the product, and own its product direction, application engineering, and operation. The work starts with a practical question: when someone is ready to leave, what information would help them choose a place?</p>
+
+      <h2 id="problem">A good place is not always the right place right now</h2>
+      <p>Someone looking for coffee may want somewhere quiet enough to work. Friends choosing a bar may want a lively room. A person deciding where to eat may care most about finding an open option nearby. The same venue can be a good fit at one moment and a poor fit an hour later.</p>
+      <p>Ratings, photos, and menus help explain what a place is like. The immediate decision also needs time-sensitive context: how crowded it appears to be, how recent that information is, whether the place is open, and what it takes to get there. Without that context, people have to guess, compare several sources, or find out after making the trip.</p>
+      <p>BusyNow brings those considerations into one comparison. The intended value is less uncertainty before leaving and a clearer tradeoff between nearby options. A slightly longer walk may be worthwhile for a fresher crowd report. The closest place may still be the right choice when time matters more. The product keeps that choice with the person using it.</p>
+      <h3>The business challenge is usefulness in a particular moment</h3>
+      <p>For this kind of consumer product, a large list of venues is only a starting point. The useful unit is a decision in a particular neighborhood, at a particular time. BusyNow has to earn a place in someone’s routine by making that decision easier than checking places individually or arriving without enough information.</p>
+      <p>That creates a local data-density problem. Recent contributions around the places someone actually visits matter more than a large total spread thinly across a city. I treat coverage, freshness, and ease of contribution as connected product concerns. Where evidence is sparse, the experience still needs to explain what is known and make the remaining uncertainty visible. A short visit that ends with a confident choice is the product goal.</p>
+
+      <h2 id="experience">From an area to a decision</h2>
+      <p>The experience is organized around a small set of comparable choices. The map adds geographic context, while the list keeps the facts needed for the decision close together.</p>
+      <ol>
+        <li><strong>Choose where to look.</strong> Use current location intentionally, or search for an area, address, or landmark. Manual area selection gives people a useful path when they prefer not to share their location or are planning for somewhere else.</li>
+        <li><strong>Choose the kind of place.</strong> Coffee, Restaurants, and Bars provide focused starting points. BusyNow presents up to three initial options, with up to three more available without turning the first screen into a long directory.</li>
+        <li><strong>Compare the tradeoffs.</strong> Venue rows combine crowd evidence, opening status, and travel information. Routed walking time is shown when available; distance remains useful when route information is unavailable. The contextual map preserves the relationship between the selected venue and the alternatives.</li>
+        <li><strong>Inspect and act.</strong> Venue detail explains the evidence and makes Directions the main next step. Additional details, such as hours and website links, sit under More when available. People who are there can optionally contribute a crowd report.</li>
+      </ol>
+      <aside class="callout" aria-label="Illustrative decision">
+        <p><strong>For example:</strong> imagine two nearby cafés. One is closer but has no recent crowd report. The other is farther away and has a recent report saying it is not crowded. BusyNow’s job is to make that difference easy to see. The recent report informs the decision; it cannot guarantee that a seat will still be available on arrival.</p>
+      </aside>
+
+      <h2 id="evidence">Crowd information has to carry its age and source</h2>
+      <p>A crowd label loses meaning when the reader cannot tell where it came from or when it was observed. I built the product around an explicit distinction between observations, patterns, estimates, and missing information.</p>
+      <ul>
+        <li><strong>Recent community reports</strong> carry a crowd condition, observation age, and accepted report count. Aging reports retain that context so people can judge whether the information is still useful.</li>
+        <li><strong>Stale observations</strong> describe a past condition. The interface makes clear that the current crowd is unknown.</li>
+        <li><strong>Historical patterns</strong>, when available, describe what is usual for a time rather than what has just been observed.</li>
+        <li><strong>General estimates</strong>, where enabled, are labeled as estimates and are not venue-specific observations.</li>
+        <li><strong>Missing information</strong> remains unknown. A lack of reports does not mean a place is empty.</li>
+      </ul>
+      <p>These distinctions exist in the shared data contract as well as the interface. Community observations have explicit freshness deadlines. As time passes, an observation moves from fresh to aging, then stale and expired. The client can reevaluate that state without pretending that a cached response was just observed.</p>
+      <p>Comparison logic uses concrete factors such as opening status, travel, freshness, and report support. Explanations have to agree with the underlying evidence. A historical pattern cannot become a claim that a place is quiet now simply because it would make a more attractive recommendation.</p>
+
+      <h2 id="architecture">An architecture shaped by the decision</h2>
+      <p>The web application uses React with JavaScript and TypeScript, backed by a Node.js/Express API. Static frontend assets are delivered through Amazon S3 and CloudFront. The containerized backend runs on AWS ECS behind an Application Load Balancer. Terraform describes the infrastructure.</p>
+      <figure class="case-diagram" aria-labelledby="architecture-title">
+        <figcaption id="architecture-title">From a nearby search to a comparable set of places</figcaption>
+        <ol class="system-flow">
+          <li><span>01 · Browser</span><strong>Area + intent</strong><p>The React interface sends the chosen area and category or search intent to the API.</p></li>
+          <li><span>02 · API on ECS</span><strong>Discovery + assembly</strong><p>The backend combines place information, travel, opening status, and available crowd evidence.</p></li>
+          <li><span>03 · Data boundaries</span><strong>Providers + stored reports</strong><p>External services supply place and route information. PostgreSQL holds accepted community reports; Redis supports temporary coordination.</p></li>
+          <li><span>04 · Shared contract</span><strong>Validated decision snapshot</strong><p>The response carries comparable venues, evidence state, freshness, and any degraded data domains back to the interface.</p></li>
+        </ol>
+      </figure>
+      <p>The API assembles a decision snapshot rather than leaving each screen to invent its own interpretation of a place. Shared runtime validation checks the snapshot’s structure, timestamps, venue identities, and consistency between evidence and comparison statements. That gives the list, map, and detail view a common meaning for the same information.</p>
+      <p>External place discovery and the community-report system have different jobs. Google Places supplies place information and discovery. Community reports are recorded and evaluated by BusyNow. Keeping those sources separate helps prevent a provider response, an old pattern, or a missing value from being mistaken for a recent on-site observation.</p>
+
+      <h2 id="reports">A small contribution needs reliable data handling</h2>
+      <p>Reporting should be a small action for someone already at a venue. Behind that action are ordinary distributed-system problems: a phone loses its connection, a response arrives late, someone taps again, or the original report needs correcting.</p>
+      <p>I use PostgreSQL as the authority for accepted reports. A submission has a stable identity, so retrying the same submission can return its original result instead of counting another report. Transactions, constraints, and locking protect that behavior when requests overlap. Corrections supersede the earlier observation through the same controlled write path, preserving the relationship between the original and corrected report.</p>
+      <p>That distinction matters to the consumer experience. A retry should not make evidence appear more widely supported. A correction should not leave both answers contributing to the current crowd state. The interface also distinguishes a confirmed submission from a failed or uncertain request, so it does not claim that information was saved without an accepted result.</p>
+      <p>Redis handles temporary coordination, including rate limits and provider-budget admission. The durable crowd record stays in PostgreSQL. Separating those responsibilities keeps a cache or coordination failure from silently redefining the source of crowd truth.</p>
+
+      <h2 id="operations">Reliability includes cost and honest failure</h2>
+      <p>Local discovery depends on networks and paid services. A slow provider can make the app feel stuck; repeated requests can also create cost without adding value. I built bounded provider calls, caching, rate limits, budgets, and circuit breakers into the service to contain those failure modes.</p>
+      <p>The fallback depends on what failed. Missing walking-route information can leave distance available. Unavailable optional venue details should not erase a useful comparison. A failed crowd refresh needs an explicit old or unknown state. These are different conditions, so the response records which part of the information is degraded and the interface offers an appropriate recovery path.</p>
+      <p>Frontend and backend delivery are separate. The ECS deployment workflow uses explicit image versions, health checks, service-stability checks, and rollback paths. Those controls make a release inspectable and recoverable. Logs and metrics cover areas such as report outcomes, provider protection, and storage readiness so failures can be investigated at the boundary where they occurred.</p>
+      <p>For a founder-operated product, understandable infrastructure is a practical requirement. I need to be able to explain which dependency is failing, what the user sees, what the failure costs, and how to restore service. Every additional component has to justify the operational work it creates.</p>
+
+      <h2 id="ownership">Building and operating the whole product</h2>
+      <p>My work on BusyNow connects the consumer experience to the system underneath it: deciding what belongs in the comparison, implementing the interface and API, defining the evidence contract, protecting report integrity, and operating the AWS runtime. These decisions are closely related. A promise in the interface becomes a requirement for the data model, failure behavior, and release process.</p>
+      <p>I use Codex and supervised agent workflows to help with implementation, debugging, tests, and review. Changes still need evidence appropriate to their risk and human control over releases. The most useful checks exercise the situations that could break the product’s promise: freshness boundaries, retries, corrections, missing provider data, and recovery after failure.</p>
+      <p>BusyNow is live, and the product remains dependent on the quality and density of information available for a particular place and time. Better coverage and easier contribution are ongoing product challenges. The aim is straightforward: help someone make a useful decision, with a clear understanding of what the information can support.</p>
+      <p class="project-link"><a class="button button-primary" href="https://busynow.app/">Try BusyNow <span aria-hidden="true">↗</span></a></p>
+    </article>
+    <aside class="related-essays" aria-label="More from Thomas"><h2>More from Thomas</h2><ul><li><a href="../../resume/#busynow">My BusyNow experience <span aria-hidden="true">→</span></a><span>Résumé</span></li><li><a href="../../about/">About me <span aria-hidden="true">→</span></a><span>Engineering background</span></li></ul><a class="back-link" href="../../blog/">Browse all writing →</a></aside>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-intro"><a class="brand" href="../../" aria-label="Thomas Howard, home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a><p>Applied AI, conversational agents, and the architecture behind useful agentic systems.</p></div>
+        <div><h2 class="footer-title">// explore</h2><nav class="footer-links" aria-label="Footer navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/">Projects</a></nav></div>
+        <div><h2 class="footer-title">// connect</h2><div class="footer-links"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="../../resume/">My Resume</a><a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X ↗</a></div></div>
+      </div>
+      <div class="footer-bottom">© 2026 Thomas Howard</div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -19,7 +19,7 @@ Then open http://localhost:8000.
 - `index.html` — terminal introduction, featured work, and recent writing
 - `about/` — applied AI experience and approach to solutions architecture
 - `resume/` — readable résumé in the site’s dark terminal theme, with green headings, section navigation, and a green PDF download button
-- `projects/` — project overview and five technical essays: `nfl-predictor/`, `sally/`, `symphony/`, `ai-evaluation/`, and `referral-intelligence/`
+- `projects/` — project overview and six technical essays: `busynow/`, `nfl-predictor/`, `sally/`, `symphony/`, `ai-evaluation/`, and `referral-intelligence/`
 - `blog/` — all writing and articles
 - `styles.css` — shared theme, responsive layouts, and reading styles
 - `terminal.js` — progressive typing animation for the homepage introduction
@@ -61,4 +61,6 @@ Founder of BusyNow, a live software product running on AWS ECS.
 
 BusyNow helps people decide where to go by comparing nearby coffee shops, restaurants, and bars using crowd information, opening hours, and distance. It helps reduce the guesswork of choosing a place, while clearly showing when crowd information is recent, historical, or unavailable.
 
-BusyNow currently runs on AWS ECS. Keep Kubernetes and Go as separate areas of engineering expertise and interest. The homepage, About, and Projects pages use `assets/busynow-logo.png`, the official PNG supplied by Thomas, unchanged. A light CSS background keeps its dark wordmark readable. This content update does not change BusyNow infrastructure or deployment.
+BusyNow currently runs on AWS ECS. Keep Kubernetes and Go as separate areas of engineering expertise and interest. The homepage, About, Projects, and dedicated BusyNow pages use `assets/busynow-logo.png`, the official PNG supplied by Thomas, unchanged. A light CSS background keeps its dark wordmark readable. This content update does not change BusyNow infrastructure or deployment.
+
+The dedicated product and engineering writeup is `/projects/busynow/`. Homepage, Projects, About, Writing, and the GitHub profile link to that page. Preserve the About section anchor for existing bookmarks. The writeup explains the consumer decision, the comparison flow, evidence provenance and freshness, shared contracts, report integrity, provider controls, and ECS operation. Historical patterns and estimates are conditional; reduced uncertainty is the intended benefit, not a measured adoption or accuracy claim.
