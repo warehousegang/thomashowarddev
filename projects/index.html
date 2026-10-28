@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Applied AI and predictive ML projects by Thomas Howard: Fourth Down, Sally, Symphony, AI evaluation, and healthcare referral intelligence.">
+  <meta name="description" content="Engineering projects by Thomas Howard: BusyNow, a live software product running on AWS ECS; Fourth Down; Sally; Symphony; AI evaluation; and healthcare referral intelligence.">
   <meta name="theme-color" content="#0a0a0f">
   <title>AI Projects | Thomas Howard</title>
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../styles.css?v=project-essays-1">
+  <link rel="stylesheet" href="../styles.css?v=busynow-ecs-1">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -23,7 +23,18 @@
   </header>
   <main id="main" class="container page-main">
     <div class="page-heading"><p class="command"><span class="prompt" aria-hidden="true">$</span>ls projects/</p><h1><span class="comment" aria-hidden="true">// </span>projects</h1><p class="page-intro">Applied AI and predictive machine learning, from the problem to the implementation. Explore NFL forecasting, conversational agents, evaluation, and healthcare decision support.</p></div>
-    <div class="card-grid project-grid"><article class="card project-card" id="nfl-predictor" style="grid-column:1/-1">
+    <div class="card-grid project-grid">
+      <article class="card project-card busynow-project" id="busynow">
+        <a class="busynow-logo" href="https://busynow.app/" aria-label="Visit BusyNow">
+          <img src="../assets/busynow-logo.png" alt="BusyNow" width="2172" height="724">
+        </a>
+        <h2><a href="https://busynow.app/">BusyNow</a></h2>
+        <p>Founder of BusyNow, a live software product running on AWS ECS.</p>
+        <p>I founded and built BusyNow and use it as a real-world environment for exploring cloud infrastructure, platform engineering, automation, and autonomous engineering systems.</p>
+        <ul class="tags" aria-label="Topics"><li>AWS ECS</li><li>Platform engineering</li><li>Automation</li></ul>
+        <a class="card-link" href="../about/#busynow">About my work on BusyNow <span aria-hidden="true">→</span></a>
+      </article>
+      <article class="card project-card" id="nfl-predictor" style="grid-column:1/-1">
         <div class="card-topline"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18M6 16l4-5 4 2 6-8"/><circle cx="10" cy="11" r="1"/><circle cx="14" cy="13" r="1"/></svg><span class="card-kind">// predictive machine learning</span></div>
         <h2><a href="/fourth-down/">Fourth Down: NFL Predictive ML</a></h2>
         <p style="max-width:84ch">An end-to-end, production-inspired NFL predictive ML application. Real current-season data, explainable frozen-model forecasts, historical evaluation, and an auditable forecast-to-outcome record.</p>

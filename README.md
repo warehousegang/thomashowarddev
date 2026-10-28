@@ -1,6 +1,6 @@
 # thomashoward.dev
 
-Thomas Howard's personal website: applied AI, agentic solutions architecture, conversational agents, evaluation, and healthcare decision support.
+Thomas Howard's personal website: applied AI, agentic solutions architecture, conversational agents, evaluation, healthcare decision support, and BusyNow.
 
 A framework-free static site with a terminal-inspired dark theme. No build step, remote fonts, or package dependencies are required. A small JavaScript enhancement types the homepage name and introduction on page load, updating one text node per line. A head-level loading state prevents the full text from flashing before typing starts. Without JavaScript, with reduced motion, or if the animation script fails to load, the full introduction remains readable. Mobile navigation uses native HTML disclosure controls.
 
@@ -54,3 +54,11 @@ The portfolio has no active refresh workflow. Current artifacts expire honestly 
 Article titles, summaries, and prose use natural punctuation without em dashes. Article pages and writing cards omit publication dates. Keep writing organized in the main Writing index for now; do not add date-based archive navigation. The former monthly archive URL redirects to Writing so existing links continue to work.
 
 The essay `blog/when-to-use-machine-learning/` compares rules, forecasts, and decision policies using fictional banquet and sub-shop examples. Its three charts have desktop and mobile SVG variants, CSV data, and a reproducible Matplotlib source in `figures/`. All values are illustrative; the demand chart uses a known synthetic generating process, not a fitted model. The inventory chart evaluates explicitly stated demand scenarios and penalties. To regenerate the figures, use Python with matplotlib 3.10.7 and numpy 2.5.4 and run `python3 blog/when-to-use-machine-learning/figures/generate_figures.py`. The website itself has no new runtime dependencies.
+
+## BusyNow public description
+
+Founder of BusyNow, a live software product running on AWS ECS.
+
+I founded and built BusyNow and use it as a real-world environment for exploring cloud infrastructure, platform engineering, automation, and autonomous engineering systems.
+
+BusyNow currently runs on AWS ECS. Keep Kubernetes and Go as separate areas of engineering expertise and interest. The homepage, About, and Projects pages use `assets/busynow-logo.png`, the official PNG supplied by Thomas, unchanged. A light CSS background keeps its dark wordmark readable. This content update does not change BusyNow infrastructure or deployment.

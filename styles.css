@@ -72,6 +72,19 @@ svg { vertical-align: middle; }
 .button-secondary:hover { background: var(--accent-bg); }
 .arrow { font-size: 1.2em; }
 
+/* BusyNow uses the supplied, unaltered PNG on a light logo panel. */
+.busynow-feature { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); align-items: center; gap: 36px; margin-top: 48px; padding: 28px; border: 1px solid var(--rule); border-radius: 12px; background: var(--surface); }
+.busynow-logo { display: block; width: min(100%, 480px); overflow: hidden; border-radius: 8px; background: #f7fafc; }
+.busynow-logo img { display: block; width: 100%; height: auto; }
+.busynow-feature h2 { margin: 0 0 16px; font-size: clamp(1.2rem, 2.4vw, 1.5rem); }
+.busynow-feature p { color: var(--muted); }
+.busynow-feature .card-link { margin-top: 0; }
+.reading .busynow-logo, .busynow-project .busynow-logo { margin-bottom: 24px; }
+.busynow-project { grid-column: 1 / -1; }
+@media (max-width: 720px) {
+  .busynow-feature { grid-template-columns: 1fr; gap: 24px; padding: 22px; }
+}
+
 /* Work and writing. */
 .home-section { padding-top: 92px; }
 .section-heading { text-align: center; margin-bottom: 32px; }
