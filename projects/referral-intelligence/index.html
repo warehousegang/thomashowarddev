@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="How Thomas Howard built Referral Intelligence, a specialist-ranking service that explains every score, exposes missing evidence, and abstains when evidence falls short.">
+  <meta name="description" content="How Thomas Howard built Referral Intelligence, a production specialist-ranking service that explains every score, exposes missing evidence, and abstains when evidence falls short.">
   <meta name="theme-color" content="#0a0a0f">
   <title>Building Referral Intelligence: ranking with reasons | Thomas Howard</title>
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
@@ -27,25 +27,25 @@
     <article class="reading case-study">
       <p class="eyebrow">Project essay</p>
       <h1>Building Referral Intelligence: ranking with reasons</h1>
-      <p class="deck">A specialist-ranking system at Snap eHealth that shows its reasons, admits when evidence is thin, and never takes action on its own.</p>
+      <p class="deck">A production specialist-ranking system at Snap eHealth that shows its reasons, admits when evidence is thin, and never takes action on its own.</p>
       <p class="meta">Thomas Howard · 6 min read</p>
       <dl class="case-facts">
         <div><dt>My role</dt><dd>Architecture &amp; service implementation</dd></div>
         <div><dt>Focus</dt><dd>Python · Explainable ranking · ML data design</dd></div>
-        <div><dt>Project stage</dt><dd>Built and tested · Not yet on live provider data</dd></div>
+        <div><dt>Project stage</dt><dd>Live production · Decision support</dd></div>
       </dl>
       <aside class="case-summary" aria-label="At a glance">
         <p class="case-summary__title">At a glance</p>
         <dl>
           <div><dt>The problem</dt><dd>Choosing a specialist for a referral means weighing incomplete, uneven evidence. A ranking that hides its reasoning, or treats missing data as good data, sends patients to the wrong place with false confidence.</dd></div>
-          <div><dt>What I built</dt><dd>A ranking service that scores specialist candidates with explicit weights, explains every point, reports what evidence is missing, and withholds a recommendation when the evidence falls short.</dd></div>
+          <div><dt>What I built</dt><dd>A production ranking service that scores specialist candidates with explicit weights, explains every point, reports what evidence is missing, and withholds a recommendation when the evidence falls short.</dd></div>
           <div><dt>Why it matters</dt><dd>The consuming workflow can show why a specialist was suggested and route a weak recommendation to a person for review instead of letting it quietly become a referral.</dd></div>
           <div><dt>The decision I’d defend</dt><dd>Missing signals earn zero points and their weight is not handed to other signals. Some providers score lower as a result, but a sparse profile can never look complete.</dd></div>
         </dl>
       </aside>
       <nav class="essay-nav" aria-label="In this essay"><p>In this essay</p><ul><li><a href="#boundary">Scores don’t act</a></li><li><a href="#ranking">Explain every point</a></li><li><a href="#missing-evidence">Missing isn’t good</a></li><li><a href="#abstention">“Not enough evidence”</a></li><li><a href="#verification">Prove nothing changed</a></li><li><a href="#prediction">Ranking isn’t prediction</a></li><li><a href="#status">Every failure has an answer</a></li><li><a href="#founder-lessons">What I’d tell a founder</a></li></ul></nav>
       <p>When a patient needs a specialist, someone has to pick one. The evidence behind that choice is rarely complete: quality data for one provider, volume for another, no network information for a third. A system that turns this into a single confident number can send a patient to the wrong place, and nobody can say why.</p>
-      <p>I architect, implement, and operate Referral Intelligence, Snap eHealth’s physician-recommendation system. It ranks specialist candidates, explains the factors behind each result, and withholds a recommendation when the evidence does not meet the eligibility policy. The hard part is making incomplete data useful while keeping the calculation, the gaps, and the authority to act visible.</p>
+      <p>I architect, implement, and operate Referral Intelligence, Snap eHealth’s production physician-recommendation system. It ranks specialist candidates, explains the factors behind each result, and withholds a recommendation when the evidence does not meet the eligibility policy. The hard part is making incomplete data useful while keeping the calculation, the gaps, and the authority to act visible.</p>
 
       <h2 id="boundary">A score should never carry permission to act</h2>
       <p>The risk with any recommendation engine is scope creep. Once it is wired into the workflow, a change to a scoring rule can start to behave like a change to who gets referred where, with no human decision in between.</p>
@@ -67,7 +67,7 @@
 
       <h2 id="ranking">Every point in the score has to be explainable</h2>
       <p>A ranking nobody can explain is a ranking nobody should trust in healthcare. If a care coordinator asks “why this doctor?”, the answer has to come from the math, not from a story written after the fact.</p>
-      <p>So the ranker uses explicit weights. It puts each signal on a common scale, computes weighted contributions, and sorts by score, breaking ties on a stable provider identifier so the same inputs always give the same order. The factors include quality, condition experience, relevant volume, outcomes and utilization, network alignment, proximity, continuity, and evidence confidence.</p>
+      <p>So the production ranker uses explicit weights. It puts each signal on a common scale, computes weighted contributions, and sorts by score, breaking ties on a stable provider identifier so the same inputs always give the same order. The factors include quality, condition experience, relevant volume, outcomes and utilization, network alignment, proximity, continuity, and evidence confidence.</p>
       <p>Explanations are built from the contributions the calculation actually used. Two specialists can land on similar totals for different reasons: one has an established relationship and is nearby, another has stronger condition-specific evidence. The assessment shows that tradeoff.</p>
       <p>Explicit weights also make our own assumptions reviewable. Condition experience and total volume, for example, may partly measure the same thing. Because the contributions are visible, that overlap can be examined and the weights revised on purpose.</p>
 
