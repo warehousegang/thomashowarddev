@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="How Thomas Howard built Sally, a live healthcare voice agent: separate workloads by deadline, let code decide what happened, make failures recoverable, and test where voice agents actually break.">
   <meta name="theme-color" content="#0a0a0f">
-  <title>Sally: a healthcare voice agent that never promises what didn’t happen | Thomas Howard</title>
+  <title>Sally: a healthcare voice agent that checks before it confirms | Thomas Howard</title>
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../../styles.css?v=project-essays-2">
   <link rel="stylesheet" href="sally.css?v=architecture-2">
@@ -26,7 +26,7 @@
     <a class="back-link" href="../">← All projects</a>
     <article class="reading case-study">
       <p class="eyebrow">Project essay</p>
-      <h1>Building Sally: a healthcare voice agent that never promises what didn’t happen</h1>
+      <h1>Building Sally: a healthcare voice agent that checks before it confirms</h1>
       <p class="deck">Sally talks with patients in real time. Making it sound natural is the easy part. The hard part is making sure everything it tells a patient is backed by something that actually happened.</p>
       <p class="meta">Thomas Howard · 7 min read</p>
       <dl class="case-facts">
@@ -40,10 +40,10 @@
           <div><dt>The problem</dt><dd>On a call, a pause sounds like a dropped line, a repeated question sounds like nobody was listening, and “you’re booked” is a promise. A voice agent that improvises any of those loses the patient’s trust.</dd></div>
           <div><dt>What I built</dt><dd>Sally’s architecture end to end: a fast conversation loop, background analysis, controlled tool execution, a checked visit brief for the care team, and the runtime and evaluations around them.</dd></div>
           <div><dt>Why it matters</dt><dd>Patients get a responsive conversation. The care team gets a record where every confirmed action traces to a real tool result and every quote traces to what the patient said.</dd></div>
-          <div><dt>The decision I’d defend</dt><dd>The model never decides what happened. It requests actions; code checks authority, executes, and records; only then does Sally speak about the outcome. That costs an extra model round on bookings, and it is worth it.</dd></div>
+          <div><dt>The decision I’d defend</dt><dd>For bookings and availability, the model requests; code checks authority, executes, and records; only then does Sally speak about the outcome. That costs an extra model round on bookings, and it is worth it.</dd></div>
         </dl>
       </aside>
-      <nav class="essay-nav" aria-label="In this essay"><p>In this essay</p><ul><li><a href="#workloads">Split by deadline</a></li><li><a href="#context">Corrections mid-call</a></li><li><a href="#actions">No false bookings</a></li><li><a href="#operations">Recoverable operations</a></li><li><a href="#evaluation">Testing where it breaks</a></li><li><a href="#value">A record to check</a></li><li><a href="#status">Owning the system</a></li><li><a href="#founder">For founders</a></li></ul></nav>
+      <nav class="essay-nav" aria-label="In this essay"><p>In this essay</p><ul><li><a href="#workloads">Split by deadline</a></li><li><a href="#context">Corrections mid-call</a></li><li><a href="#actions">Book, then confirm</a></li><li><a href="#operations">Recoverable operations</a></li><li><a href="#evaluation">Testing where it breaks</a></li><li><a href="#value">A record to check</a></li><li><a href="#status">Owning the system</a></li><li><a href="#founder">For founders</a></li></ul></nav>
       <p>Picture a patient calling to book a follow-up. They give a date, pause, correct it, and ask whether Thursday works. In the next couple of seconds Sally has to answer naturally, remember the correction, check real availability, and avoid saying “you’re booked” until a booking actually exists.</p>
       <p>Each failure feels different to the caller. A slow response sounds like silence. Stale context sounds like Sally wasn’t listening. A confirmation without a booking is a broken promise, and in healthcare that can mean a missed appointment.</p>
       <p>I lead the architecture, development, and operation of Sally, Snap eHealth’s conversational AI system, which is live with real patients. The question I design around is easy to say and hard to build: what may the model say, what may the application do, and what can the final record support?</p>
@@ -52,7 +52,7 @@
       <p>It is tempting to ask one model call to do everything. Sally runs three separate workloads, each with its own deadline.</p>
       <ul>
         <li><strong>The speaking loop</strong> answers the current turn using context that has already been accepted. It has to be fast.</li>
-        <li><strong>Background analysis</strong> keeps that context current while the conversation continues. It can take longer, as long as it never holds up speech.</li>
+        <li><strong>Background analysis</strong> keeps that context current while the conversation continues. It can take longer, as long as it stays off the routine speech path.</li>
         <li><strong>Extraction</strong> runs after the call and turns the transcript and recorded actions into a visit brief. It has to be precise.</li>
       </ul>
       <figure class="sally-zones" aria-labelledby="zones-title">
@@ -102,9 +102,9 @@
       <h2 id="context">Let the patient change their mind mid-sentence</h2>
       <p>Patients correct themselves. If background analysis is still working from an older version of the conversation, its result can quietly overwrite the correction. That is how an agent ends up confidently repeating the wrong date.</p>
       <p>So every analysis result is checked against the transcript snapshot it read before Sally accepts it. New turns may extend that snapshot. If an earlier turn was rewritten, evidence was removed, or the result would rewind progress, Sally rejects it. Accepted context then becomes available to later turns.</p>
-      <p>The speech path never waits for analysis. A regression test holds an analysis response open while speech completes, so if anyone couples the two, the test fails.</p>
+      <p>Routine speech never waits for analysis. A regression test holds an analysis response open while speech completes, so if anyone couples the two, the test fails.</p>
 
-      <h2 id="actions">Never announce a booking that didn’t happen</h2>
+      <h2 id="actions">Speak about a booking only after it exists</h2>
       <p>For booking and availability requests, Sally withholds its draft reply, runs the tool through the runtime, and only then asks the model to respond from the committed result. That is an extra model round on every booking. I accept the cost because the alternative is an agent that occasionally confirms appointments that don’t exist.</p>
       <p>Before any tool has an effect, the runtime rechecks that the call is still connected, the response belongs to the current turn, the session is in the right state, calling is enabled, and the recipient is verified. A response from an interrupted turn loses its authority. AI disclosure, consent, and recipient verification are application policies, so nothing a caller says can talk Sally out of them. If verification is unavailable, Sally fails closed.</p>
       <p>The visit brief gets its own deterministic checks. A confirmed booking requires a successful tool result. The output must match its schema, every transcript reference must resolve, and every quotation must match the turn it cites. Context from the chart keeps its source label instead of quietly becoming something the patient said.</p>
@@ -113,7 +113,7 @@
       <p>A live voice agent fails in ordinary ways: a deploy in the middle of a call, a dropped database connection, a downstream system that is briefly down. These are the failures that place a duplicate call or lose a visit brief.</p>
       <p>Sally runs as a Node service on AWS ECS Fargate behind an HTTPS load balancer, with private PostgreSQL storage. Conversation state and scheduled work commit together, so an interrupted alarm can retry, and an uncertain call-creation attempt goes to reconciliation instead of placing a second call.</p>
       <p>A database advisory lock ensures one active process. If that process loses its connection, it marks itself not ready, stops scheduling, and closes its sockets. The tradeoff is that deploys must drain active calls before a process is replaced. I chose explicit ownership over faster rollouts.</p>
-      <p>Releases build one immutable image in staging and promote that same tested image to production. Finished calls are delivered through a transactional outbox, a queue, private artifact storage, and retried callbacks, so a temporary downstream failure doesn’t lose a record or deliver it twice. Operational logs carry metadata only; conversation content sits behind a separate access boundary.</p>
+      <p>Releases build one immutable image in staging and promote that same tested image to production. Finished calls are delivered through a transactional outbox, a queue, private artifact storage, and retried callbacks, so a temporary downstream failure is recoverable and duplicate deliveries are handled. Operational logs contain metadata; conversation content sits behind a separate access boundary.</p>
 
       <h2 id="evaluation">Test the agent where it actually breaks</h2>
       <h3>Reproduce failures at the boundary</h3>
@@ -123,7 +123,7 @@
       <p>To compare speaking models fairly, I freeze the conversation at one caller turn and ask each candidate for its next reply. Replaying a whole conversation doesn’t work: once a candidate says something different, the caller’s next line would have changed too.</p>
       <h3>Debug the evaluator as carefully as the model</h3>
       <p>Two of the most useful lessons came from tests that were wrong, not models. In one, the model failed an unavailable-slot scenario because it had never been told the offered slots were the full availability. Fixing the test context fixed the result, with no prompt change.</p>
-      <p>In another, a faster speech path let the test move on before background analysis arrived, so the scores were measuring the test’s pacing. Blocking speech on analysis would have made the test pass and the product worse. I made turn pacing explicit instead. Reports keep scenario identifiers, prompt hashes, tool activity, and timing spans, so I can tell whether to change the application, its context, the evaluator, or the model.</p>
+      <p>In another, a faster speech path let the test move on before background analysis arrived, so part of the score was measuring the test’s pacing. Blocking speech on analysis would have made the test pass and the product worse. I made turn pacing explicit instead. Reports keep scenario identifiers, prompt hashes, tool activity, and timing spans, so I can tell whether to change the application, its context, the evaluator, or the model.</p>
 
       <h2 id="value">Give the care team a record they can check</h2>
       <p>The visit brief is where Sally’s work becomes useful to clinicians. It keeps four things distinct: what the patient said, what came from the chart, what the patient consented to, and which actions actually completed. Transcript references and committed tool results make each line traceable after the call.</p>
@@ -133,7 +133,7 @@
 
       <h2 id="founder">What I’d tell a founder</h2>
       <p><strong>The model should never be your system of record.</strong> Let it decide what to say and what to ask for. Let code decide what happened.</p>
-      <p><strong>Design a voice agent around deadlines.</strong> Conversation, analysis, and extraction have different latency budgets. Forcing them into one model call is where responsiveness and accuracy both break.</p>
+      <p><strong>Design a voice agent around deadlines.</strong> Conversation, analysis, and extraction have different latency budgets. Forcing them into one model call trades responsiveness against accuracy on every turn.</p>
       <p><strong>Budget time to debug your evals.</strong> Some “model regressions” will be test bugs, and the easy fix for the test can quietly damage the product.</p>
     </article>
     <aside class="related-essays" aria-labelledby="related-title"><h2 id="related-title">Explore the other projects</h2><ul><li><a href="../symphony/">Symphony <span aria-hidden="true">→</span></a><span>Agent orchestration</span></li><li><a href="../ai-evaluation/">AI Evaluation <span aria-hidden="true">→</span></a><span>Quality &amp; evaluation</span></li><li><a href="../referral-intelligence/">Referral Intelligence <span aria-hidden="true">→</span></a><span>Decision support</span></li></ul><a class="back-link" href="../../blog/">Browse all writing →</a></aside>
