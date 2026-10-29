@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="BusyNow: the consumer problem, product experience, and engineering behind choosing nearby coffee shops, restaurants, and bars. Founded and built by Thomas Howard.">
+  <meta name="description" content="BusyNow is the consumer product I founded and built to help people choose a nearby coffee shop, restaurant, or bar before heading out, with crowd information that is honest about its age and source.">
   <meta name="theme-color" content="#0a0a0f">
   <title>BusyNow: the product and engineering | Thomas Howard</title>
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
@@ -28,50 +28,61 @@
       <p class="eyebrow">Product &amp; engineering</p>
       <a class="busynow-logo" href="https://busynow.app/" aria-label="Visit BusyNow"><img src="../../assets/busynow-logo.png" alt="BusyNow" width="2172" height="724"></a>
       <h1>BusyNow: helping people decide where to go next</h1>
-      <p class="deck">A consumer product for comparing nearby places, understanding crowd information, and making a choice before heading out.</p>
-      <p class="meta">Thomas Howard · 8 min read</p>
+      <p class="deck">A consumer product for choosing a nearby coffee shop, restaurant, or bar before heading out, with crowd information that tells you how old it is and where it came from.</p>
+      <p class="meta">Thomas Howard · 7 min read</p>
       <dl class="case-facts">
         <div><dt>My role</dt><dd>Founder &amp; Software Engineer</dd></div>
         <div><dt>Product</dt><dd>Coffee, restaurants, and bars</dd></div>
         <div><dt>Project stage</dt><dd>Live consumer product</dd></div>
       </dl>
-      <nav class="essay-nav" aria-label="In this writeup"><p>In this writeup</p><ul><li><a href="#problem">The consumer problem</a></li><li><a href="#experience">How it works</a></li><li><a href="#evidence">Crowd information</a></li><li><a href="#architecture">Architecture</a></li><li><a href="#reports">Reliable reports</a></li><li><a href="#operations">Cost &amp; reliability</a></li><li><a href="#ownership">Building the product</a></li></ul></nav>
-      <p><strong>Founder of BusyNow, helping people see what’s busy nearby before heading out.</strong> I founded and built the product, and own its product direction, application engineering, and operation. The work starts with a practical question: when someone is ready to leave, what information would help them choose a place?</p>
+      <aside class="case-summary" aria-label="At a glance">
+        <p class="case-summary__title">At a glance</p>
+        <dl>
+          <div><dt>The problem</dt><dd>People choosing a café, restaurant, or bar often guess whether it is busy, compare several sources, or find out only after making the trip.</dd></div>
+          <div><dt>What I built</dt><dd>A live consumer product that compares a few nearby places on crowd evidence, opening status, and travel, and lets people on site add a crowd report.</dd></div>
+          <div><dt>Why it matters</dt><dd>A consumer app only survives if it earns a place in someone’s routine. That happens when one short visit ends in a confident choice, and the app never claims to know more than it does.</dd></div>
+          <div><dt>The decision I’d defend</dt><dd>Every crowd label carries its age and source, and missing information stays unknown. An honest “we don’t know” beats an attractive guess.</dd></div>
+        </dl>
+      </aside>
+      <nav class="essay-nav" aria-label="In this writeup"><p>In this writeup</p><ul><li><a href="#problem">Right place, right now</a></li><li><a href="#experience">Four steps to a decision</a></li><li><a href="#evidence">Age and source on every label</a></li><li><a href="#architecture">One answer for every screen</a></li><li><a href="#reports">A double tap is not two witnesses</a></li><li><a href="#operations">Fail honestly, within budget</a></li><li><a href="#ownership">Owning the promise end to end</a></li><li><a href="#founder-lessons">What I’d tell a founder</a></li></ul></nav>
+      <p>Picture walking to a café to get some work done and finding every seat taken. Or picking a bar for a night out and finding it empty. Neither is a disaster, but a product that can’t prevent it has no reason to be on someone’s phone.</p>
+      <p><strong>Founder of BusyNow, helping people see what’s busy nearby before heading out.</strong> I founded and built it, and I own its product direction, engineering, and operation.</p>
 
       <h2 id="problem">A good place is not always the right place right now</h2>
-      <p>Someone looking for coffee may want somewhere quiet enough to work. Friends choosing a bar may want a lively room. A person deciding where to eat may care most about finding an open option nearby. The same venue can be a good fit at one moment and a poor fit an hour later.</p>
-      <p>Ratings, photos, and menus help explain what a place is like. The immediate decision also needs time-sensitive context: how crowded it appears to be, how recent that information is, whether the place is open, and what it takes to get there. Without that context, people have to guess, compare several sources, or find out after making the trip.</p>
-      <p>BusyNow brings those considerations into one comparison. The intended value is less uncertainty before leaving and a clearer tradeoff between nearby options. A slightly longer walk may be worthwhile for a fresher crowd report. The closest place may still be the right choice when time matters more. The product keeps that choice with the person using it.</p>
-      <h3>The business challenge is usefulness in a particular moment</h3>
-      <p>For this kind of consumer product, a large list of venues is only a starting point. The useful unit is a decision in a particular neighborhood, at a particular time. BusyNow has to earn a place in someone’s routine by making that decision easier than checking places individually or arriving without enough information.</p>
-      <p>That creates a local data-density problem. Recent contributions around the places someone actually visits matter more than a large total spread thinly across a city. I treat coverage, freshness, and ease of contribution as connected product concerns. Where evidence is sparse, the experience still needs to explain what is known and make the remaining uncertainty visible. A short visit that ends with a confident choice is the product goal.</p>
+      <p>The same venue can be a good fit now and a poor fit an hour later. Someone after coffee may want a quiet table to work. Friends choosing a bar may want a lively room.</p>
+      <p>Ratings, photos, and menus describe what a place is like. The immediate question needs time-sensitive context: how crowded it seems, how recent that is, whether it is open, and how far it is.</p>
+      <p>BusyNow puts those into one comparison. A longer walk may be worth it for a fresher crowd report; the closest place may still win when time matters more. The product shows the tradeoff and leaves the choice with the person.</p>
+      <h3>Usefulness is local, and it expires</h3>
+      <p>A big list of venues is only a starting point. The useful unit is a decision in one neighborhood, at one time. BusyNow earns a place in someone’s routine only if that decision gets easier than checking places one by one.</p>
+      <p>That makes it a local data-density problem. Recent reports around the places someone actually visits matter more than a large total spread thinly across a city. So coverage, freshness, and ease of contribution are one product concern. Where evidence is thin, the app says what is known and what isn’t.</p>
 
-      <h2 id="experience">From an area to a decision</h2>
-      <p>The experience is organized around a small set of comparable choices. The map adds geographic context, while the list keeps the facts needed for the decision close together.</p>
+      <h2 id="experience">Four steps from an area to a decision</h2>
+      <p>The experience is a few comparable choices, not a directory. The map gives context; the list keeps the deciding facts side by side.</p>
       <ol>
-        <li><strong>Choose where to look.</strong> Use current location intentionally, or search for an area, address, or landmark. Manual area selection gives people a useful path when they prefer not to share their location or are planning for somewhere else.</li>
-        <li><strong>Choose the kind of place.</strong> Coffee, Restaurants, and Bars provide focused starting points. BusyNow presents up to three initial options, with up to three more available without turning the first screen into a long directory.</li>
-        <li><strong>Compare the tradeoffs.</strong> Venue rows combine crowd evidence, opening status, and travel information. Routed walking time is shown when available; distance remains useful when route information is unavailable. The contextual map preserves the relationship between the selected venue and the alternatives.</li>
-        <li><strong>Inspect and act.</strong> Venue detail explains the evidence and makes Directions the main next step. Additional details, such as hours and website links, sit under More when available. People who are there can optionally contribute a crowd report.</li>
+        <li><strong>Choose where to look.</strong> Use your current location deliberately, or search for an area, address, or landmark, useful if you’d rather not share location or are planning ahead.</li>
+        <li><strong>Choose the kind of place.</strong> Coffee, Restaurants, or Bars. BusyNow shows up to three options first, with up to three more on request, so the first screen never becomes a long list.</li>
+        <li><strong>Compare the tradeoffs.</strong> Each row combines crowd evidence, opening status, and travel. Walking time appears when a route is available; otherwise distance. The map keeps the alternatives in view.</li>
+        <li><strong>Inspect and act.</strong> The detail view explains the evidence and makes Directions the main next step, with hours and links under More. People on site can add a crowd report.</li>
       </ol>
       <aside class="callout" aria-label="Illustrative decision">
         <p><strong>For example:</strong> imagine two nearby cafés. One is closer but has no recent crowd report. The other is farther away and has a recent report saying it is not crowded. BusyNow’s job is to make that difference easy to see. The recent report informs the decision; it cannot guarantee that a seat will still be available on arrival.</p>
       </aside>
 
-      <h2 id="evidence">Crowd information has to carry its age and source</h2>
-      <p>A crowd label loses meaning when the reader cannot tell where it came from or when it was observed. I built the product around an explicit distinction between observations, patterns, estimates, and missing information.</p>
+      <h2 id="evidence">Never show a crowd label without its age and source</h2>
+      <p>“Quiet” is meaningless if you can’t tell who said it or when. A confident label that turns out wrong teaches people to ignore the app. So the product separates what was observed, what is typical, what is estimated, and what is unknown.</p>
       <ul>
-        <li><strong>Recent community reports</strong> carry a crowd condition, observation age, and accepted report count. Aging reports retain that context so people can judge whether the information is still useful.</li>
-        <li><strong>Stale observations</strong> describe a past condition. The interface makes clear that the current crowd is unknown.</li>
-        <li><strong>Historical patterns</strong>, when available, describe what is usual for a time rather than what has just been observed.</li>
-        <li><strong>General estimates</strong>, where enabled, are labeled as estimates and are not venue-specific observations.</li>
-        <li><strong>Missing information</strong> remains unknown. A lack of reports does not mean a place is empty.</li>
+        <li><strong>Recent community reports</strong> carry a crowd condition, observation age, and accepted report count, and keep that context as they age.</li>
+        <li><strong>Stale observations</strong> describe a past condition. The interface says plainly that the current crowd is unknown.</li>
+        <li><strong>Historical patterns</strong>, when available, describe what is usual for that time, not what just happened.</li>
+        <li><strong>General estimates</strong>, where enabled, are labeled as estimates, not venue-specific observations.</li>
+        <li><strong>Missing information</strong> stays unknown. No reports does not mean empty.</li>
       </ul>
-      <p>These distinctions exist in the shared data contract as well as the interface. Community observations have explicit freshness deadlines. As time passes, an observation moves from fresh to aging, then stale and expired. The client can reevaluate that state without pretending that a cached response was just observed.</p>
-      <p>Comparison logic uses concrete factors such as opening status, travel, freshness, and report support. Explanations have to agree with the underlying evidence. A historical pattern cannot become a claim that a place is quiet now simply because it would make a more attractive recommendation.</p>
+      <p>These categories live in the shared data contract, not just the UI. Each observation has explicit freshness deadlines: fresh, aging, stale, expired. The app rechecks that state itself, so a cached response never pretends it was just observed.</p>
+      <p>Explanations must agree with the evidence underneath. A historical pattern cannot become “quiet now” because that makes a nicer recommendation.</p>
 
-      <h2 id="architecture">An architecture shaped by the decision</h2>
-      <p>The web application uses React with JavaScript and TypeScript, backed by a Node.js/Express API. Static frontend assets are delivered through Amazon S3 and CloudFront. The containerized backend runs on AWS ECS behind an Application Load Balancer. Terraform describes the infrastructure.</p>
+      <h2 id="architecture">Assemble one answer, so every screen tells the same story</h2>
+      <p>If the list, map, and detail view each interpret a venue on their own, they will eventually disagree. A user who sees “quiet” in one place and “unknown” in another stops trusting both.</p>
+      <p>The web app is React with JavaScript and TypeScript, backed by a Node.js/Express API. Static assets are served through Amazon S3 and CloudFront. The containerized backend runs on AWS ECS behind an Application Load Balancer, described in Terraform.</p>
       <figure class="case-diagram" aria-labelledby="architecture-title">
         <figcaption id="architecture-title">From a nearby search to a comparable set of places</figcaption>
         <ol class="system-flow">
@@ -81,25 +92,33 @@
           <li><span>04 · Shared contract</span><strong>Validated decision snapshot</strong><p>The response carries comparable venues, evidence state, freshness, and any degraded data domains back to the interface.</p></li>
         </ol>
       </figure>
-      <p>The API assembles a decision snapshot rather than leaving each screen to invent its own interpretation of a place. Shared runtime validation checks the snapshot’s structure, timestamps, venue identities, and consistency between evidence and comparison statements. That gives the list, map, and detail view a common meaning for the same information.</p>
-      <p>External place discovery and the community-report system have different jobs. Google Places supplies place information and discovery. Community reports are recorded and evaluated by BusyNow. Keeping those sources separate helps prevent a provider response, an old pattern, or a missing value from being mistaken for a recent on-site observation.</p>
+      <p>So the API assembles a single decision snapshot. Shared runtime validation checks its structure, timestamps, venue identities, and that comparison statements match the evidence. Every screen reads the same meaning.</p>
+      <p>Google Places supplies place information and discovery; BusyNow records and evaluates community reports. Keeping them apart stops a provider response, an old pattern, or a missing value from being mistaken for a recent on-site observation.</p>
 
-      <h2 id="reports">A small contribution needs reliable data handling</h2>
-      <p>Reporting should be a small action for someone already at a venue. Behind that action are ordinary distributed-system problems: a phone loses its connection, a response arrives late, someone taps again, or the original report needs correcting.</p>
-      <p>I use PostgreSQL as the authority for accepted reports. A submission has a stable identity, so retrying the same submission can return its original result instead of counting another report. Transactions, constraints, and locking protect that behavior when requests overlap. Corrections supersede the earlier observation through the same controlled write path, preserving the relationship between the original and corrected report.</p>
-      <p>That distinction matters to the consumer experience. A retry should not make evidence appear more widely supported. A correction should not leave both answers contributing to the current crowd state. The interface also distinguishes a confirmed submission from a failed or uncertain request, so it does not claim that information was saved without an accepted result.</p>
-      <p>Redis handles temporary coordination, including rate limits and provider-budget admission. The durable crowd record stays in PostgreSQL. Separating those responsibilities keeps a cache or coordination failure from silently redefining the source of crowd truth.</p>
+      <h2 id="reports">A double tap must not look like two witnesses</h2>
+      <p>Reporting should be a quick tap. Behind it sit ordinary distributed-system problems: a dropped connection, a late response, a second tap, a report that needs correcting.</p>
+      <p>Get this wrong and the evidence lies. A retry counted twice makes a place look better supported than it is. A correction that doesn’t replace the original leaves two answers in the current state.</p>
+      <p>PostgreSQL is the authority for accepted reports. Each submission has a stable identity, so a retry returns the original result instead of counting again. That idempotency is protected by transactions, constraints, and locking when requests overlap. Corrections use the same write path and supersede the earlier observation while keeping the link between them.</p>
+      <p>The interface never says “saved” without an accepted result. Redis handles temporary coordination, such as rate limits and provider-budget admission; the durable record stays in PostgreSQL. A cache failure cannot quietly redefine the source of crowd truth.</p>
 
-      <h2 id="operations">Reliability includes cost and honest failure</h2>
-      <p>Local discovery depends on networks and paid services. A slow provider can make the app feel stuck; repeated requests can also create cost without adding value. I built bounded provider calls, caching, rate limits, budgets, and circuit breakers into the service to contain those failure modes.</p>
-      <p>The fallback depends on what failed. Missing walking-route information can leave distance available. Unavailable optional venue details should not erase a useful comparison. A failed crowd refresh needs an explicit old or unknown state. These are different conditions, so the response records which part of the information is degraded and the interface offers an appropriate recovery path.</p>
-      <p>Frontend and backend delivery are separate. The ECS deployment workflow uses explicit image versions, health checks, service-stability checks, and rollback paths. Those controls make a release inspectable and recoverable. Logs and metrics cover areas such as report outcomes, provider protection, and storage readiness so failures can be investigated at the boundary where they occurred.</p>
-      <p>For a founder-operated product, understandable infrastructure is a practical requirement. I need to be able to explain which dependency is failing, what the user sees, what the failure costs, and how to restore service. Every additional component has to justify the operational work it creates.</p>
+      <h2 id="operations">When a provider fails, say what broke and keep what still works</h2>
+      <p>Local discovery runs on networks and paid services. A slow provider makes the app feel stuck, and repeated requests cost money without adding value.</p>
+      <p>So the service has bounded provider calls, caching, rate limits, budgets, and circuit breakers, each containing a specific failure mode.</p>
+      <p>The fallback depends on what failed. Missing routes fall back to distance. Missing optional details should not erase a useful comparison. A failed crowd refresh shows an explicit old or unknown state. The response records which part is degraded, and the interface offers a matching recovery path. A labeled partial answer beats an error screen.</p>
+      <p>Frontend and backend ship separately. ECS deploys use explicit image versions, health checks, service-stability checks, and rollback paths. Logs and metrics cover report outcomes, provider protection, and storage readiness, so a failure can be traced to its boundary.</p>
+      <p>For a founder-operated product, understandable infrastructure is a requirement. I need to say which dependency is failing, what the user sees, what it costs, and how to restore service. Every component has to justify the work it creates.</p>
 
-      <h2 id="ownership">Building and operating the whole product</h2>
-      <p>My work on BusyNow connects the consumer experience to the system underneath it: deciding what belongs in the comparison, implementing the interface and API, defining the evidence contract, protecting report integrity, and operating the AWS runtime. These decisions are closely related. A promise in the interface becomes a requirement for the data model, failure behavior, and release process.</p>
-      <p>I use Codex and supervised agent workflows to help with implementation, debugging, tests, and review. Changes still need evidence appropriate to their risk and human control over releases. The most useful checks exercise the situations that could break the product’s promise: freshness boundaries, retries, corrections, missing provider data, and recovery after failure.</p>
-      <p>BusyNow is live, and the product remains dependent on the quality and density of information available for a particular place and time. Better coverage and easier contribution are ongoing product challenges. The aim is straightforward: help someone make a useful decision, with a clear understanding of what the information can support.</p>
+      <h2 id="ownership">One owner for the promise and the system behind it</h2>
+      <p>My work runs from the consumer experience to the runtime: what belongs in the comparison, the interface and API, the evidence contract, report integrity, and the AWS operation. A promise on screen becomes a requirement for the data model, failure behavior, and release process.</p>
+      <p>I use Codex and supervised agent workflows for implementation, debugging, tests, and review. Changes still need evidence that fits their risk, and releases stay under human control. The checks that matter most target the product’s promise: freshness boundaries, retries, corrections, missing provider data, and recovery.</p>
+      <p>BusyNow is live, and it still depends on the density of information for a given place and time. Coverage and easier contribution remain open challenges.</p>
+
+      <h2 id="founder-lessons">What I’d tell a founder</h2>
+      <ul>
+        <li><strong>Density beats totals.</strong> A consumer data product is judged one neighborhood and one moment at a time. Measure coverage where your users actually go, not across the whole map.</li>
+        <li><strong>Honesty about uncertainty is a feature.</strong> Label the age and source of every claim, and let “unknown” be an answer. Trust lost to one confident mistake is expensive to win back.</li>
+        <li><strong>Design failure and cost in from day one.</strong> Budgets, circuit breakers, and labeled partial answers protect both the user’s experience and your runway when a provider has a bad day.</li>
+      </ul>
       <p class="project-link"><a class="button button-primary" href="https://busynow.app/">Try BusyNow <span aria-hidden="true">↗</span></a></p>
     </article>
     <aside class="related-essays" aria-label="More from Thomas"><h2>More from Thomas</h2><ul><li><a href="../../resume/#busynow">My BusyNow experience <span aria-hidden="true">→</span></a><span>Résumé</span></li><li><a href="../../about/">About me <span aria-hidden="true">→</span></a><span>Engineering background</span></li></ul><a class="back-link" href="../../blog/">Browse all writing →</a></aside>
