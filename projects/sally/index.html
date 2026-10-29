@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="How Thomas Howard built Sally, a live healthcare voice agent: separate workloads by deadline, let code decide what happened, make failures recoverable, and test where voice agents actually break.">
+  <meta name="description" content="How Thomas Howard built Sally, a healthcare voice agent in live pilot: separate workloads by deadline, let code decide what happened, make failures recoverable, and test where voice agents actually break.">
   <meta name="theme-color" content="#0a0a0f">
   <title>Sally: a healthcare voice agent that checks before it confirms | Thomas Howard</title>
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
@@ -32,7 +32,7 @@
       <dl class="case-facts">
         <div><dt>My role</dt><dd>Lead, Applied AI architecture &amp; development</dd></div>
         <div><dt>Focus</dt><dd>TypeScript · Voice · Tool use · Evaluation</dd></div>
-        <div><dt>Project stage</dt><dd>Live production · Real patient conversations</dd></div>
+        <div><dt>Project stage</dt><dd>Live pilot · Patient outreach calls</dd></div>
       </dl>
       <aside class="case-summary" aria-label="At a glance">
         <p class="case-summary__title">At a glance</p>
@@ -46,7 +46,7 @@
       <nav class="essay-nav" aria-label="In this essay"><p>In this essay</p><ul><li><a href="#workloads">Split by deadline</a></li><li><a href="#context">Corrections mid-call</a></li><li><a href="#actions">Book, then confirm</a></li><li><a href="#operations">Recoverable operations</a></li><li><a href="#evaluation">Testing where it breaks</a></li><li><a href="#value">A record to check</a></li><li><a href="#status">Owning the system</a></li><li><a href="#founder">For founders</a></li></ul></nav>
       <p>Picture a patient calling to book a follow-up. They give a date, pause, correct it, and ask whether Thursday works. In the next couple of seconds Sally has to answer naturally, remember the correction, check real availability, and avoid saying “you’re booked” until a booking actually exists.</p>
       <p>Each failure feels different to the caller. A slow response sounds like silence. Stale context sounds like Sally wasn’t listening. A confirmation without a booking is a broken promise, and in healthcare that can mean a missed appointment.</p>
-      <p>I lead the architecture, development, and operation of Sally, Snap eHealth’s conversational AI system, which is live with real patients. The question I design around is easy to say and hard to build: what may the model say, what may the application do, and what can the final record support?</p>
+      <p>I lead the architecture, development, and operation of Sally, Snap eHealth’s conversational AI system, which is live in pilot, making patient outreach calls for primary care clinics. Booking into live clinic schedules isn’t switched on yet; the booking path below is how Sally is built and tested for it. The question I design around is easy to say and hard to build: what may the model say, what may the application do, and what can the final record support?</p>
 
       <h2 id="workloads">Split the work by deadline, not by feature</h2>
       <p>It is tempting to ask one model call to do everything. Sally runs three separate workloads, each with its own deadline.</p>
