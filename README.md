@@ -20,7 +20,7 @@ Then open http://localhost:8000.
 - `about/` — applied AI experience and approach to solutions architecture
 - `resume/` — readable résumé in the site’s dark terminal theme, with green headings, section navigation, and a green PDF download button
 - `projects/` — project overview and six technical essays: `busynow/`, `nfl-predictor/`, `sally/`, `symphony/`, `ai-evaluation/`, and `referral-intelligence/`
-- `blog/` — all writing and articles
+- `blog/` — all writing: the Writing index has an Essays section (long-form) and a Notes section (shorter frontier notes, tagged "Frontier note"). Both live at `blog/<slug>/`. New essays go at the top of Essays and may update the homepage cards; new notes go at the top of Notes and stay off the homepage.
 - `styles.css` — shared theme, responsive layouts, and reading styles
 - `terminal.js` — progressive typing animation for the homepage introduction
 - `favicon.svg` — terminal icon

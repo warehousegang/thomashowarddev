@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A hosted model returned other customers' data in 155 responses. The model behaved correctly; the serving configuration did not. Lessons on testing outputs, failing closed, and tenant isolation in hosted inference.">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>The Model Did Nothing Wrong: Lessons from a KV Cache Leak | Thomas Howard</title>
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../styles.css?v=project-essays-1">
+  <link rel="canonical" href="https://thomashoward.dev/blog/the-model-did-nothing-wrong/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="The Model Did Nothing Wrong">
+  <meta property="og:description" content="A hosted model returned other customers' data in 155 responses. The model behaved correctly; the serving configuration did not. Lessons on testing outputs, failing closed, and tenant isolation in hosted inference.">
+  <meta property="og:url" content="https://thomashoward.dev/blog/the-model-did-nothing-wrong/">
+  <meta name="twitter:card" content="summary">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../" aria-label="Thomas Howard, home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a>
+      <nav class="desktop-nav" aria-label="Main navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/" aria-current="page">Writing</a><a href="../../projects/">Projects</a><span class="nav-github"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a></span><a href="../../resume/">My Resume</a></nav>
+      <details class="mobile-nav">
+        <summary>Menu</summary>
+        <nav aria-label="Mobile navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/" aria-current="page">Writing</a><a href="../../projects/">Projects</a><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a><a href="../../resume/">My Resume</a></nav>
+      </details>
+    </div>
+  </header>
+  <main id="main" class="site">
+<a class="back-link" href="../../blog/">← Back to writing</a><article class="reading">
+  <h1>The Model Did Nothing Wrong</h1>
+  <p class="deck">A hosted model returned other customers' data in 155 responses. The cause was a serving configuration, not the model, and nothing in the status code or response format signaled it.</p>
+  <p class="meta">Thomas Howard · Frontier note · 5 min read</p>
+  <p>Between August 27 and September 9, a model hosted on Cloudflare Workers AI sometimes answered a prompt with fragments of someone else's request. In total, 155 responses across a small number of customers contained data from other customers' requests sent shortly before.</p>
+  <p>The model behaved correctly the entire time. That is the part I keep thinking about.</p>
+  <p>Cloudflare published a detailed postmortem on October 26, coordinated with an advisory from the maintainers of SGLang, the open-source inference engine involved. It is one of the clearest accounts I have read of how an inference optimization turns into a data exposure. Anyone who sends sensitive data to a hosted model should read it.</p>
+
+  <h2>What happened</h2>
+  <p>GLM-5.3 was offered with a context window of 1,048,576 tokens. The GPU memory reserved for prompt state during prefill, the KV cache pool, held 681,280 tokens. The team knew about the gap before launch. They expected the engine to reject prompts that did not fit, and their pre-launch tests returned successful status codes with no errors, so the gap looked harmless.</p>
+  <p>It was not. The model ran with SGLang in disaggregated mode, where one set of GPUs processes the prompt (prefill), another generates the response (decode), and the cache is handed between them. In that mode, a prompt too long for the pool was not aborted. It was replaced with a one-token placeholder and allowed to continue. The decode side then read cache pages that had never been filled for that request. Those pages still held earlier requests. The caller received HTTP 200 and text built partly from another customer's prompt.</p>
+  <p>Every affected prompt was longer than 681,280 tokens. Security researcher Gadi Evron of Knostic reported the issue through Cloudflare's bug bounty program on September 8. The next day, after declaring an incident, Cloudflare reproduced the leak within 25 minutes, took the model offline within 40 minutes of the declaration, and restored it that evening with a much larger cache pool and an engine patch that rejects oversized requests before any handoff. Cloudflare found no evidence of deliberate exploitation.</p>
+
+  <h2>Three lessons</h2>
+  <p><strong>1. A 200 is not a pass.</strong> Cloudflare names its own testing gap plainly: it validated status codes and performance, not the content or coherence of the output. Those long-context tests passed without errors. In an AI system the response body is the product. Tests that never look at what came back cannot catch this class of bug.</p>
+  <p><strong>2. Fail closed at capacity limits.</strong> The engine had a rejection path. The disaggregated path degraded instead: it substituted a placeholder and kept going. Silent degradation at a resource boundary is a security bug, not a performance quirk. When input exceeds what a system can safely hold, the only acceptable outcome is an error the caller can see. Cloudflare now measures pool size against configured context, from the running engine, before any disaggregated deployment change ships. That is the right instinct: verify the invariant directly instead of trusting a component to enforce it.</p>
+  <p><strong>3. Tenant isolation lives in configuration you cannot see.</strong> From the API, a leaked response looked like any other: HTTP 200, coherent text. Isolation depended on cache sizing, a transfer protocol, and an admission check deep inside the provider's serving stack. That is not a reason to avoid hosted inference. It is a reason to ask better questions of the providers you rely on.</p>
+
+  <h2>What I would add to an AI vendor review</h2>
+  <ul>
+    <li>How are KV and prefix caches scoped: per request, per tenant, or shared?</li>
+    <li>Is configured context length checked against cache capacity before a deployment goes live?</li>
+    <li>Do pre-release tests inspect output content, or only status codes and latency?</li>
+    <li>When a request exceeds a limit, does the system return an error, or does it truncate, substitute, or continue?</li>
+    <li>How and how quickly will you notify customers if their data appears in another tenant's response?</li>
+  </ul>
+  <p>If you run SGLang yourself with prefill/decode disaggregation, Cloudflare recommends v0.5.22 or later, and the SGLang advisory lists further transfer-backend fixes through v0.5.23. Cloudflare recommends measuring KV pool capacity against configured context on every node after any relevant change, and SGLang describes its fix as a complement to that check, not a replacement.</p>
+
+  <h2>Why this matters more in healthcare</h2>
+  <p>In a regulated setting, a leak like this is an incident even though nobody on your side made a mistake. Your code handled the prompt correctly, the API accepted it, and a configuration you never saw exposed it. Contracts and business associate agreements matter, but they do not tell you how a provider partitions its cache. You have to ask.</p>
+  <p>Credit where it is due. Cloudflare and the SGLang maintainers published root causes, timelines, configuration values, and exact fixes, including the parts that reflect poorly on their own testing. That candor is how the rest of us learn, and I would like to see more inference providers do the same.</p>
+
+  <h2>Sources</h2>
+  <ul>
+    <li><a href="https://blog.cloudflare.com/kv-cache-exposure-remediation/" target="_blank" rel="noopener noreferrer">Cloudflare: Cross-request KV cache exposure in the GLM-5.3 Workers AI model, and our remediation with SGLang</a></li>
+    <li><a href="https://www.lmsys.org/blog/2026-10-26-cf-security/" target="_blank" rel="noopener noreferrer">SGLang security update: improving request isolation</a></li>
+  </ul>
+</article>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-intro"><a class="brand" href="../../" aria-label="Thomas Howard, home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a><p>Applied AI, conversational agents, and the architecture behind useful agentic systems.</p></div>
+        <div><h2 class="footer-title">// explore</h2><nav class="footer-links" aria-label="Footer navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../projects/">Projects</a></nav></div>
+        <div><h2 class="footer-title">// connect</h2><div class="footer-links"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="../../resume/">My Resume</a><a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X ↗</a></div></div>
+      </div>
+      <div class="footer-bottom">© 2026 Thomas Howard</div>
+    </div>
+  </footer>
+</body>
+</html>
