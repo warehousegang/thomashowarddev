@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A case study of Referral Intelligence: deterministic specialist ranking, evidence coverage, explainable contributions, abstention, FastAPI service extraction, and future referral-completion modeling.">
+  <meta name="description" content="How Thomas Howard built Referral Intelligence, a production specialist-ranking service that explains every score, exposes missing evidence, and abstains when evidence falls short.">
   <meta name="theme-color" content="#0a0a0f">
   <title>Building Referral Intelligence: ranking with reasons | Thomas Howard</title>
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../../styles.css?v=project-essays-1">
+  <link rel="stylesheet" href="../../styles.css?v=project-essays-2">
   <link rel="stylesheet" href="../evidence-flow.css?v=production-audit-1">
 </head>
 <body>
@@ -27,20 +27,30 @@
     <article class="reading case-study">
       <p class="eyebrow">Project essay</p>
       <h1>Building Referral Intelligence: ranking with reasons</h1>
-      <p class="deck">Building production decision support at Snap eHealth: explainable physician ranking, evidence quality, and explicit recommendation policies.</p>
+      <p class="deck">A production specialist-ranking system at Snap eHealth that shows its reasons, admits when evidence is thin, and never takes action on its own.</p>
       <p class="meta">Thomas Howard · 6 min read</p>
       <dl class="case-facts">
         <div><dt>My role</dt><dd>Architecture &amp; service implementation</dd></div>
         <div><dt>Focus</dt><dd>Python · Explainable ranking · ML data design</dd></div>
         <div><dt>Project stage</dt><dd>Live production · Decision support</dd></div>
       </dl>
-      <nav class="essay-nav" aria-label="In this essay"><p>In this essay</p><ul><li><a href="#boundary">Service boundary</a></li><li><a href="#ranking">Explainable ranking</a></li><li><a href="#missing-evidence">Missing evidence</a></li><li><a href="#abstention">Abstention</a></li><li><a href="#verification">Extraction tests</a></li><li><a href="#prediction">Predictive modeling</a></li><li><a href="#status">Operating the system</a></li></ul></nav>
-      <p>I architect, implement, and operate Referral Intelligence, Snap eHealth’s production physician-recommendation system. It ranks specialist candidates from heterogeneous evidence, explains the factors behind each result, and withholds a recommendation when the evidence does not meet the eligibility policy.</p>
-      <p>My work spans the ranking domain, normalization, evidence adapters, eligibility rules, and service interface. The engineering challenge is making incomplete data useful while keeping the calculation, missing signals, and authority to act visible to the consuming workflow.</p>
+      <aside class="case-summary" aria-label="At a glance">
+        <p class="case-summary__title">At a glance</p>
+        <dl>
+          <div><dt>The problem</dt><dd>Choosing a specialist for a referral means weighing incomplete, uneven evidence. A ranking that hides its reasoning, or treats missing data as good data, sends patients to the wrong place with false confidence.</dd></div>
+          <div><dt>What I built</dt><dd>A production ranking service that scores specialist candidates with explicit weights, explains every point, reports what evidence is missing, and withholds a recommendation when the evidence falls short.</dd></div>
+          <div><dt>Why it matters</dt><dd>Staff can see why a specialist was suggested and when the system is unsure, so a weak recommendation goes to a person for review instead of quietly becoming a referral.</dd></div>
+          <div><dt>The decision I’d defend</dt><dd>Missing signals earn zero points and their weight is not handed to other signals. Some providers score lower as a result, but a sparse profile can never look complete.</dd></div>
+        </dl>
+      </aside>
+      <nav class="essay-nav" aria-label="In this essay"><p>In this essay</p><ul><li><a href="#boundary">Scores don’t act</a></li><li><a href="#ranking">Explain every point</a></li><li><a href="#missing-evidence">Missing isn’t good</a></li><li><a href="#abstention">“Not enough evidence”</a></li><li><a href="#verification">Prove nothing changed</a></li><li><a href="#prediction">Ranking isn’t prediction</a></li><li><a href="#status">Every failure has an answer</a></li><li><a href="#founder-lessons">What I’d tell a founder</a></li></ul></nav>
+      <p>When a patient needs a specialist, someone has to pick one. The evidence behind that choice is rarely complete: quality data for one provider, volume for another, no network information for a third. A system that turns this into a single confident number can send a patient to the wrong place, and nobody can say why.</p>
+      <p>I architect, implement, and operate Referral Intelligence, Snap eHealth’s production physician-recommendation system. It ranks specialist candidates, explains the factors behind each result, and withholds a recommendation when the evidence does not meet the eligibility policy. The hard part is making incomplete data useful while keeping the calculation, the gaps, and the authority to act visible.</p>
 
-      <h2 id="boundary">Separate assessment from workflow authority</h2>
-      <p>The engine began inside Snap Workflows. I designed its extraction into a Python package with an authenticated FastAPI interface, separating domain contracts and scoring rules from HTTP validation and concrete adapters. The ranker consumes normalized models rather than vendor payloads or web-framework objects.</p>
-      <p>The boundary gives the assessment service one responsibility: explain the candidates. Workflows owns user sessions, operational queues, specialist selection, authorization, and EHR actions. This separation keeps a scoring change from acquiring permission to act on a referral.</p>
+      <h2 id="boundary">A score should never carry permission to act</h2>
+      <p>The risk with any recommendation engine is scope creep. Once it is wired into the workflow, a change to a scoring rule can start to behave like a change to who gets referred where, with no human decision in between.</p>
+      <p>The engine began inside Snap Workflows. I designed its extraction into a standalone Python package behind an authenticated FastAPI interface. Domain contracts and scoring rules live apart from HTTP validation and data adapters, and the ranker only sees normalized models, never vendor payloads or web-framework objects.</p>
+      <p>That boundary gives the service one job: assess and explain the candidates. Workflows keeps user sessions, operational queues, specialist selection, authorization, and EHR writes. A scoring change cannot acquire permission to act on a referral.</p>
       <figure class="case-diagram evidence-architecture" aria-labelledby="referral-architecture-title">
         <figcaption id="referral-architecture-title">From referral evidence to an explained recommendation</figcaption>
         <ol class="evidence-flow" role="list">
@@ -53,39 +63,48 @@
         </ol>
         <p class="evidence-architecture__note"><strong>Outside this service:</strong> Workflows owns user authorization, selection, workflow state, and EHR writes. The assessment supplies evidence for that authorized workflow.</p>
       </figure>
-      <p>The package can be verified independently of its consumer. That was a deliberate extraction decision: preserve behavior while making the scoring and API contracts easier to evolve, test, and integrate.</p>
+      <p>The tradeoff is an extra service to run. In return, the package can be tested on its own and its contracts can evolve independently.</p>
 
-      <h2 id="ranking">Make the score inspectable and repeatable</h2>
-      <p>The production ranker uses explicit weights. It normalizes signals to a common scale, computes weighted contributions, and sorts by descending score with a stable provider-identifier tie-break. Factors include quality, condition experience, relevant volume, outcomes and utilization, network alignment, proximity, continuity, and evidence confidence.</p>
-      <p>Explanations come from contributions the calculation actually used. Two specialists can have similar totals for different reasons: one has an established relationship and is nearby, while another has stronger condition-specific evidence. The assessment exposes that tradeoff directly.</p>
-      <p>Explicit weights make assumptions reviewable. For example, condition experience and total volume may reflect overlapping evidence. I keep the contributions visible so that weighting decisions can be examined and revised deliberately rather than hidden inside a plausible narrative.</p>
+      <h2 id="ranking">Every point in the score has to be explainable</h2>
+      <p>A ranking nobody can explain is a ranking nobody should trust in healthcare. If a care coordinator asks “why this doctor?”, the answer has to come from the math, not from a story written after the fact.</p>
+      <p>So the production ranker uses explicit weights. It puts each signal on a common scale, computes weighted contributions, and sorts by score, breaking ties on a stable provider identifier so the same inputs always give the same order. The factors include quality, condition experience, relevant volume, outcomes and utilization, network alignment, proximity, continuity, and evidence confidence.</p>
+      <p>Explanations are built from the contributions the calculation actually used. Two specialists can land on similar totals for different reasons: one has an established relationship and is nearby, another has stronger condition-specific evidence. The assessment shows that tradeoff.</p>
+      <p>Explicit weights also make our own assumptions reviewable. Condition experience and total volume, for example, may partly measure the same thing. Because the contributions are visible, that overlap can be examined and the weights revised on purpose.</p>
 
-      <h2 id="missing-evidence">Preserve missingness and evidence quality</h2>
-      <p>Normalization enforces the input contract. Invalid percentages, nonfinite values, negative or fractional counts, mismatched conditions, and missing provider records are rejected or represented as unavailable evidence. Network compatibility requires compatible plan information, preserving the distinction between provider identity and coverage.</p>
-      <p>Unavailable signals earn no points, and their weights are not redistributed. Coverage is returned separately. This conservative choice prevents a sparse profile from appearing complete because its few observed signals are strong. The tradeoff is that providers with less available data can score lower, so the response exposes the missing factors for review.</p>
-      <p>Confidence labels describe the available outcomes sample. Coverage describes which signals are present. Score describes the weighted assessment. Keeping those meanings separate lets the consumer explain the recommendation without presenting a ranking score as a calibrated outcome probability.</p>
+      <h2 id="missing-evidence">Missing data must not look like good data</h2>
+      <p>The quiet failure in ranking systems is the sparse profile that looks great. A provider with two strong signals and six unknowns can outscore one with a full, honest record if the system fills the gaps generously.</p>
+      <p>Normalization enforces the input contract first. Invalid percentages, nonfinite values, negative or fractional counts, mismatched conditions, and missing provider records are rejected or marked as unavailable. Network compatibility requires compatible plan information, because knowing who a provider is does not tell you whether the patient’s coverage applies.</p>
+      <p>Then the key decision: unavailable signals earn no points, and their weight is not redistributed to the signals that are present. Coverage is reported separately. The cost is real. Providers with less data can score lower. So the response lists the missing factors, and a reviewer can see when a low score reflects thin evidence rather than poor care.</p>
+      <p>I keep three ideas apart. Confidence describes the size of the outcomes sample. Coverage describes which signals are present. Score is the weighted assessment. None of them is a calibrated probability that the referral will go well, and the consumer can explain a recommendation without pretending otherwise.</p>
 
-      <h2 id="abstention">Make abstention a useful domain result</h2>
-      <p>I separate ranking from eligibility. The highest-scoring candidate must still satisfy required signals, quality-profile requirements, sample-size confidence, and confirmed network compatibility. If those checks fail, the service returns the ranked assessment with reasons and withholds a recommended provider.</p>
-      <p>That is a valid decision-support result. The API distinguishes it from an authentication failure, malformed request, unknown context, or service outage so the workflow can route insufficient evidence for review.</p>
-      <p>The policy evaluates the top candidate rather than silently substituting the next person. Changing that rule would alter the recommendation policy. Stable ordering and explicit abstention make the choice visible and testable.</p>
+      <h2 id="abstention">“Not enough evidence” is a real answer</h2>
+      <p>Every ranking has a top result. That does not mean the top result is good enough.</p>
+      <p>I separate ranking from eligibility. The highest-scoring candidate must still meet the required signals, quality-profile requirements, sample-size confidence, and confirmed network compatibility. If it fails, the service returns the full ranked assessment with reasons and withholds a recommended provider.</p>
+      <p>That is a valid result, not an error. The API distinguishes it from an authentication failure, a malformed request, an unknown context, or an outage, so the workflow can route insufficient evidence to a person instead of retrying or crashing.</p>
+      <p>The policy checks the top candidate and does not silently fall through to the next one. Falling through would be a different recommendation policy, and changing policy should be a visible, tested decision.</p>
 
-      <h2 id="verification">Verify behavior across the package boundary</h2>
-      <p>Before extraction, we captured full assessment responses for <strong>six controlled synthetic scenarios</strong>. The standalone API is checked against those independent parity fixtures for ordering, contributions, coverage, confidence, missing evidence, and abstention.</p>
-      <p>Verification installs the built wheel in a separate environment, starts it outside the checkout, and exercises loopback HTTP. That catches missing package resources and accidental imports from the source directory that ordinary unit tests can miss.</p>
-      <p>API tests cover bearer authentication, invalid input, unknown contexts, cache behavior, and the distinction between abstention and a transport error. Fixture adapters are restricted to development and testing. CI runs locked package checks so the delivered package and its domain contract are verified together.</p>
-      <p>This testing strategy protects two boundaries: extraction must preserve the assessment, and the packaged service must work independently of the development checkout. A change to weights or eligibility can then be reviewed as an explicit behavior change.</p>
+      <h2 id="verification">Prove the extraction changed nothing</h2>
+      <p>Moving a production engine out of the application it grew up in is exactly when behavior drifts unnoticed.</p>
+      <p>Before extraction, we captured full assessment responses for controlled synthetic scenarios. The standalone API is checked against those parity fixtures for ordering, contributions, coverage, confidence, missing evidence, and abstention.</p>
+      <p>Verification installs the built wheel in a separate environment, starts it outside the source checkout, and calls it over loopback HTTP. That catches missing package resources and accidental imports from the source directory, which ordinary unit tests can miss.</p>
+      <p>API tests cover bearer authentication, invalid input, unknown contexts, cache behavior, and the difference between abstention and a transport error. Fixture adapters are restricted to development and testing. CI runs locked package checks so the shipped package and its domain contract are verified together. A change to weights or eligibility then shows up as an explicit behavior change, ready for review.</p>
 
-      <h2 id="prediction">Keep learned prediction explicit</h2>
-      <p>The deterministic ranker assesses specialist candidates under defined rules. Predicting whether an eligible referral completes within 30 days is a separate modeling problem, with a different target, dataset, and evaluation contract.</p>
-      <p>I explore that problem in Physician Referral Success Predictor, a separate educational project. Its NumPy and pandas package generates and validates <strong>20,000 fictional referral candidates by default</strong>. Invented relationships among wait time, distance, capacity, experience, and specialty feed a logistic simulation. Insurance acceptance is an eligibility gate: ineligible candidates have no applicable success label.</p>
-      <p>The main design decision is temporal correctness. Features must be available when a referral is created. A success becomes observable at its completion event; a non-completion becomes observable after the full 30-day window. Pending referrals remain pending, and future or same-timestamp outcomes are excluded from historical features.</p>
-      <p>The generator updates histories as outcomes become available, while validation independently recomputes them. Tests cover reproducibility, schema rules, eligibility, cold starts, and exact time boundaries. A physician with no observed history receives a neutral default and an explicit zero count.</p>
-      <p>The implemented work is the data pipeline and temporal validation. Chronological splits, fitted baselines, and <a href="https://scikit-learn.org/stable/modules/calibration.html">probability calibration</a> are the next modeling steps. My <a href="../nfl-predictor/">Fourth Down</a> project applies related questions to historical sports data: define the outcome, enforce the prediction-time boundary, and compare against a simple baseline.</p>
+      <h2 id="prediction">Ranking is not prediction</h2>
+      <p>A ranking score is not the “chance this referral works out.” The ranker assesses candidates under defined rules. Predicting whether an eligible referral completes within 30 days is a different problem, with a different target, dataset, and evaluation contract.</p>
+      <p>That prediction work is a separate project, Physician Referral Success Predictor. It is in development on synthetic data and has not shipped. Its NumPy and pandas package generates and validates <strong>20,000 fictional referral candidates by default</strong>. Invented relationships among wait time, distance, capacity, experience, and specialty feed a logistic simulation. Insurance acceptance is an eligibility gate: ineligible candidates have no success label at all.</p>
+      <p>The main design concern is time. A model that peeks at the future looks brilliant in testing and fails in use. Features must be available when the referral is created. A success becomes observable at its completion event; a non-completion only after the full 30-day window. Pending referrals stay pending, and future or same-timestamp outcomes are excluded from historical features.</p>
+      <p>The generator updates histories as outcomes arrive, and validation recomputes them independently. Tests cover reproducibility, schema rules, eligibility, cold starts, and exact time boundaries. A physician with no history gets a neutral default and an explicit zero count.</p>
+      <p>What exists today is the data pipeline and temporal validation. Chronological splits, fitted baselines, and <a href="https://scikit-learn.org/stable/modules/calibration.html">probability calibration</a> come next. My <a href="../nfl-predictor/">Fourth Down</a> project works through related questions on historical sports data: define the outcome, enforce the prediction-time boundary, and compare against a simple baseline.</p>
 
-      <h2 id="status">Operate an explainable decision boundary</h2>
-      <p>I keep input validity, evidence coverage, ranking, eligibility, and workflow authorization separate through the service contract. Each failure has a meaningful result: reject invalid data, expose missing evidence, abstain when policy requires it, or return an explained recommendation for the authorized workflow.</p>
-      <p>That separation also makes changes reviewable. Engineers can identify whether a different recommendation came from updated evidence, a normalization rule, a weight, or an eligibility decision, then verify the affected behavior before release.</p>
+      <h2 id="status">Every failure gets its own answer</h2>
+      <p>When a recommendation changes, someone will ask why. Without clear boundaries, the honest answer is “we’re not sure.”</p>
+      <p>The service contract keeps input validity, evidence coverage, ranking, eligibility, and workflow authorization separate. Each failure has a distinct result: reject invalid data, expose missing evidence, abstain when policy requires it, or return an explained recommendation to the authorized workflow.</p>
+      <p>That also makes changes reviewable. Engineers can tell whether a different recommendation came from new evidence, a normalization rule, a weight, or an eligibility decision, and verify the affected behavior before release.</p>
+
+      <h2 id="founder-lessons">What I’d tell a founder</h2>
+      <p><strong>Keep the scorer and the actor apart.</strong> If the component that ranks options can also act on them, every scoring tweak becomes an unreviewed operational change.</p>
+      <p><strong>Make “I don’t know” a first-class output.</strong> A system that can abstain, with reasons, earns more trust than one that always has an answer.</p>
+      <p><strong>Don’t let a score impersonate a probability.</strong> Ranking under rules and predicting outcomes are different problems; ship the one you can defend and label the other honestly.</p>
 
     </article>
     <aside class="related-essays" aria-labelledby="related-title"><h2 id="related-title">Explore the other projects</h2><ul><li><a href="../nfl-predictor/">Fourth Down <span aria-hidden="true">→</span></a><span>Predictive machine learning</span></li><li><a href="../sally/">Sally <span aria-hidden="true">→</span></a><span>Conversational AI</span></li><li><a href="../symphony/">Symphony <span aria-hidden="true">→</span></a><span>Agent orchestration</span></li><li><a href="../ai-evaluation/">AI Evaluation <span aria-hidden="true">→</span></a><span>Quality &amp; evaluation</span></li></ul><a class="back-link" href="../../blog/">Browse all writing →</a></aside>
