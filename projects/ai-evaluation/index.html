@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Inside Snap eHealth’s AI evaluation work: goldsets, guardrails, independent LLM judges, repeated sampling, demographic invariance, and real-model validation through Amazon Bedrock.">
+  <meta name="description" content="How Thomas Howard built the evaluation system that gates Snap eHealth’s AI releases: behavior contracts, deterministic checks, independent LLM judges, repeated sampling, and reproducible evidence of what changed.">
   <meta name="theme-color" content="#0a0a0f">
   <title>Building AI evaluations that explain what changed | Thomas Howard</title>
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../../styles.css?v=project-essays-1">
+  <link rel="stylesheet" href="../../styles.css?v=project-essays-2">
   <link rel="stylesheet" href="../evidence-flow.css?v=production-audit-1">
 </head>
 <body>
@@ -27,24 +27,36 @@
     <article class="reading case-study">
       <p class="eyebrow">Project essay</p>
       <h1>Building AI evaluations that explain what changed</h1>
-      <p class="deck">Designing model-quality measurement for Snap eHealth’s production AI: behavior contracts, regression diagnosis, and reproducible release evidence.</p>
-      <p class="meta">Thomas Howard · 6 min read</p>
+      <p class="deck">How I built model-quality measurement for Snap eHealth’s production AI, so a release rests on evidence of what changed rather than a demo that looked good.</p>
+      <p class="meta">Thomas Howard · 7 min read</p>
       <dl class="case-facts">
         <div><dt>My role</dt><dd>Evaluation architecture &amp; implementation</dd></div>
         <div><dt>Focus</dt><dd>Python · Amazon Bedrock · Model evaluation</dd></div>
-        <div><dt>Project stage</dt><dd>Live production · AI quality</dd></div>
+        <div><dt>Project stage</dt><dd>Live production · Gates real releases</dd></div>
       </dl>
-      <nav class="essay-nav" aria-label="In this essay"><p>In this essay</p><ul><li><a href="#contract">Behavior contracts</a></li><li><a href="#layers">Evaluation architecture</a></li><li><a href="#reproducibility">Reproducible bundles</a></li><li><a href="#debugging">Diagnosing failures</a></li><li><a href="#mock-and-real">Verified baselines</a></li><li><a href="#status">Operating the system</a></li></ul></nav>
-      <p>I build and operate AI evaluation infrastructure for Snap eHealth’s production systems. My work connects versioned behavior contracts, deterministic checks, independent model judging, reproducible execution, and release criteria. It gives engineers a concrete explanation of what changed when a model, prompt, or policy changes.</p>
-      <p>A convincing response is easy to demonstrate. Detecting a regression requires a measurement system that can separate model behavior from evaluator defects and policy disagreements. I designed the evaluation architecture around those distinctions.</p>
-      <p>The central suite covers a patient-facing health chatbot and Health Risk Assessment summaries. Controlled synthetic scenarios exercise ordinary behavior, difficult edge cases, and adversarial input as part of the production quality process.</p>
+      <aside class="case-summary" aria-label="At a glance">
+        <p class="case-summary__title">At a glance</p>
+        <dl>
+          <div><dt>The problem</dt><dd>AI output that reads well can still be wrong, and a prompt or model change can quietly break behavior patients rely on. A good demo can’t tell you whether a release regressed.</dd></div>
+          <div><dt>What I built</dt><dd>An evaluation system for Snap eHealth’s health chatbot and Health Risk Assessment summaries that combines deterministic checks, an independent LLM judge, repeated sampling, and reproducible run bundles, ending in an executable release gate.</dd></div>
+          <div><dt>Why it matters</dt><dd>Releases ship on evidence instead of impressions. When quality drops, engineers can trace it to the exact case and configuration instead of guessing at the prompt.</dd></div>
+          <div><dt>The decision I’d defend</dt><dd>An LLM judge never overrides a failed hard check. A favorable score can forgive a wording difference, but not a safety or behavioral failure.</dd></div>
+        </dl>
+      </aside>
+      <nav class="essay-nav" aria-label="In this essay"><p>In this essay</p><ul><li><a href="#contract">Define “correct” first</a></li><li><a href="#layers">Rules outrank the judge</a></li><li><a href="#reproducibility">Trace every result</a></li><li><a href="#debugging">Find who is wrong</a></li><li><a href="#mock-and-real">Test the evaluator</a></li><li><a href="#status">Healthy is not correct</a></li><li><a href="#founder">What I’d tell a founder</a></li></ul></nav>
+      <p>A health chatbot can look excellent in a demo and still be wrong in the way that matters. Change a prompt or swap a model, and a summary could start dropping what a patient said, or turn a denied symptom into a reported one. Fluent text hides that kind of failure well.</p>
+      <p>Without a way to measure it, every release is a judgment call made on a few good-looking responses. I designed, built, and operate the evaluation system that now gates releases of Snap eHealth’s production AI. When a model, prompt, or policy changes, it tells engineers what changed and where, and gives the person approving the release the evidence to decide.</p>
+      <p>The central suite covers a patient-facing health chatbot and Health Risk Assessment (HRA) summaries. Controlled synthetic scenarios exercise ordinary behavior, difficult edge cases, and adversarial input.</p>
 
-      <h2 id="contract">Define the behavior before measuring it</h2>
-      <p>I start with the output’s job. A chatbot must respond appropriately within its scope. An HRA summary must preserve the meaning of supplied answers. Both need privacy and safety controls, but they need different quality contracts.</p>
-      <p>For a summary, “the patient denies a symptom” must remain a negative finding. Missing information stays missing, and uncertainty stays visible. These properties can be tested while allowing several acceptable phrasings.</p>
-      <p>Goldsets supply reference cases. Separate collections cover guardrails, adversarial instructions, and expanded clinical quality. Category-level results keep a strong average from concealing a consequential failure in a smaller scenario family.</p>
+      <h2 id="contract">Write down what “correct” means before you score anything</h2>
+      <p>The first risk is measuring the wrong thing. A chatbot and a summary can both sound fluent while failing at completely different jobs. One generic quality score hides more than it shows.</p>
+      <p>So I start with the output’s job. The chatbot has to respond appropriately and stay inside its scope. The HRA summary has to preserve the meaning of what the patient actually answered. Both need privacy and safety controls, but each gets its own behavior contract.</p>
+      <p>The contract is concrete. If the patient denies a symptom, the summary must keep it as a negative finding. Missing information stays missing. Uncertainty stays visible. Those properties are testable, and they still allow many acceptable phrasings.</p>
+      <p>Goldsets supply the reference cases, with separate collections for guardrails, adversarial instructions, and expanded clinical quality. I report results by category, because a strong average can conceal a consequential failure in a small family of scenarios.</p>
 
-      <h2 id="layers">Combine complementary forms of evidence</h2>
+      <h2 id="layers">Never let a good score overrule a failed safety check</h2>
+      <p>An LLM judge is good at nuance and bad at being a rule. If its score can outvote a hard check, a well-written unsafe answer passes.</p>
+      <p>The system uses two kinds of evidence with a strict order between them. Deterministic checks enforce explicit requirements: required behavior, forbidden content, privacy rules, expected concepts. A separate model with its own rubric judges semantic quality such as completeness, clarity, scope, and faithfulness. The judge can accept a reasonable wording difference. It cannot turn a hard failure into a pass.</p>
       <figure class="case-diagram evidence-architecture" aria-labelledby="evaluation-architecture-title">
         <figcaption id="evaluation-architecture-title">From a versioned behavior contract to a human release decision</figcaption>
         <ol class="evidence-flow" role="list">
@@ -58,32 +70,36 @@
         </ol>
         <p class="evidence-architecture__note"><strong>Precedence matters:</strong> model judging can resolve a soft wording mismatch, but cannot turn a deterministic safety or behavioral failure into a passing sample. Configured critical-failure gates also block release.</p>
       </figure>
-      <p>Deterministic checks enforce explicit requirements. The independent judge handles semantic qualities such as completeness, clarity, appropriate scope, and faithfulness. It can resolve an acceptable wording difference while hard behavioral and safety failures retain precedence.</p>
-      <p>Repeated sampling measures stability by retaining each generation and its outcome. Paired scenarios hold the substantive input constant while varying controlled demographic wording. These produce separate views of inconsistency: variation across repeated execution and variation under a specific change to the input.</p>
-      <p>I keep the judge’s rubric and explanation alongside its score. That makes unexpected judgments inspectable and supports calibration against human review, including cases where the candidate and judge share a blind spot.</p>
+      <p>One run is also not enough. Repeated sampling keeps every generation and its outcome, which shows whether the model is stable or just got lucky once. Paired scenarios hold the substance of an input constant and vary only controlled demographic wording. That separates two different problems: drift across repeated runs, and a change in behavior caused by who the patient appears to be.</p>
+      <p>The cost is that you now depend on a second model. I keep the judge’s rubric and explanation next to every score, so a surprising judgment can be inspected and calibrated against human review. That matters most when the candidate and the judge share a blind spot.</p>
 
-      <h2 id="reproducibility">Make every result traceable to its configuration</h2>
-      <p>I treat the evaluation bundle as the unit of change. Prompts, model parameters, guardrail policies, datasets, and evaluation configuration travel together. Dataset and prompt-registry fingerprints identify the tested assets, and the reproducibility manifest records the seed.</p>
-      <p>Canonical JSON makes identical fixture-backed inputs byte-reproducible. For real-provider runs, the bundle identifies the conditions being compared while individual samples capture model variability. This supports investigation of a regression without relying on a remembered prompt or an overwritten result.</p>
-      <p>Reports retain checks, judge explanations, repeated samples, and category and cohort summaries, with sensitive fields redacted before persistence. An engineer can trace an aggregate change to the exact failing case and the checks that produced its result.</p>
-      <p>Executable release criteria combine overall pass rate, critical failures, repeated-sample stability, judge quality, and paired-scenario consistency. The runner returns a failing exit status when the configured gate fails, giving downstream automation a deterministic decision boundary.</p>
+      <h2 id="reproducibility">Make every result traceable to the configuration that produced it</h2>
+      <p>A regression you can’t reproduce turns into an argument. Someone remembers a different prompt, a result gets overwritten, and the team debates instead of fixing.</p>
+      <p>I treat the evaluation bundle as the unit of change. Prompts, model parameters, guardrail policies, datasets, and evaluation configuration travel together. Fingerprints of the dataset and prompt registry identify exactly what was tested, and a reproducibility manifest records the seed.</p>
+      <p>For fixture-backed runs, canonical JSON makes identical inputs byte-for-byte reproducible. Real model calls vary, so there the bundle pins the conditions being compared and the individual samples capture the variability. Reports keep the checks, judge explanations, samples, and category and cohort summaries, with sensitive fields redacted before anything is stored. An engineer can follow an aggregate drop down to the exact failing case.</p>
+      <p>The gate itself is code. Release criteria combine overall pass rate, critical failures, repeated-sample stability, judge quality, and paired-scenario consistency. When the configured gate fails, the runner exits with a failing status. Downstream automation gets a deterministic boundary, not a dashboard to interpret.</p>
 
-      <h2 id="debugging">Diagnose the failure before changing the prompt</h2>
-      <p>I distinguish four failure classes: poor model behavior, an evaluator false positive, an ambiguous expected answer, and a policy decision. Each needs a different response. A model defect calls for a candidate change; a faulty assertion calls for a test correction; an unresolved policy needs a decision from its owner.</p>
-      <p>Sally provided a concrete example. A faster speech path let a conversational test advance before background analysis arrived. The apparent regression partly measured the evaluator’s pacing. I made turn timing and accepted-memory arrival explicit so the test measured conversational continuity under the intended workload.</p>
-      <p>That correction preserved the application’s latency architecture. Blocking every turn on analysis would have made the test easier to pass while changing the behavior it was supposed to protect.</p>
-      <p>A structured finding then supports a targeted repair and rerun. I retain the original failure, the changed configuration, and the resulting evidence so reviewers can judge whether the correction addresses the cause. Independent review keeps repairs accountable to the behavior contract.</p>
+      <h2 id="debugging">Find out who is wrong before you touch the prompt</h2>
+      <p>The most expensive mistake in evaluation is fixing the wrong thing. If every red result triggers a prompt edit, you end up tuning the model to satisfy a broken test.</p>
+      <p>I sort failures into four classes: the model behaved poorly, the evaluator raised a false positive, the expected answer was ambiguous, or the case is really a policy decision. A model defect calls for a candidate change. A faulty assertion calls for a test fix. An open policy question goes to its owner.</p>
+      <p>Sally gave me a concrete case. A faster speech path let a conversational test advance before background analysis had arrived, so part of the apparent regression was the test’s own pacing. I made turn timing and the arrival of accepted memory explicit, so the test measured conversational continuity under the intended workload.</p>
+      <p>The easy fix was to block every turn on analysis. The test would have passed, and the latency design it was meant to protect would have been gone. Every repair keeps the original failure, the changed configuration, and the new evidence together, so an independent reviewer can judge whether the fix addressed the cause.</p>
 
-      <h2 id="mock-and-real">Test the evaluator and measure the model</h2>
-      <p>The suite has mock, fixture, and real-provider execution paths. Its <strong>29 passing offline tests</strong> exercise case loading, rule application, report generation, redaction, and gate behavior. Mock execution provides fast regression feedback on the measurement infrastructure.</p>
-      <p>Real-provider execution uses Amazon Bedrock for candidate inference and a separate model for judging. The recorded chatbot baseline used a Sonnet candidate and a Haiku judge and passed <strong>77 of 77 scenarios in one run, with one sample per case</strong>. That result is retained with its configuration and scenario coverage.</p>
-      <p>The HRA suite adds <strong>34 scenarios</strong>: two reference cases, two guardrail cases, and thirty expanded cases. They target the summary contract through expected concepts, faithfulness checks, and semantic review. Keeping product-specific results separate makes regressions easier to locate.</p>
-      <p>Public <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/evaluation.html">Amazon Bedrock evaluation documentation</a> describes the platform’s evaluation options. My engineering contribution is the application-specific contracts, datasets, runners, result handling, and interpretation that make those capabilities useful for Snap’s systems.</p>
+      <h2 id="mock-and-real">Test the evaluator, then measure the model</h2>
+      <p>An evaluator is software, and software has bugs. If the measuring stick is wrong, its results look authoritative and still mislead.</p>
+      <p>The suite has three execution paths: mock, fixture, and real provider. Offline tests cover case loading, rule application, report generation, redaction, and gate behavior. Mock runs give fast feedback whenever the measurement code itself changes.</p>
+      <p>Real-provider runs use Amazon Bedrock for the candidate and a separate model as judge. The recorded chatbot baseline used a Sonnet candidate with a Haiku judge, and it is retained with its configuration and scenario coverage so later runs have an honest comparison point. The HRA suite stays separate, with reference, guardrail, and expanded cases aimed at the summary contract through expected concepts, faithfulness checks, and semantic review. Separate results per product make a regression easier to locate.</p>
+      <p>Public <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/evaluation.html">Amazon Bedrock evaluation documentation</a> describes the platform’s evaluation options. My contribution is the application-specific part: the contracts, datasets, runners, result handling, and interpretation that make those options useful for Snap’s systems.</p>
 
-      <h2 id="status">Operate a quality process that explains decisions</h2>
-      <p>I organize model-quality review around the tested bundle and the resulting failure evidence. Candidate and judge identities, scenario coverage, repeated samples, and category changes give the reviewer enough context to decide what should progress, what needs repair, and what requires policy review.</p>
-      <p>The distinction between application health and model behavior shapes that process. A service can respond successfully while producing an incomplete summary or crossing a conversational boundary. Behavioral evaluations make those failures visible alongside ordinary software checks.</p>
-      <p>The operational discipline is to preserve the regression, correct its cause, and keep it in the suite. That makes each production lesson part of the next release decision and gives engineering teams an explanation they can inspect beyond the aggregate score.</p>
+      <h2 id="status">A healthy service can still give a bad answer</h2>
+      <p>Ordinary software checks tell you the service responded. They won’t tell you the summary left something out, or that the chatbot crossed a conversational boundary. Behavioral evaluations put those failures next to the ordinary checks.</p>
+      <p>Release review is organized around the tested bundle and its failure evidence: candidate and judge identities, scenario coverage, repeated samples, and changes by category. That gives the reviewer enough context to decide what progresses, what needs repair, and what needs a policy decision.</p>
+      <p>The discipline is simple to state. Preserve the regression, fix its cause, and keep it in the suite. Each production lesson becomes part of the next release decision.</p>
+
+      <h2 id="founder">What I’d tell a founder</h2>
+      <p><strong>Define “correct” per output before you pick an evaluator.</strong> A single quality score across different products will hide the failure you most need to see.</p>
+      <p><strong>Put a hard order between rules and model judgment.</strong> An LLM judge is useful, but it should never be able to pass something a deterministic check failed.</p>
+      <p><strong>Treat the evaluator as production code.</strong> When a result looks like a regression, find out whether the model, the test, or the policy is wrong before anyone edits a prompt.</p>
 
     </article>
     <aside class="related-essays" aria-labelledby="related-title"><h2 id="related-title">Explore the other projects</h2><ul><li><a href="../sally/">Sally <span aria-hidden="true">→</span></a><span>Conversational AI</span></li><li><a href="../symphony/">Symphony <span aria-hidden="true">→</span></a><span>Agent orchestration</span></li><li><a href="../referral-intelligence/">Referral Intelligence <span aria-hidden="true">→</span></a><span>Decision support</span></li></ul><a class="back-link" href="../../blog/">Browse all writing →</a></aside>
