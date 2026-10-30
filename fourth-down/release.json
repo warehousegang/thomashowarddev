@@ -89,11 +89,12 @@
     "data/current/forecast-2026-fb8d27cf43f9c34f93c38fd9ae2cedd83ec7328d5e6e08746ccec868d14d1789.json": "fb8d27cf43f9c34f93c38fd9ae2cedd83ec7328d5e6e08746ccec868d14d1789",
     "data/current/latest.json": "1b211d357f3866cc27325cc3427fdc13f96896ef6c22bd155629bcfcd70db1d1",
     "data/demo.json": "41c3ad0d8d2997238b464f196b700ce328f38eb6e93831a18d504c7ef6aa24a9",
-    "data/game-day.json": "ef3bc64284920a0f03f35b5bf9d216c830188064918d09ad60c9d4d203a34dbd",
-    "data/operations/latest.json": "430a0b448ca8ddb42493a7ea00c707d384c33480cef95b81063c11d05a031edd",
+    "data/game-day.json": "9bd81603c4b5b020bb3bde9b232551720bb40001aeeb159e32147f0bbe744865",
+    "data/operations/latest.json": "7d43e6e385ea2062b0cc7aaccaa9caf3564916fef9ee60b742bbd098a637f85e",
     "data/operations/operations-08d80d80d794f1de4ee9b88dec9cd1ecd298add18c1b3613c65f250f89e01631.json": "08d80d80d794f1de4ee9b88dec9cd1ecd298add18c1b3613c65f250f89e01631",
     "data/operations/operations-0a21283c5bfd13265e43ac345507d6cf1a986bd4fdda279e7ce6c04716f1c95f.json": "0a21283c5bfd13265e43ac345507d6cf1a986bd4fdda279e7ce6c04716f1c95f",
     "data/operations/operations-12555455a00214e3048d4a6d300fbac6921eeb0081db2c55cc91733ebe0bdd60.json": "12555455a00214e3048d4a6d300fbac6921eeb0081db2c55cc91733ebe0bdd60",
+    "data/operations/operations-128d5649e1935d06c66a3658b9e93c248864b48b50ff40ee9f9e16aa1616c2d1.json": "128d5649e1935d06c66a3658b9e93c248864b48b50ff40ee9f9e16aa1616c2d1",
     "data/operations/operations-14d4507fc99b72d0025583fd860743d37d1ad38560e722f3f953f1ee38049756.json": "14d4507fc99b72d0025583fd860743d37d1ad38560e722f3f953f1ee38049756",
     "data/operations/operations-1bd77cb73ee923ab70bd0c514d6a5b8f6e8b161d3cf6dd2cb1d72a067fce84ff.json": "1bd77cb73ee923ab70bd0c514d6a5b8f6e8b161d3cf6dd2cb1d72a067fce84ff",
     "data/operations/operations-23753a5f95b610beadf1513bfdc16f546f35d381b6d68153c2738147c6d0e141.json": "23753a5f95b610beadf1513bfdc16f546f35d381b6d68153c2738147c6d0e141",
@@ -137,5 +138,5 @@
     "index.html": "351e03e01dc925d34648635ec06568f150a2014fd3af9eed28888c985ff0d7a8"
   },
   "schema_version": 1,
-  "source_commit": "0c0fb075ef87aab3208270a56f5aab6a847e4ae6"
+  "source_commit": "fd79fb61d108601c79730a66147ba0af1c00a03c"
 }

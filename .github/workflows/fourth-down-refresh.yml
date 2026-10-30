@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: warehousegang/fourth-down
-          ref: 0c0fb075ef87aab3208270a56f5aab6a847e4ae6
+          ref: fd79fb61d108601c79730a66147ba0af1c00a03c
           path: source
           persist-credentials: false
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
