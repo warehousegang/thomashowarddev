@@ -296,3 +296,6 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 3rem 0; }
   .sm-caption { font-size: .9rem; color: rgba(255,255,255,.9); }
   .sally-button { position: static; margin: 0; font-size: 1rem; }
 }
+
+/* Homepage: name card matches the full width of the cards below */
+.hero .terminal { max-width: none; }
