@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="How I'm building the BusyNow Voice Concierge: a voice agent that forecasts how busy a place will be with its own model, answers questions from a small knowledge base, and never says a number it wasn't given.">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>Building a Voice Concierge That Never Guesses | Thomas Howard</title>
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../styles.css?v=project-essays-2">
+  <style>
+    .concierge-logo { margin: 8px 0 32px; }
+    .concierge-logo img { display: block; width: min(100%, 447px); height: auto; border-radius: 10px; border: 1px solid var(--rule); }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../" aria-label="Thomas Howard, home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a>
+      <nav class="desktop-nav" aria-label="Main navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/" aria-current="page">Writing</a><a href="../../notes/">Notes</a><a href="../../projects/">Projects</a><span class="nav-github"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a></span><a href="../../resume/">My Resume</a></nav>
+      <details class="mobile-nav">
+        <summary>Menu</summary>
+        <nav aria-label="Mobile navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/" aria-current="page">Writing</a><a href="../../notes/">Notes</a><a href="../../projects/">Projects</a><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a><a href="../../resume/">My Resume</a></nav>
+      </details>
+    </div>
+  </header>
+  <main id="main" class="site">
+    <a class="back-link" href="../">← All writing</a>
+    <article class="reading">
+      <p class="eyebrow">Voice agents · Predictive ML · BusyNow</p>
+      <h1>Building a Voice Concierge That Never Guesses</h1>
+      <p class="deck">How I’m building a voice agent for BusyNow that forecasts crowds with its own model, answers from a small knowledge base, and never says a number it wasn’t given.</p>
+      <p class="meta">Thomas Howard · 6 min read</p>
+      <figure class="concierge-logo"><img src="../../assets/busynow-concierge-logo-dark.png" alt="BusyNow Concierge" width="447" height="178"></figure>
+      <nav class="essay-nav" aria-label="In this essay"><p>In this essay</p><ul><li><a href="#rule">The rule</a></li><li><a href="#how-it-works">How it works</a></li><li><a href="#in-public">Running it in public</a></li><li><a href="#why">Why build it this way</a></li></ul></nav>
+<p>Most of the questions people ask about a place are really about time. Is the coffee shop packed right now? Will the grocery store be a zoo on Saturday morning? When’s the quietest time to go today?</p>
+<p>I built <a href="../../projects/busynow/">BusyNow</a>, a free app that shows how busy nearby places are, to answer the first of those. Now I’m building the next step: a voice concierge on the BusyNow site. You tap a button, ask out loud, and it answers in a natural voice. “The Whole Foods on Houston is usually at its busiest at 11 on Saturdays. Around 9 is a better bet.”</p>
+<p>Under the hood it combines three things that usually get talked about separately: a forecasting model I train myself, a small knowledge base about each place, and a real-time voice model that ties them together. This piece explains how it fits together and the one rule that shapes all of it.</p>
+
+<h2 id="rule">The rule: the voice never says a number it wasn’t given</h2>
+<p>Voice agents are persuasive. A confident, friendly voice saying “it’s about 40% full” sounds true whether or not anything backs it up. That’s the real risk with putting a language model behind a microphone. It isn’t rudeness or odd phrasing; it’s a made-up fact delivered well.</p>
+<p>So the concierge is built around one rule: every busyness number it speaks has to come from a tool my code ran during that conversation. The voice model can understand the question, decide which tool to call and turn the result into a natural sentence. It can’t produce the number itself.</p>
+<p>The same goes for facts about a place. If the knowledge base doesn’t say a café has wifi, the concierge says it doesn’t know. When a place has too little history for a trustworthy forecast, the right answer is “I don’t have enough data for that place yet,” not a plausible guess. BusyNow already works this way: it shows “unknown” instead of inventing a crowd level. The concierge keeps that promise out loud.</p>
+<p>This is the principle I come back to in all my AI work. The model proposes; the application decides what actually happens, and the important facts get checked in code.</p>
+
+<h2 id="how-it-works">How it works</h2>
+<p>The system has four parts, all on AWS: a forecasting model, a knowledge base, a voice model and a small server in the middle that controls everything.</p>
+<h3>Forecasting: predicting how busy a place will be</h3>
+<p>The forecast is classic machine learning, not a language model. It takes a place, a day and an hour, and predicts busyness on the same scale BusyNow already shows.</p>
+<p>It learns from BusyNow’s own history of hourly readings, using simple features: hour of day, day of week, the kind of place, holidays, recent trends, and what the same hour looked like last week. The model is gradient-boosted trees (LightGBM). It’s small, fast and well suited to this kind of tabular data, and a prediction takes milliseconds.</p>
+<p>The part I care about most is the baseline. The simplest reasonable forecast is “same as this hour last week,” and that’s hard to beat for a lot of places. My model has to beat it on weeks it has never seen, or it doesn’t ship. It retrains every week and replaces the current model only when it measurably does better.</p>
+<h3>Knowledge: answering questions about the place itself</h3>
+<p>Some questions aren’t about crowds at all. Do they open early? Is there seating? For those, the concierge uses retrieval-augmented generation: it looks up a short document about that specific place and answers only from what it finds.</p>
+<p>The documents live in an Amazon Bedrock Knowledge Base, and every lookup is filtered to the one place being discussed. That keeps a question about one café from pulling in facts about the café next door.</p>
+<h3>Voice: one model that listens and speaks</h3>
+<p>For the conversation itself, I’m using Amazon Nova 2.5 Sonic, a speech-to-speech model on Bedrock that both hears and speaks. Older voice systems chain three steps: transcribe the audio, send the text to a language model, then synthesize a reply. One model doing all three cuts the delay, and in voice, delay is felt on every turn. It also handles people interrupting it, which real conversations are full of.</p>
+<h3>The server in the middle</h3>
+<p>A small service on AWS Fargate holds one live connection per visitor. It streams audio between the browser and the voice model, and it runs every tool. When the voice model wants a forecast, it asks for one; the server checks the request, runs the model and returns a structured result. The voice model never touches the data directly.</p>
+<p>There are four tools, all read-only: find a place, forecast its busyness, find the quietest time to go, and look up information about it. Because nothing can be written or changed, even a cleverly worded attack hidden in a place’s description has nothing to act on.</p>
+
+<h2 id="in-public">Running it in public</h2>
+<p>A public microphone connected to a paid AI model is an open tap, so the limits go in before launch, not after. Conversations are capped in length, visitors are rate-limited, a budget alarm watches spending, and a single switch can turn the button off without a deploy. Audio isn’t stored, and transcripts are kept briefly, with no names attached, only to test and improve the system.</p>
+<p>Testing is built around the failures that would actually hurt, and any one of them blocks a release:</p>
+<ul>
+  <li>Saying a number no tool returned</li>
+  <li>Answering about the wrong location of a chain</li>
+  <li>Giving a confident forecast where the data is too thin</li>
+  <li>Stating a fact about a place that the knowledge base doesn’t support</li>
+  <li>Following instructions hidden inside a place’s description</li>
+</ul>
+<p>Each is checked by code, not by eye. Whenever a new failure turns up in real use, it becomes a permanent test.</p>
+<p>I’ll judge it by three numbers: how much the forecast beats the “same hour last week” baseline, how long it takes the concierge to start answering, and what each conversation costs.</p>
+
+<h2 id="why">Why build it this way</h2>
+<p>It would be easy to make a demo that sounds impressive: hook a voice model up to some data and let it talk. The hard part, and the part I find most interesting, is making something people can trust. That means a real model measured against a real baseline, an assistant that says “I don’t know” when it doesn’t, and costs and failures that are watched instead of hoped about.</p>
+<p>I’m building it the way I build most things now: with my own agent system, <a href="../../projects/symphony/">Symphony</a>, doing most of the hands-on engineering while I direct the work, review it and approve every change. Agents write; I decide what ships.</p>
+<p>I’ll share what I learn as it goes live: the forecast results against the baseline, what broke, and what I changed. If you’d like to talk about voice agents, forecasting or building AI products people can rely on, I’d love to hear from you.</p>
+
+    </article>
+    <aside class="related-essays" aria-labelledby="related-title">
+      <h2 id="related-title">Related project essays</h2>
+      <ul>
+        <li><a href="../../projects/busynow/">BusyNow <span aria-hidden="true">→</span></a><span>Helping people decide where to go next</span></li>
+        <li><a href="../../projects/sally/">Sally <span aria-hidden="true">→</span></a><span>Model roles and conversation latency</span></li>
+        <li><a href="../../projects/ai-evaluation/">AI Evaluation <span aria-hidden="true">→</span></a><span>Making behavior measurable</span></li>
+      </ul>
+      <a class="back-link" href="../">Browse all writing →</a>
+    </aside>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-intro"><a class="brand" href="../../" aria-label="Thomas Howard, home"><span class="brand-name">thomas</span>@<span class="brand-host">howard</span>:~$</a><p>Applied AI, conversational agents, and the architecture behind useful agentic systems.</p></div>
+        <div><h2 class="footer-title">// explore</h2><nav class="footer-links" aria-label="Footer navigation"><a href="../../">Home</a><a href="../../about/">About</a><a href="../../blog/">Writing</a><a href="../../notes/">Notes</a><a href="../../projects/">Projects</a></nav></div>
+        <div><h2 class="footer-title">// connect</h2><div class="footer-links"><a href="https://github.com/warehousegang" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="../../resume/">My Resume</a><a href="https://www.linkedin.com/in/thomashow/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://x.com/iloveGoMan" target="_blank" rel="noopener noreferrer">X ↗</a></div></div>
+      </div>
+      <div class="footer-bottom">© 2026 Thomas Howard</div>
+    </div>
+  </footer>
+</body>
+</html>
