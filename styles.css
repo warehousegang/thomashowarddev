@@ -275,3 +275,24 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 3rem 0; }
   .fd-feature { padding: 32px 20px; }
   .fd-crumb { margin-bottom: 24px; }
 }
+
+/* Sally: phone-only rebuild (text stays readable) */
+.sally-mobile { display: none; }
+@media (max-width: 600px) {
+  .sally-feature img { display: none; }
+  .sally-feature { line-height: 1.5; padding: 30px 22px 28px; color: #fff; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background: radial-gradient(ellipse at 95% 0%, rgba(176, 102, 160, .8), transparent 60%), radial-gradient(ellipse at 100% 100%, rgba(120, 52, 92, .7), transparent 55%), linear-gradient(160deg, #3a2160 0%, #2f1d55 50%, #3b2052 100%); }
+  .sally-mobile { display: block; }
+  .sally-mobile p { margin: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; letter-spacing: normal; }
+  .sm-crumb { font-size: .78rem; color: rgba(255,255,255,.85); margin-bottom: 26px !important; }
+  .sm-eyebrow { font-size: .74rem; letter-spacing: .14em !important; text-transform: uppercase; color: rgba(255,255,255,.85); margin-bottom: 8px !important; }
+  .sm-name { font-size: 4.6rem; font-weight: 400; line-height: 1; letter-spacing: -.055em !important; color: #fff; }
+  .sm-dot { display: inline-block; width: .1em; height: .1em; margin-left: .03em; background: #f0a28e; }
+  .sm-tagline { margin: 18px 0 14px !important; font-size: 1.75rem; font-weight: 400; line-height: 1.12; letter-spacing: -.03em !important; color: #fff; }
+  .sm-text { font-size: .98rem; line-height: 1.65; color: rgba(255,255,255,.88); }
+  .sm-visual { display: flex; flex-direction: column; align-items: center; gap: 18px; margin: 30px 0 26px; }
+  .sm-mic { display: grid; place-items: center; width: 56px; height: 56px; border: 1px solid rgba(240,162,142,.55); border-radius: 50%; color: #f0b3a3; }
+  .sm-wave { display: flex; align-items: center; gap: 6px; height: 100px; }
+  .sm-wave span { display: block; width: 7px; border-radius: 999px; background: linear-gradient(180deg, #f6b49b 0%, #e48bb6 50%, #a98bf0 100%); }
+  .sm-caption { font-size: .9rem; color: rgba(255,255,255,.9); }
+  .sally-button { position: static; margin: 0; font-size: 1rem; }
+}
