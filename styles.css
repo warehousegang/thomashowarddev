@@ -249,3 +249,28 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 3rem 0; }
   .system-flow { grid-template-columns: 1fr; }
   .essay-nav ul { gap: 8px 18px; }
 }
+
+/* Sally feature (homepage) */
+.sally-feature { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); align-items: center; gap: 32px; margin-top: 48px; padding: 56px 64px; border-radius: 16px; color: #fff; font-family: var(--sans); background: radial-gradient(ellipse at 85% 0%, rgba(176, 102, 160, .75), transparent 55%), radial-gradient(ellipse at 100% 100%, rgba(120, 52, 92, .7), transparent 50%), linear-gradient(135deg, #3a2160 0%, #2f1d55 45%, #3b2052 100%); }
+.sally-feature h2, .sally-feature p { font-family: var(--sans); letter-spacing: normal; }
+.sally-crumb { margin: 0 0 40px; font-size: .82rem; color: rgba(255,255,255,.85); }
+.sally-eyebrow { margin: 0 0 18px; font-size: .82rem; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.85); }
+.sally-name { margin: 0; font-size: clamp(4.2rem, 11vw, 8.4rem); font-weight: 500; line-height: .95; letter-spacing: -.05em; color: #fff; }
+.sally-dot { display: inline-block; width: .1em; height: .1em; margin-left: .05em; background: #f0a28e; color: transparent; overflow: hidden; vertical-align: baseline; }
+.sally-tagline { margin: 34px 0 22px; font-size: clamp(1.8rem, 3.6vw, 2.75rem); font-weight: 500; line-height: 1.12; letter-spacing: -.03em; color: #fff; }
+.sally-text { margin: 0; max-width: 34em; font-size: 1.05rem; line-height: 1.7; color: rgba(255,255,255,.88); }
+.sally-visual { display: flex; flex-direction: column; align-items: center; gap: 44px; }
+.sally-mic { display: grid; place-items: center; width: 88px; height: 88px; border: 1px solid rgba(240,162,142,.55); border-radius: 50%; color: #f0b3a3; }
+.sally-wave { display: flex; align-items: center; gap: 10px; height: 190px; }
+.sally-wave span { display: block; width: 12px; border-radius: 999px; background: linear-gradient(180deg, #f6b49b 0%, #e48bb6 50%, #a98bf0 100%); }
+.sally-caption { margin: 0; font-size: 1rem; color: rgba(255,255,255,.9); }
+@media (max-width: 900px) {
+  .sally-feature { grid-template-columns: 1fr; padding: 40px 32px; gap: 40px; }
+  .sally-crumb { margin-bottom: 28px; }
+}
+@media (max-width: 600px) {
+  .sally-feature { padding: 32px 20px; }
+  .sally-wave { gap: 6px; height: 140px; }
+  .sally-wave span { width: 8px; }
+  .sally-visual { gap: 28px; }
+}
