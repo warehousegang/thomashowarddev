@@ -250,6 +250,28 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 3rem 0; }
   .essay-nav ul { gap: 8px 18px; }
 }
 
-/* Sally feature (homepage) */
-.sally-feature { margin-top: 48px; border-radius: 16px; overflow: hidden; line-height: 0; }
+/* Homepage plaques: Sally + Fourth Down */
+.sally-feature { position: relative; margin-top: 48px; border-radius: 16px; overflow: hidden; line-height: 0; background: #2d1c52; }
 .sally-feature img { display: block; width: 100%; height: auto; }
+.plaque-button { display: inline-flex; align-items: center; gap: .7em; padding: .95em 1.5em; border-radius: 999px; background: #fff; color: #1d1530; font-family: var(--sans); font-size: 1rem; font-weight: 500; line-height: 1.2; text-decoration: none; letter-spacing: 0; transition: transform .15s, box-shadow .15s; }
+.plaque-button:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,.25); color: #1d1530; }
+.sally-button { position: absolute; left: 5.7%; top: 80.8%; font-size: clamp(.8rem, 1.35vw, 1.02rem); }
+.fd-feature { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); align-items: center; gap: 32px; margin-top: 32px; padding: 56px 64px; aspect-ratio: 1264 / 678; border-radius: 16px; color: #fff; font-family: var(--sans); background: radial-gradient(ellipse at 88% 0%, rgba(0, 237, 100, .32), transparent 55%), radial-gradient(ellipse at 100% 100%, rgba(6, 95, 70, .65), transparent 55%), linear-gradient(135deg, #04261a 0%, #063b28 45%, #0a4a33 100%); }
+.fd-feature h2, .fd-feature p { font-family: var(--sans); letter-spacing: normal; }
+.fd-crumb { margin: 0 0 36px; font-size: .82rem; color: rgba(255,255,255,.82); }
+.fd-eyebrow { margin: 0 0 16px; font-size: .82rem; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.82); }
+.fd-name { margin: 0; white-space: nowrap; font-size: clamp(2.6rem, 6.2vw, 5.4rem); font-weight: 500; line-height: .98; letter-spacing: -.05em; color: #fff; }
+.fd-dot { display: inline-block; width: .11em; height: .11em; margin-left: .05em; background: #00ed64; }
+.fd-tagline { margin: 26px 0 34px; font-size: clamp(1.6rem, 3.2vw, 2.5rem); font-weight: 500; line-height: 1.12; letter-spacing: -.03em; color: #fff; }
+.fd-visual { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.fd-field { width: 100%; max-width: 420px; height: auto; }
+.fd-caption { margin: 0; font-size: 1rem; color: rgba(255,255,255,.88); }
+@media (max-width: 900px) {
+  .fd-feature { grid-template-columns: 1fr; aspect-ratio: auto; padding: 40px 32px; }
+}
+@media (max-width: 600px) {
+  .sally-button { position: static; margin: 0 0 22px 5.7%; line-height: 1.2; }
+  .sally-feature { line-height: 1.2; }
+  .fd-feature { padding: 32px 20px; }
+  .fd-crumb { margin-bottom: 24px; }
+}
