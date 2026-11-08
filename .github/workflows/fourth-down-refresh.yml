@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: warehousegang/fourth-down
-          ref: f39f591fa2012ace11370636a212086f1b10557c
+          ref: 255219698ed52271199cf0b17134456bdf1f4b6f
           path: source
           persist-credentials: false
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
@@ -104,3 +104,7 @@ jobs:
           with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as output:
               print('### Publication verification\n```json\n'+(Path(os.environ['RUNNER_TEMP'])/'publication.json').read_text()+'\n```', file=output)
           PY
+      - name: Report result collection health
+        if: always() && steps.refresh.outcome == 'success'
+        working-directory: source
+        run: python scripts/check_refresh_health.py --receipt "$RUNNER_TEMP/refresh.json"
