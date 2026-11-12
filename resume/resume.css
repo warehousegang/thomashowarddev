@@ -38,6 +38,8 @@
 .resume-position { position: relative; border-left: 1px solid #2f4a38; padding-left: 25px; }
 .resume-position::before { content: ''; position: absolute; left: -4px; top: 10px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px #00ed6433; }
 .resume-position + .resume-position { margin-top: 37px; }
+.resume-document .resume-subhead { margin: 22px 0 0; font: .78rem/1.6 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--accent-soft); }
+.resume-document .resume-subhead + ul { margin-top: 8px; }
 .resume-job { display: flex; flex-direction: column; gap: 6px; margin: 0 0 17px; }
 .resume-document .resume-job h3 { margin: 0; }
 .resume-document .resume-date { flex-shrink: 0; margin: 0; color: var(--subtle); font: .75rem/1.6 var(--mono); white-space: nowrap; }
