@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Read Thomas Howard’s résumé: CTO &amp; Head of Applied AI, AI product leadership, agent platforms, healthcare voice AI, evaluation-driven release criteria, and BusyNow founder experience. Download the PDF.">
+  <meta name="description" content="Read Thomas Howard’s résumé: CTO &amp; Head of Applied AI, AI product leadership, agent platforms, healthcare voice AI, RAG, predictive ML, evaluation-driven release criteria, and BusyNow founder experience. Download the PDF.">
   <meta name="theme-color" content="#0a0a0f">
   <title>My Resume | Thomas Howard</title>
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
@@ -25,11 +25,11 @@
   <main id="main" class="resume-main">
     <div class="resume-toolbar">
       <p class="resume-page-label"><span aria-hidden="true">//</span>my_resume</p>
-      <a class="button button-primary" href="./Thomas_Howard_Resume.pdf?v=20261112c" download="Thomas_Howard_Resume.pdf" type="application/pdf" aria-label="Download resume as PDF">Download</a>
+      <a class="button button-primary" href="./Thomas_Howard_Resume.pdf?v=20261117" download="Thomas_Howard_Resume.pdf" type="application/pdf" aria-label="Download resume as PDF">Download</a>
     </div>
     <article class="resume-document" aria-label="Thomas Howard’s résumé">
 <header class="resume-identity"><h1>Thomas Howard</h1>
-<p class="resume-role"><strong>CTO &amp; Head of Applied AI</strong></p>
+<p class="resume-role"><strong>CTO &amp; Head of Applied AI</strong> · Agentic &amp; Voice AI · RAG · Predictive ML · AI Evaluation &amp; Safety</p>
 <p class="resume-contact">New York, NY · 929.505.6058 · <a href="mailto:thomashoward206@gmail.com">thomashoward206@gmail.com</a></p>
 <p class="resume-contact"><a href="https://www.linkedin.com/in/thomashow/">linkedin.com/in/thomashow</a> · <a href="https://github.com/warehousegang">github.com/warehousegang</a> · <a href="https://thomashoward.dev">thomashoward.dev</a> · <a href="https://busynow.app">busynow.app</a></p>
 </header>
@@ -37,11 +37,11 @@
 <nav class="resume-nav" aria-label="Résumé sections"><p>ON THIS PAGE</p><ul><li><a href="#summary"><span aria-hidden="true">01</span>Summary</a></li><li><a href="#experience"><span aria-hidden="true">02</span>Experience</a></li><li><a href="#earlier-experience"><span aria-hidden="true">03</span>Earlier work</a></li><li><a href="#skills"><span aria-hidden="true">04</span>Skills</a></li><li><a href="#education"><span aria-hidden="true">05</span>Education</a></li></ul></nav>
 <div class="resume-content">
 <section class="resume-section" id="summary" aria-labelledby="summary-title"><h2 id="summary-title"><span class="resume-section-marker" aria-hidden="true">//</span>Summary</h2>
-<p>I build AI agents that do real work, and the controls that make them safe to trust. I also own the strategy around them: what to build, for whom, and what has to be true before it ships. I&#x27;m at my best where strategy and hands-on work meet: deciding what an agent should be allowed to do, building it, and proving it&#x27;s right.</p>
+<p>Hands-on Applied AI leader who builds production LLM agents and the controls that make them safe to ship. Sole Applied AI engineer at a 10-person healthcare company, also leading its small engineering team: conceived, built, and shipped its AI product line from scratch, from Sally, a patient-facing voice agent now live in production, to Symphony, the governed system of 10 specialized engineering agents used to build its products. Previously led a 12-person engineering organization for seven years. Builds with agents: sets the architecture, writes the task contracts, and reviews every change, in Python, TypeScript, and Go. Works across the applied AI stack: LLM agents, retrieval-augmented generation (RAG) over clinical data, explainable predictive ML in Python and scikit-learn, and the evaluation and MLOps practices that keep them reliable. Founded and built a production SaaS product end to end.</p>
 </section>
 <section class="resume-section" id="experience" aria-labelledby="experience-title"><h2 id="experience-title"><span class="resume-section-marker" aria-hidden="true">//</span>Experience</h2>
 <div class="resume-position"><div class="resume-job"><h3>CTO &amp; Head of Applied AI, Snap eHealth</h3><p class="resume-date">Jun 2026 – Present</p></div>
-<p>Promoted to CTO to own AI strategy, product, and engineering delivery for our agent platform, while remaining the company&#x27;s hands-on AI engineer.</p>
+<p>Promoted to CTO of this 10-person healthcare SaaS company, which makes referral and Annual Wellness Visit (AWV) software for primary care clinics, after four years building its AI platform; own Applied AI strategy, product architecture, and engineering delivery, while remaining the company&#x27;s hands-on AI engineer.</p>
 <p class="resume-subhead"><strong>Strategy &amp; leadership</strong></p>
 <ul>
 <li>Set the AI roadmap with the CEO and partner directly with CIOs, CTOs, CEOs and board executives at enterprise clients to turn business requirements into product requirements and agentic design patterns.</li>
@@ -51,7 +51,8 @@
 </ul>
 <p class="resume-subhead"><strong>Hands-on</strong></p>
 <ul>
-<li>Built Sally, a production healthcare voice agent: the LLM handles intent and conversation, while deterministic state machines handle consent, identity verification, and anything that changes a record.</li>
+<li>Built Sally, a production healthcare voice agent grounded in live practice-management and EHR data through structured tool calls for identity, scheduling, and consent: the LLM handles intent and conversation, while deterministic state machines handle consent, identity verification, and anything that changes a record.</li>
+<li>Built retrieval-augmented generation (RAG) into the Health Risk Assessment (HRA) and Personalized Prevention Plan (PPPS) workflows, grounding generated risk assessments and prevention recommendations in retrieved patient data and supporting evidence, with traceable sources.</li>
 <li>Designed a 180-scenario evaluation and release gate, run 20 times per scenario, that surfaced a call-termination failure in 40% of runs and reached 3,600/3,600 passes.</li>
 <li>Defined fallback behavior for timeouts, hang-ups, off-topic requests, and tool errors, with deterministic logic for anything outside the agent&#x27;s scope.</li>
 <li>Delivered four agent applications in four months with Symphony, my governed multi-agent coding system, now serving ~1,200 users across four clinics with zero production incidents.</li>
@@ -69,13 +70,14 @@
 <ul>
 <li>Designed and built an AI engineering control plane: specialized monitoring, security, and SRE agents producing structured evidence, with deterministic triage, bounded remediation, protected verification gates, and human escalation.</li>
 <li>Built an AI test-intelligence system that decomposed product stories, generated test requirements and API tests, analyzed defects, and targeted retests.</li>
-<li>Architected an explainable physician-referral ranking engine in Python and scikit-learn, combining clinical quality, outcomes, eligibility, availability, and proximity with deterministic scoring, uncertainty handling, and abstention.</li>
+<li>Designed and implemented Referral Intelligence, a standalone Python and scikit-learn ranking service combining clinical quality, outcomes, eligibility, availability, and proximity, with evidence normalization, missing-data handling, confidence scoring, explainable recommendations, and abstention; validated on synthetic evaluation scenarios, with production data integration underway.</li>
 <li>Developing supervised models to predict 30-day referral completion, with leakage prevention and evaluation on precision, recall, ROC-AUC, and calibration.</li>
 </ul>
 </div>
-<div class="resume-position" id="busynow"><div class="resume-job"><h3>Founder &amp; Product Lead, BusyNow (<a href="https://busynow.app">busynow.app</a>)</h3><p class="resume-date">Oct 2025 – Present</p></div>
-<p>Designed and built Symphony, an autonomous coding-agent runner based on OpenAI&#x27;s open-source Symphony specification, and used it to develop BusyNow: defining the workflow for task intake, isolated execution, CI/CD validation, and human review of every pull request before merge.</p>
+<div class="resume-position" id="busynow"><div class="resume-job"><h3>Founder &amp; Software Engineer, BusyNow (<a href="https://busynow.app">busynow.app</a>)</h3><p class="resume-date">Oct 2025 – Present</p></div>
 <ul>
+<li>Designed and built Symphony, an autonomous coding-agent runner based on OpenAI&#x27;s open-source Symphony specification, and used it to develop BusyNow: defining the workflow for task intake, isolated execution, CI/CD validation, and human review of every pull request before merge.</li>
+<li>Developing predictive ML to estimate venue busyness so users can decide where and when to go, and Concierge, a voice agent for conversational venue discovery over Google Places and app venue data.</li>
 <li>Used real-time user telemetry and traffic analytics to validate the core hypothesis, growing to about 1,000 users a month within two months with no marketing spend.</li>
 <li>Oversee end-to-end cloud product architecture, managing vendor integrations, rate limits, provider budgets, and deployment reliability strategies.</li>
 <li>Identified a key market gap in local venue discovery, founding and launching a real-time data product across Seattle and New York based on validated user pain points.</li>
@@ -83,8 +85,8 @@
 </ul>
 </div>
 <div class="resume-position"><div class="resume-job"><h3>Director of Engineering, FBS</h3><p class="resume-date">Jan 2015 – Apr 2022</p></div>
-<p>Managed a 12-person organization within a 60-engineer company, driving product strategy, hiring, roadmap delivery, and technical governance for the nationwide Flexmls platform.</p>
 <ul>
+<li>Managed a 12-person organization within a 60-engineer company, driving product strategy, hiring, roadmap delivery, and technical governance for the nationwide Flexmls platform.</li>
 <li>Led a multi-year platform migration strategy from legacy PHP to modern Ruby on Rails and JavaScript architectures while maintaining continuous service availability for the customer base.</li>
 <li>Reduced regression release cycle times by 90% by championing an automation-first culture, standardized quality controls, and early validation processes.</li>
 <li>Managed developer tooling, CI/CD pipelines, and cloud observability platforms as internal products to accelerate developer productivity across the wider engineering organization.</li>
@@ -92,16 +94,17 @@
 </div>
 </section>
 <section class="resume-section" id="earlier-experience" aria-labelledby="earlier-experience-title"><h2 id="earlier-experience-title"><span class="resume-section-marker" aria-hidden="true">//</span>Earlier experience</h2>
-<div class="resume-earlier-role"><p><strong>Software Engineer</strong>, Google</p><p class="resume-date">Jun 2012 – Dec 2014</p></div>
+<div class="resume-earlier-role"><p><strong>Software Engineer</strong>, Google (Contract)</p><p class="resume-date">Jun 2012 – Dec 2014</p></div>
 <div class="resume-earlier-role"><p><strong>Software Engineer</strong>, Community Health Plan of Washington</p><p class="resume-date">Aug 2011 – Jun 2012</p></div>
 <div class="resume-earlier-role"><p><strong>Software Engineer</strong>, Xperience Communications</p><p class="resume-date">Aug 2010 – Aug 2011</p></div>
 </section>
 <section class="resume-section" id="skills" aria-labelledby="skills-title"><h2 id="skills-title"><span class="resume-section-marker" aria-hidden="true">//</span>Skills</h2>
 <p class="resume-skill"><strong>Product Leadership:</strong> <span>technical product strategy, zero-to-one product roadmap execution, agent task decomposition, scope reduction, eval-driven release criteria, executive &amp; technical stakeholder management</span></p>
-<p class="resume-skill"><strong>AI &amp; Agent Platforms:</strong> <span>conversational &amp; voice agent product management, multi-agent orchestration, tool integration, context engineering, structured outputs, Amazon Bedrock, Codex</span></p>
-<p class="resume-skill"><strong>Eval &amp; Governance:</strong> <span>agent evaluations, goldset benchmark creation, regression harnesses, safety guardrails, deterministic verification, human-in-the-loop approval workflows</span></p>
+<p class="resume-skill"><strong>AI &amp; Agent Platforms:</strong> <span>retrieval-augmented generation (RAG), conversational &amp; voice agents, multi-agent orchestration, tool integration, context engineering, structured outputs, Amazon Bedrock, Codex</span></p>
+<p class="resume-skill"><strong>ML &amp; Predictive Modeling:</strong> <span>supervised classification, explainable ranking, feature engineering, data-leakage prevention, model evaluation (precision, recall, ROC-AUC, calibration), confidence scoring &amp; abstention, scikit-learn</span></p>
+<p class="resume-skill"><strong>MLOps &amp; LLMOps:</strong> <span>eval-gated releases, reproducible model &amp; ranking evaluations, synthetic test datasets, scenario-based agent evaluation, goldset benchmarks, regression harnesses, version-controlled models &amp; services, model drift controls, safety guardrails, model-cost controls, human-in-the-loop approval</span></p>
 <p class="resume-skill"><strong>Technical Architecture:</strong> <span>Python, Go, TypeScript, React, Node.js/Express, REST APIs, PostgreSQL, Redis, scikit-learn, system design, enterprise integrations</span></p>
-<p class="resume-skill"><strong>Cloud &amp; Operations:</strong> <span>AWS (ECS, Bedrock, IAM, VPC), Terraform, Docker, CI/CD pipelines, product telemetry &amp; observability, release management</span></p>
+<p class="resume-skill"><strong>Cloud &amp; Operations:</strong> <span>AWS (Bedrock, ECS Fargate, RDS PostgreSQL, VPC, IAM, CloudFront, S3), Terraform, CI/CD, observability; previously Kubernetes</span></p>
 </section>
 <section class="resume-section" id="education" aria-labelledby="education-title"><h2 id="education-title"><span class="resume-section-marker" aria-hidden="true">//</span>Education</h2>
 <p><strong>Harvard University</strong>, Harvard Extension School | Special Student, on-campus courses in Harvard College | GPA 3.9</p>
