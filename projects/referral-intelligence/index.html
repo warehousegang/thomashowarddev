@@ -94,7 +94,7 @@
       <p>That prediction work is a separate educational project, Physician Referral Success Predictor. It is in development on synthetic data and has not shipped. Its NumPy and pandas package generates and validates <strong>20,000 fictional referral candidates by default</strong>. Invented relationships among wait time, distance, capacity, experience, and specialty feed a logistic simulation. Insurance acceptance is an eligibility gate: ineligible candidates have no success label at all.</p>
       <p>The main design concern is time. A model that peeks at the future looks brilliant in testing and fails in use. Features must be available when the referral is created. A success becomes observable at its completion event; a non-completion only after the full 30-day window. Pending referrals stay pending, and future or same-timestamp outcomes are excluded from historical features.</p>
       <p>The generator updates histories as outcomes arrive, and validation recomputes them independently. Tests cover reproducibility, schema rules, eligibility, cold starts, and exact time boundaries. A physician with no history gets a neutral default and an explicit zero count.</p>
-      <p>What exists today is the data pipeline and temporal validation. Chronological splits, fitted baselines, and <a href="https://scikit-learn.org/stable/modules/calibration.html">probability calibration</a> come next. My <a href="../nfl-predictor/">Fourth Down</a> project works through related questions on historical sports data: define the outcome, enforce the prediction-time boundary, and compare against a simple baseline.</p>
+      <p>What exists today is the data pipeline and temporal validation. Chronological splits, fitted baselines, and <a href="https://scikit-learn.org/stable/modules/calibration.html">probability calibration</a> come next.</p>
 
       <h2 id="status">Every failure gets its own answer</h2>
       <p>When a recommendation changes, someone will ask why. Without clear boundaries, the honest answer is “we’re not sure.”</p>
@@ -107,7 +107,7 @@
       <p><strong>Don’t let a score impersonate a probability.</strong> Ranking under rules and predicting outcomes are different problems; ship the one you can defend and label the other honestly.</p>
 
     </article>
-    <aside class="related-essays" aria-labelledby="related-title"><h2 id="related-title">Explore the other projects</h2><ul><li><a href="../nfl-predictor/">Fourth Down <span aria-hidden="true">→</span></a><span>Predictive machine learning</span></li><li><a href="../sally/">Sally <span aria-hidden="true">→</span></a><span>Conversational AI</span></li><li><a href="../symphony/">Symphony <span aria-hidden="true">→</span></a><span>Agent orchestration</span></li><li><a href="../ai-evaluation/">AI Evaluation <span aria-hidden="true">→</span></a><span>Quality &amp; evaluation</span></li></ul><a class="back-link" href="../../blog/">Browse all writing →</a></aside>
+    <aside class="related-essays" aria-labelledby="related-title"><h2 id="related-title">Explore the other projects</h2><ul><li><a href="../sally/">Sally <span aria-hidden="true">→</span></a><span>Conversational AI</span></li><li><a href="../symphony/">Symphony <span aria-hidden="true">→</span></a><span>Agent orchestration</span></li><li><a href="../ai-evaluation/">AI Evaluation <span aria-hidden="true">→</span></a><span>Quality &amp; evaluation</span></li></ul><a class="back-link" href="../../blog/">Browse all writing →</a></aside>
   </main>
   <footer class="site-footer">
     <div class="container">

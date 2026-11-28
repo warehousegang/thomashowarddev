@@ -19,7 +19,7 @@ Then open http://localhost:8000.
 - `index.html` — terminal introduction, featured work, and recent writing
 - `about/` — applied AI experience and approach to solutions architecture
 - `resume/` — readable résumé in the site’s dark terminal theme, with green headings, section navigation, and a green PDF download button
-- `projects/` — project overview and six technical essays: `busynow/`, `nfl-predictor/`, `sally/`, `symphony/`, `ai-evaluation/`, and `referral-intelligence/`
+- `projects/` — project overview and five technical essays: `busynow/`, `sally/`, `symphony/`, `ai-evaluation/`, and `referral-intelligence/`
 - `blog/` — essays and long-form writing
 - `notes/` — shorter frontier notes, linked as Notes in the main navigation. Each note lives at `notes/<slug>/`; add new notes to the top of `notes/index.html`. Notes stay off the homepage and the Writing index. `blog/the-model-did-nothing-wrong/` redirects to the note's new URL.
 - `styles.css` — shared theme, responsive layouts, and reading styles
@@ -34,23 +34,11 @@ Publish the repository as static files using the existing GitHub Pages configura
 
 Project essays use the shared reading styles, local tables of contents, role and stage summaries, and HTML architecture diagrams. They are also listed in Writing. Keep project-stage descriptions grounded in source evidence: synthetic prototypes, local validation, prepared runtimes, and production deployments are different milestones.
 
-The Fourth Down technical article retains its existing `/projects/nfl-predictor/` URL and section anchors. Its architecture, implemented capabilities, limitations, and 2023 validation table are grounded in the application artifacts; the prospective record is kept separate. The featured card now links to Fourth Down at `/fourth-down/`: a separately developed frozen-model application with upcoming forecasts, evaluation and research demonstrations. Referral Intelligence distinguishes its deterministic ranking service from the separate synthetic referral-completion modeling project. Update model-performance claims only when supported by measured results.
+Referral Intelligence distinguishes its deterministic ranking service from the separate synthetic referral-completion modeling project. Update model-performance claims only when supported by measured results.
 
-## Fourth Down static application
+## Retired project
 
-`fourth-down/` contains only the compiled application and its checksummed `release.json` receipt. Source, tests, model training and forecast generation stay in the separate Fourth Down repository. Its artifact installer replaces only this directory; the existing `main`/root Pages deployment and `CNAME` stay unchanged. Import a verified build, review the diff, then publish through the normal approved main-branch merge. Reverting the integration commits in reverse order restores the prior website; a squash publication can be rolled back by reverting its single merge commit. The pre-integration baseline is `0df446445f199b0e7f1329f5817b97b22cf7b1e8`. There is no cross-repository token or automatic publication job.
-
-## NFL Forecast Lab concept
-
-`projects/nfl-predictor/lab/` is an archived, responsive interface prototype linked from the Fourth Down article. Its archive banner points to the current application. The Lions–Packers pairing is an example, not the current schedule. Clicking **Run demo forecast** reveals hand-authored 62% / 38% values; it performs no inference. The page labels those values as illustrative before and after the click. No forecasts or user actions are persisted, and repeated demos never alter the empty public scorecard. The reveal respects reduced motion and exposes state through native buttons and a live region. Without JavaScript, the page explains that the interaction is unavailable.
-
-Team-logo PNGs are vendored from ESPN's public team assets using URLs from nflverse's teams metadata: `https://github.com/nflverse/nflverse-data/releases/download/teams/teams_colors_logos.csv`. Original images: `https://a.espncdn.com/i/teamlogos/nfl/500/det.png` and `https://a.espncdn.com/i/teamlogos/nfl/500/gb.png`. These identify the teams; the project is independent of the NFL and the clubs.
-
-### Current application and archived prototype
-
-The real inference and lifecycle pipeline is implemented in Fourth Down, not in this archived lab. The article documents frozen-model inference, current-season ingestion, saved forecast receipts, reconciliation and evaluation. Injury/news context does not change probabilities; the research walkthrough is deterministic, not LLM-powered; no automatic retraining or prospective accuracy is claimed. The historical table is checked against `/fourth-down/data/demo.json` by the separate source repository's portfolio tests.
-
-The portfolio has no active refresh workflow. Current artifacts expire honestly until a newly reviewed artifact is imported. The archive prototype remains illustrative and never contributes to the application's prospective record.
+Fourth Down was removed from the public portfolio at the owner’s request on November 27, 2026. Its compiled application, technical article, prototype and refresh workflow are no longer published. The V1 Cloudflare cron triggers were removed and its GitHub refresh workflow was disabled. The source repository and the retained `.fourth-down-state/` evidence remain available; the full former site is recoverable from Git commit `d454513c75d0caa19911d8bc2cd5032f835621b2`. Do not restore automatic publication without a new owner request.
 
 Article titles, summaries, and prose use natural punctuation without em dashes. Article pages and writing cards omit publication dates. Keep writing organized in the main Writing index for now; do not add date-based archive navigation. The former monthly archive URL redirects to Writing so existing links continue to work.
 
